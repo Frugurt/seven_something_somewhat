@@ -1,0 +1,25 @@
+<-TurnOrderIndicator>:
+    orientation: 'tb-lr'
+    cols: 1
+    pos_hint: {'right': 1, 'top': 1}
+    size_hint: (0.12, 1)
+    spacing: (0, 1)
+    canvas:
+        Color:
+            rgba: 0.0, 0.0, 0.5, 0.5
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+
+<-TurnOrderRecord>:
+    size_hint: (None, 0.1)
+    canvas:
+        Color:
+            rgb: 0.5, 0.5, 0.5
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    Label:
+        pos: self.parent.pos
+        text: root.text

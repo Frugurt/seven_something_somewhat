@@ -1,0 +1,29 @@
+<-RectCellWidget>:
+    id: cell
+    canvas.after:
+        PushMatrix
+        Translate:
+            xy: self.pos
+        Color:
+            rgba: 0, 0, 0, 0.5*self.is_highlighted
+        Mesh:
+            vertices: self.mesh_vertices
+            mode: 'triangle_fan'
+            indices: range(4)
+        Color:
+            rgba: 1.0, 0, 0, 1.0*self.is_selected
+        Line:
+            points: self.circuit
+            width: 1.5
+        PopMatrix
+#    Label:
+#        index: 1
+#        text: str(cell.cell.pos)
+#        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+#        Translate:
+#            xy: (0, 0)
+
+#    Button:
+#        pos: -200, 0
+#        text: "Select"
+#        on_press: hexcell.is_selected = not hexcell.is_selected

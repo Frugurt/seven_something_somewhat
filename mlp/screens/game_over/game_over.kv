@@ -1,0 +1,12 @@
+#<GameOverScreen@Screen>:
+<-GameOverScreen>:
+    Label:
+        pos_hint: {'x':0.5, 'y':0.5}
+        size_hint: (None, None)
+        text: "HE J|OCOCHYJ| {}".format(root.winner_name)
+        font_size: 20
+    Button:
+        pos_hint: {'x':0.5, 'y':0.3}
+        size_hint: (None, None)
+        text: "NU OK"
+        on_press: app.stop()

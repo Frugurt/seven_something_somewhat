@@ -1,0 +1,54 @@
+<-ActionBar>:
+    size_hint: 1, 0.1
+    spacing: 1
+    orientation: 'horizontal'
+    rows: 1
+    canvas:
+        Color:
+            rgba: 0.5, 0.5, 0.5, 0.5
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<-CurrentActionBar>
+    size_hint: 0.3, 0.1
+#    pos_hint: {'x': 0.0, 'bottom': 0.5}
+    spacing: 1
+    orientation: 'horizontal'
+    rows: 1
+    canvas:
+        Color:
+            rgba: 0.5, 0.5, 0.5, 0.5
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+#<Action>:
+#    size_hint: None, None
+#    size: self.texture_size
+#    ScrollView:
+#        id: scroll_view
+#
+#        size_hint: (1, 1)
+#        do_scroll: (True, False)
+#
+#        scroll_timeout: 70
+#        scroll_distance: 20
+#
+#        GridLayout:
+#            id: card_stack
+#
+#            canvas.before:
+#                Color:
+#                    rgb: 1, 1, 1
+#                Rectangle:
+#                    pos: self.pos
+#                    size: self.size
+#
+#            rows: 1
+#            width: self.minimum_width
+#            do_scroll: (True, False)
+#            orientation: 'horizontal'
+#            size_hint: (None, 1)
+#            spacing: 1
+#

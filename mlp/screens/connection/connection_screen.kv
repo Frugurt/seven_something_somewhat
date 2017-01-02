@@ -1,0 +1,55 @@
+<ConnectionScreen@Screen>:
+    BoxLayout:
+        size: (350, 150)
+        size_hint: None, None
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        orientation: 'vertical'
+        spacing: 4
+
+        GridLayout:
+            size_hint_y: 0.7
+            cols: 2
+            rows: 3
+
+            Label:
+                size_hint_x: 0.4
+                text: 'Host:'
+
+            TextInput:
+                id: host
+                multiline: False
+                write_tab: False
+                text: 'localhost'
+
+            Label:
+                size_hint_x: 0.4
+                text: 'Port:'
+
+            TextInput:
+                id: port
+                multiline: False
+                write_tab: False
+                input_filter: 'int'
+                text: '1488'
+
+            Label:
+                size_hint_x: 0.4
+                text: 'Your name:'
+
+            PlayerNameInput:
+                id: name
+                multiline: False
+                write_tab: False
+                text: 'Tester'
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.3
+
+            Button:
+                text: 'Connect'
+                on_press: root.connect(host.text, port.text, name.text)
+
+            Button:
+                text: 'Cancel'
+                on_press: root.cancel()
