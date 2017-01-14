@@ -50,3 +50,5 @@ lobby_message = Enum(
 chat_message = Enum(
     "BROADCAST"
 )
+
+SEPARATOR = b"|||"

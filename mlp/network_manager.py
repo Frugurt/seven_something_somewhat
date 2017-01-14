@@ -13,6 +13,7 @@ from .serialization import (
     mlp_dumps,
     mlp_loads,
 )
+from .protocol import SEPARATOR
 # from collections import deque
 # from kivy.app import App
 # from kivy.uix.label import Label
@@ -54,7 +55,7 @@ class NetworkManager(Thread):
             text = yield self.inqueue.get()
             print("bytes sended", text)
             # await stream.write(text)
-            yield stream.write(text + b"|||")
+            yield stream.write(text + SEPARATOR)
 
 
     @gen.coroutine
@@ -64,8 +65,8 @@ class NetworkManager(Thread):
             try:
                 # text = await stream.read_bytes(10000, partial=True)
                 # text = yield stream.read_bytes(100000, partial=True)
-                text = yield stream.read_until(b"|||")
-                text = text.rstrip(b"|||")
+                text = yield stream.read_until(SEPARATOR)
+                text = text.rstrip(SEPARATOR)
                 # status = stream.get_fd_error()
                 # if status:
                 #     print(str(status))

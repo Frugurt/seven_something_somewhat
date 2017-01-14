@@ -1,4 +1,3 @@
-import socket
 from tornado import (
     ioloop,
     tcpserver,
@@ -20,6 +19,7 @@ from mlp.protocol import (
     lobby_message,
     chat_message,
     game_message,
+    SEPARATOR,
 )
 from mlp.game import (
     Game,
@@ -83,8 +83,8 @@ class User:
 
     async def await_handshake(self):
         try:
-            msg = await self.stream.read_until(b"|||")
-            msg = msg.rstrip(b"|||")
+            msg = await self.stream.read_until(SEPARATOR)
+            msg = msg.rstrip(SEPARATOR)
             # msg = yield self.stream.read_until(pycard_protocol.message_delimiter)
         except iostream.StreamClosedError:
             pass
@@ -99,8 +99,8 @@ class User:
         while self.is_alive:
             # print "ololo"
             try:
-                msg = await self.stream.read_until(b"|||")
-                msg = msg.rstrip(b"|||")
+                msg = await self.stream.read_until(SEPARATOR)
+                msg = msg.rstrip(SEPARATOR)
                 # print(self.name, "rec bytes", msg)
                 # msg = yield self.stream.read_until(pycard_protocol.message_delimiter)
             except iostream.StreamClosedError:
@@ -132,7 +132,7 @@ class User:
             print("")
             # print(self.name, message)
             # print message, isinstance(message, bytes), type(message)
-            await self.stream.write(message + b"|||")
+            await self.stream.write(message + SEPARATOR)
             status = self.stream.get_fd_error()
             if status:
                 print(str(status))
