@@ -11,6 +11,7 @@ from tornado import (
 from mlp.serialization import (
     mlp_dumps as encode,
     mlp_loads as decode,
+    CreateOrUpdateTag,
 )
 from mlp.replication_manager import (
     GameObjectRegistry
@@ -52,17 +53,19 @@ class TestServer(tcpserver.TCPServer):
     async def send_update(self, stream):
         print(self.game.registry.game_objects)
         print(self.game.registry.dump())
-        payload = self.game.registry.dump()
+        # payload = self.game.registry.dump()
+        payload = [CreateOrUpdateTag(o) for o in self.game.registry.dump()]
         message = {
             'message_type': (message_type.GAME, game_message.UPDATE),
             'payload': payload
         }
         # await stream.write(json.dumps(message).encode())
-        await stream.write(encode(message))
+        await stream.write(encode(message) + SEPARATOR)
 
     async def work_with(self, stream):
         try:
-            inital_message = await stream.read_bytes(1000, partial=True)
+            # inital_message = await stream.read_bytes(1000, partial=True)
+            inital_message = await stream.read_until(SEPARATOR)
         except iostream.StreamClosedError:
             print("Wait, what?")
         else:
@@ -78,14 +81,21 @@ class TestServer(tcpserver.TCPServer):
         await self.send_update(stream)
         while True:
             try:
-                msg = await stream.read_bytes(1000, partial=True)
+                msg = await stream.read_until(SEPARATOR)
             except iostream.StreamClosedError:
                 break
             else:
                 message_struct = decode(msg)
                 print("\n\n", message_struct)
                 message_struct['payload']['author'] = 'overlord'
-                self.game.receive_message(message_struct)
+                message_struct['message_type'] = tuple(message_struct['message_type'])
+                if message_struct['message_type'] == (message_type.GAME, game_message.READY):
+                    for player in self.game.players:
+                        # if player.name == player_name:
+                        player.is_ready = True
+                    self.game.run()
+                else:
+                    self.game.receive_message(message_struct)
                 if self.game.winner is not None:
                     print("WINNER")
                     message = {
