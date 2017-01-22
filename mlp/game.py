@@ -10,6 +10,9 @@ from .bind_widget import bind_widget
 from .grid import Grid
 from .unit import Unit
 from .tools import dict_merge
+from .actions.action import (
+    SLOW, NORMAL, FAST
+)
 
 
 @bind_widget("TurnOrderIndicator")
@@ -125,11 +128,24 @@ class Game:
             # print(self.units)
             for unit in self.turn_order_manager:
                 # print(unit)
+                unit_is_not_pass = unit.apply_actions(speed=FAST)
+                self.action_log[-1].extend(unit.action_log)
+                unit.action_log.clear()
+                anyone_not_pass = anyone_not_pass or unit_is_not_pass
+            for unit in self.turn_order_manager:
+                # print(unit)
                 unit_is_not_pass = unit.apply_actions()
                 self.action_log[-1].extend(unit.action_log)
                 unit.action_log.clear()
                 anyone_not_pass = anyone_not_pass or unit_is_not_pass
             for unit in self.turn_order_manager:
+                # print(unit)
+                unit_is_not_pass = unit.apply_actions(speed=SLOW)
+                self.action_log[-1].extend(unit.action_log)
+                unit.action_log.clear()
+                anyone_not_pass = anyone_not_pass or unit_is_not_pass
+            for unit in self.turn_order_manager:
+                unit.current_action_bar.clear()
                 unit.clear_preparations()
             dead_players = {player for player in self.players if player.main_unit.stats.health <= 0}
             alive_players = set(self.players) - dead_players

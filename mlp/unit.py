@@ -124,7 +124,7 @@ class Unit(GameObject):
     def remove_action(self, action_index):
         self.current_action_bar.remove_action(action_index)
 
-    def apply_actions(self):
+    def apply_actions(self, speed=NORMAL):
         return self.current_action_bar.apply_actions()
 
     def refill_action_points(self):

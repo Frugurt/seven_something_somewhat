@@ -68,12 +68,12 @@ class CurrentActionBar:
         else:
             return True
 
-    def apply_actions(self):
+    def apply_actions(self, speed=NORMAL):
         any_action = bool(self.actions)
-        for action in self.actions:
+        for action in (action for action in self.actions if action.action_speed == speed):
             if action.pre_check():
                 action.apply()
-        self.clear()
+        # self.clear()
         return any_action
 
     def clear(self):
@@ -215,6 +215,7 @@ class Shoot(Action):
 
     action_type = STANDARD
     action_points_cost = 1
+    action_speed = SLOW
 
     def __init__(self, target, line=None):
         super().__init__(target)
@@ -308,6 +309,7 @@ class Parry(Action):
     action_type = FULL
     action_points_cost = 1
     move_points_cost = 1
+    action_speed = FAST
 
     def pre_check(self):
         return super().pre_check() and self.target.stats.unit_state == "sword" and not self.target.stats.parried
@@ -320,11 +322,11 @@ class Parry(Action):
         self.target.current_action_bar.preparations.append('parry')
         self.target.stats.parried = True
 
-    def append_to_bar_effect(self):
-        self.target.current_action_bar.preparations.append('parry')
-
-    def remove_from_bar_effect(self):
-        try:
-            self.target.current_action_bar.preparations.remove('parry')
-        except ValueError:
-            pass
+    # def append_to_bar_effect(self):
+    #     self.target.current_action_bar.preparations.append('parry')
+    #
+    # def remove_from_bar_effect(self):
+    #     try:
+    #         self.target.current_action_bar.preparations.remove('parry')
+    #     except ValueError:
+    #         pass
