@@ -1,3 +1,4 @@
+from collections import defaultdict
 from .resource import Resource
 from .bind_widget import bind_widget
 
@@ -19,6 +20,8 @@ class Stats:
         self.ammo = 3
         self.loaded = True
         self.parried = False
+        self.triggers = defaultdict(list)
+        self.statuses = []
         # self.current_action_bar = CurrentActionBar(self.owner)
 
     # def setup_action(self, action=None):

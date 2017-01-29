@@ -1,0 +1,41 @@
+- !new_action
+  name: Move
+  action_type: MOVE
+  speed: NORMAL
+  cost: 1
+  setup:
+    - name: target_coord
+      cursor: adjacent_cell
+      cursor_params:
+        - !prop owner_cell
+  area: !prop owner_cell
+  effects:
+    - effect: !eff
+        name: Move
+      configure:
+        target_coord: !prop target_coord
+  widget:
+    icon: './data/run.png'
+    pressed_icon: './data/run2.png'
+
+#Attack: !attack
+#  action_type: STANDARD
+#  attack_type: MELEE
+#  cost: 1
+#  area:
+#    Range:
+#      r: 1
+#      source: owner_cell
+#  effects:
+#    - Damage:
+#      amount: 15
+#
+#Parry: #!action
+#  action_type: FULL
+#  speed: FAST
+#  cost: 1
+#  area: owner_cell
+#  effects:
+#    - AddStatus:
+#      status: !status
+#        Parry:

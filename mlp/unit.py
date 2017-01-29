@@ -28,11 +28,11 @@ class Unit(GameObject):
             self,
             [
                 Move,
-                Attack,
-                Shoot,
-                Reload,
-                Parry,
-                ChangeWeapon,
+                # Attack,
+                # Shoot,
+                # Reload,
+                # Parry,
+                # ChangeWeapon,
             ]
         )
 
