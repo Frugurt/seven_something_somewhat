@@ -158,6 +158,8 @@ class ActionMeta(type):
 
     def __new__(cls, name, bases, dct):
         # print(bases, dct)
+        if 'name' in dct:
+            name = dct['name'] or name
         new_cls = super().__new__(cls, name, bases, dct)
         if bases:
             cls.registry[name] = new_cls

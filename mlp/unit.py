@@ -3,11 +3,13 @@ from functools import reduce
 from mlp.replication_manager import (
     GameObject,
     # RefTag,
+    ActionsRegistry,
 )
-from mlp.bind_widget import bind_widget
+# from mlp.bind_widget import bind_widget
 from .stats import Stats
 from .grid import Grid
 from .actions.action import *
+from .actions.new_action import *
 from .tools import dict_merge
 
 
@@ -27,7 +29,7 @@ class Unit(GameObject):
         self.action_bar = ActionBar(
             self,
             [
-                Move,
+                ActionsRegistry()['Move'],
                 # Attack,
                 # Shoot,
                 # Reload,

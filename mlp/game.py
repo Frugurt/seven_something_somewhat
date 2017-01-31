@@ -88,8 +88,8 @@ class Game:
     def append_action(action_struct):
         action = action_struct['action']
         author = action_struct['author']
-        if author == action.target.stats.owner or author == "overlord":
-            action.target.append_action(action)
+        if author == action.owner.stats.owner or author == "overlord":
+            action.owner.append_action(action)
 
     @staticmethod
     def remove_action(action_struct):

@@ -3,8 +3,11 @@ from ..replication_manager import (
     ActionsRegistry,
     ActionMeta,
 )
+from ..serialization import RefTag, ActionTag
 from ..protocol import Enum
 from .effect import EFFECTS
+from ..bind_widget import bind_widget
+from ..tools import dict_merge
 
 # from ..serialization import RefTag, ActionTag
 # class Namespace:
@@ -81,8 +84,8 @@ PROPERTY_TABLE = {
 }
 
 
-# class Action(metaclass=ActionMeta):
-class Action:
+class Action(metaclass=ActionMeta):
+# class Action:
     hooks = []
 
     name = None
@@ -92,16 +95,19 @@ class Action:
 
     setup_fields = []
     effects = []
-    area = None
+    # area = None
 
     widget = None
 
-    def __init__(self, owner):
+    def __init__(self, owner, **kwargs):
         self.owner = owner
         for setup_struct in self.setup_fields:
             field_name = setup_struct['name']
             setattr(self, field_name, None)
-        self.effects = [effect.copy() for effect in self.effects]
+        for key, value in kwargs.items():
+            # field_name = setup_struct['name']
+            setattr(self, key, value)
+        # self.effects = [effect.copy() for effect in self.effects]
 
     def setup(self):
         for setup_struct in self.setup_fields:
@@ -109,7 +115,7 @@ class Action:
                 p.get(self) if isinstance(p, Property) else p
                 for p in setup_struct['cursor_params']
             ]
-            value = yield [setup_struct['cursor']] + cursor_params
+            value = yield [setup_struct['cursor']] + [cursor_params]
             setattr(self, setup_struct['name'], value)
 
     def clear(self):
@@ -118,15 +124,39 @@ class Action:
             setattr(self, field_name, None)
 
     def apply(self):
-        cells = self.area.get(self)
-        for effect in self.effects:
-            effect.apply(cells)
+        pass
+        # for effect_struct in self.effects:
+        #     cells = effect['area'].get(self)
+        #     effect.apply(cells)
 
     def pre_check(self):
-        pass
+        return True
 
     def post_check(self):
+        return True
+
+    def append_to_bar_effect(self):
         pass
+
+    def remove_from_bar_effect(self):
+        pass
+
+    def dump(self):
+        fields = {}
+        for setup_field in self.setup_fields:
+            name = setup_field['name']
+            fields[name] = getattr(self, name)
+        return dict_merge(
+            {
+                'name': self.name,
+                'owner': RefTag(self.owner)
+            },
+            fields
+        )
+
+    # def load(self, struct):
+    #     for name, val in struct:
+    #         pass
 
 
 def property_constructor(loader, node):
@@ -144,13 +174,14 @@ ACTIONS_TABLE = {}
 def actions_constructor(loader, node):
     a_s = loader.construct_mapping(node)
 
+    @bind_widget("NewAction")
     class NewAction(Action):
         name = a_s['name']
         action_type = getattr(type_, a_s['action_type'])
         action_speed = getattr(speed, a_s['speed'])
         cost = a_s['cost']
         setup_fields = a_s['setup']
-        area = a_s['area']
+        # area = a_s['area']
         effects = a_s['effects']
         widget = a_s['widget']
 
@@ -166,7 +197,8 @@ def effect_constructor(loader, node):
     return effect
 
 yaml.add_constructor("!eff", effect_constructor)
+with open('./mlp/actions/actions.yaml') as a:
+    c = yaml.load(a)
 
 if __name__ == '__main__':
-    with open('./mlp/actions/actions.yaml') as a:
-        c = yaml.load(a)
+    print(c)

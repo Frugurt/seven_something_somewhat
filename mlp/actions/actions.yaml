@@ -8,12 +8,12 @@
       cursor: adjacent_cell
       cursor_params:
         - !prop owner_cell
-  area: !prop owner_cell
   effects:
     - effect: !eff
         name: Move
       configure:
         target_coord: !prop target_coord
+      area: !prop owner_cell
   widget:
     icon: './data/run.png'
     pressed_icon: './data/run2.png'

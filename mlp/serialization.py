@@ -5,6 +5,7 @@ from .replication_manager import (
     GameObjectRegistry,
     ActionsRegistry,
 )
+from .grid import Cell
 from .protocol import *
 
 
@@ -102,13 +103,41 @@ def remote_action_remove(action):
     return msg_struct
 
 
+def encode_cell(encoder, cell, fp):
+    encoder.encode_custom_tag(CellTag(cell), fp)
+
+
+class CellTag(CBORTag):
+
+    def __init__(self, obj):
+        super().__init__(44, obj.pos)
+
+
+class CellDecoder:
+
+    registry = GameObjectRegistry()
+
+    def __call__(self, decoder, cell_pos, fp, shareable_index=None):
+        return self.grid[tuple(cell_pos)]
+
+    @property
+    def grid(self):
+        return self.registry.categories['Grid'][0]
+
+
 mlp_decoder = cbor2.CBORDecoder(semantic_decoders={
     40: RefDecoder(),
     41: remote_call_decoder,
     42: ActionDecoder(),
     43: CreateOrUpdateDecoder(),
+    44: CellDecoder(),
 })
-mlp_encoder = cbor2.CBOREncoder(value_sharing=False)
+mlp_encoder = cbor2.CBOREncoder(
+    value_sharing=False,
+    encoders={
+        Cell: encode_cell
+    }
+)
 
 
 def mlp_dump(obj, fp):

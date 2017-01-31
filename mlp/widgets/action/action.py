@@ -33,8 +33,8 @@ class RemoveActionButton(ImageButton):
 
 class Action(ImageButton):
 
-    # on_press_source = None
-    # on_release_source = None
+    on_press_source = None
+    on_release_source = None
     select_result = ObjectProperty(allownone=True)
 
     def __init__(self, action, **kwargs):
@@ -49,6 +49,7 @@ class Action(ImageButton):
     def on_press(self):
         # self.source = 'atlas://data/images/defaulttheme/checkbox_on'
         super().on_press()
+        # print("PRIIIIINT")
         if self.action.pre_check():
             self.setup()
         # self.parent.send_action(self.action)
@@ -61,6 +62,7 @@ class Action(ImageButton):
     #     # self.texture = texture_released
 
     def setup(self):
+        print("Start setup")
         setup_context = self.action.setup()
         if setup_context is not None:
             self.setup_context = setup_context
@@ -87,6 +89,14 @@ class Action(ImageButton):
         cursor_cls = CURSOR_TABLE[cursor_name]
         cursor = cursor_cls(self.parent.game, self, *(cursor_args or tuple()), **(cursor_kwargs or dict()))
         self.parent.game.add_cursor(cursor)
+
+
+class NewAction(Action):
+
+    def __init__(self, action, **kwargs):
+        self.on_press_source = action.widget['pressed_icon']
+        self.on_release_source = action.widget['icon']
+        super().__init__(action, **kwargs)
 
 
 class RandomMove(Action):
