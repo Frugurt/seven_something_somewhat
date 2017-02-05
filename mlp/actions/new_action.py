@@ -107,6 +107,14 @@ class Action(metaclass=ActionMeta):
         for key, value in kwargs.items():
             # field_name = setup_struct['name']
             setattr(self, key, value)
+        effects = []
+        for effect in self.effects:
+            effects.append({
+                'effect': effect['effect'].copy(),
+                'configure': effect['configure'],
+                'area': effect['area']
+            })
+        self.effects = effects
         # self.effects = [effect.copy() for effect in self.effects]
 
     def setup(self):
@@ -124,10 +132,13 @@ class Action(metaclass=ActionMeta):
             setattr(self, field_name, None)
 
     def apply(self):
-        pass
-        # for effect_struct in self.effects:
-        #     cells = effect['area'].get(self)
-        #     effect.apply(cells)
+        # pass
+        for effect_struct in self.effects:
+            effect = effect_struct['effect']
+            effect_args = {k: arg.get(self) for k, arg in effect_struct['configure'].items()}
+            effect.configure(**effect_args)
+            cells = effect_struct['area'].get(self)
+            effect.apply(self, cells)
 
     def pre_check(self):
         return True

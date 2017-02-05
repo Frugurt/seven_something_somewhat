@@ -29,7 +29,7 @@ class Move(Effect):
         self.target_coord = target_coord
 
     def apply(self, source, target):
-        target.object.pos = self.target_coord
+        target.object.pos = self.target_coord.pos
         self.info_message = self.info_message.format(target, self.target_coord)
         super().apply(source, target)
 

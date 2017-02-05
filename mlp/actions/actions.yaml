@@ -11,6 +11,9 @@
   effects:
     - effect: !eff
         name: Move
+#      modifers:
+#        - expression: None
+#          modifer: None
       configure:
         target_coord: !prop target_coord
       area: !prop owner_cell
