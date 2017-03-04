@@ -12,6 +12,8 @@ from .actions.action import *
 from .actions.new_action import *
 from .tools import dict_merge
 
+PLANNING, ACTION = range(2)
+
 
 class Unit(GameObject):
 
@@ -20,11 +22,13 @@ class Unit(GameObject):
     def __init__(self, master_name=None, id_=None):
         super().__init__(id_)
         # self.master_name = None
-        self.cell = None
+        # self.cell = None
+        self.state = ACTION
         self.presumed_path = []
         self.action_log = []
         # self.action = None
-        self.stats = Stats(self.__class__.__name__, master_name)
+        self._stats = Stats(self.__class__.__name__, master_name)
+        self._presumed_stats = Stats(self.__class__.__name__, master_name)
         self.current_action_bar = CurrentActionBar(self)
         self.action_bar = ActionBar(
             self,
@@ -37,6 +41,7 @@ class Unit(GameObject):
                 # ChangeWeapon,
             ]
         )
+        self.clear_presumed()
 
     @property
     def presumed_cell(self):
@@ -56,6 +61,21 @@ class Unit(GameObject):
             return self.cell.grid[self.presumed_path[-1][-1]]
         else:
             return self.cell
+
+    @property
+    def stats(self):
+        if self.state == ACTION:
+            return self._stats
+        else:
+            return self._presumed_stats
+
+    @property
+    def cell(self):
+        return self.stats.cell
+
+    @cell.setter
+    def cell(self, cell):
+        self.stats.cell = cell
 
     def append_to_path(self, target_coord):
         try:
@@ -136,6 +156,9 @@ class Unit(GameObject):
 
     def clear_preparations(self):
         self.current_action_bar.clear_preparations()
+
+    def clear_presumed(self):
+        self._presumed_stats.load(self._stats.dump())
 
     def __repr__(self):
         return "{} {}".format(self.stats.owner, self.__class__.__name__)

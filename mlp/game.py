@@ -94,10 +94,10 @@ class Game:
     @staticmethod
     def remove_action(action_struct):
         unit = action_struct['unit']
-        action_index = action_struct['action_index']
+        # action_index = action_struct['action_index']
         author = action_struct['author']
         if unit.stats.owner == author or author == "overlord":
-            unit.remove_action(action_index)
+            unit.remove_action(None)
 
     @property
     def units(self):

@@ -92,11 +92,11 @@ def remote_action_append(action):
 
 def remote_action_remove(action):
     unit = action.target
-    action_index = unit.current_action_bar.actions.index(action)
+    # action_index = unit.current_action_bar.actions.index(action)
     msg_struct = {
         "message_type": (message_type.GAME, game_message.ACTION_REMOVE),
         "payload": {
-            'action_index': action_index,
+            # 'action_index': action_index,
             'unit': RefTag(unit),
         }
     }

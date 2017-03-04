@@ -22,6 +22,7 @@ class Stats:
         self.parried = False
         self.triggers = defaultdict(list)
         self.statuses = []
+        self.cell = None
         # self.current_action_bar = CurrentActionBar(self.owner)
 
     # def setup_action(self, action=None):
@@ -63,5 +64,6 @@ class Stats:
             "ammo": self.ammo,
             "loaded": self.loaded,
             "parried": self.parried,
+            'cell': self.cell,
             # "action": self.action.__class__.__name__ if self.action else ""
         }

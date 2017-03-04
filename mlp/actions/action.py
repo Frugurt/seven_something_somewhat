@@ -35,15 +35,16 @@ class CurrentActionBar:
     def append_action(self, action):
         if self.check_slots(action) and action.pre_check() and action.post_check():
             self.actions.append(action)
-            action.append_to_bar_effect()
+            # action.append_to_bar_effect()
 
     def remove_action(self, action_index):
-        try:
-            action = self.actions.pop(action_index)
-        except IndexError:
-            action = self.actions.pop(0)
+        self.actions.clear()
+        # try:
+        #     action = self.actions.pop(action_index)
+        # except IndexError:
+        #     action = self.actions.pop(0)
         # finally:
-        action.remove_from_bar_effect()
+        # action.remove_from_bar_effect()
 
     def check_slots(self, action):
         action_type = action.action_type
