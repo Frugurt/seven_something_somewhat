@@ -56,15 +56,20 @@ class HexCellWidget(relativelayout.FloatLayout):
     mesh_vertices = ListProperty([])
     circuit = ListProperty([])
     # mesh_texture = ObjectProperty(None)
-    # hex_size = NumericProperty(40)
+    # hex_size = NumericProperty()
     is_selected = BooleanProperty(False)
     is_highlighted = BooleanProperty(False)
     rotator = mtl.eye(3)
 
     def __init__(self, cell, **kwargs):
         self.cell = cell
+        hex_size = kwargs.pop('hex_size')
         # self.cell_pos = kwargs.pop('cell_pos')
-        super(HexCellWidget, self).__init__(**kwargs)
+        super(HexCellWidget, self).__init__(
+            size=(hex_size*2, hex_size*2),
+            **kwargs
+        )
+        # self.hex_size = hex_size
         # self.update_vertices()
         # self.bind(rotator=self.update_vertices)
 
@@ -148,7 +153,7 @@ class HexCellWidget(relativelayout.FloatLayout):
 class Hexgrid(widget.Widget):
 
     cell_indices = range(6)
-    cell_size = NumericProperty(40)
+    cell_size = NumericProperty(110)
     rotation = NumericProperty(0)
     rotator = mtl.eye(3)
 
@@ -156,11 +161,14 @@ class Hexgrid(widget.Widget):
         # hexgrid = kwargs.pop('hexgrid')
         hexgrid = grid
         self.grid = grid
-        super(Hexgrid, self).__init__(**kwargs)
         self.hexgrid = hexgrid
         w, h = len(hexgrid._grid), len(hexgrid._grid[0])
         self._grid = [
             [None for _ in range(h)] for _ in range(w)]
+        super(Hexgrid, self).__init__(
+            # size=(),
+            **kwargs
+        )
         self.make_cells()
         # for column in self._grid:
         #     for cell in column:
@@ -174,7 +182,10 @@ class Hexgrid(widget.Widget):
             pos = cell.pos
             terrain = cell.terrain
             x, y = pos
-            w = cell.make_widget(pos=self.grid_to_window(pos))
+            w = cell.make_widget(
+                hex_size=self.cell_size,
+                pos=self.grid_to_window(pos)
+            )
             self._grid[x][y] = w
             self.add_widget(w)
             if terrain:
@@ -209,8 +220,9 @@ class Hexgrid(widget.Widget):
 
     def update_children(self, _=None, __=None):
         for child in self.children:
-            child.pos = self.grid_to_window(child.cell_pos)
-            child.update_vertices()
+            if isinstance(child, HexCellWidget):
+                child.pos = self.grid_to_window(child.cell_pos)
+                child.update_vertices()
 
     def grid_to_window(self, pos):
         sx, sy = self.pos
@@ -276,43 +288,3 @@ class FullImage(Image):
 #
 #     def dismiss_popup(self):
 #         self._popup.dismiss()
-
-
-if __name__ == '__main__':
-    # from core.desk.common_desks import hexgrid_desk as hgd
-    # from client.tools import bind_widget
-    from kivy.app import App
-    from kivy.core.image import Image as CoreImage
-    # texture = CoreImage('/home/ecialo/grass.png')
-
-    class CellMock(object):
-
-        def __init__(self, i, j, texture_, is_selected=False):
-            self.i = i
-            self.j = j
-            # self.texture = texture_
-            self.is_selected = is_selected
-
-    # grid = [[CellMock(0, 0, texture)]]
-    h, w = 10, 10
-    grid = [[CellMock(i, j, i == 0 and j == 0) for j in range(h)] for i in range(w)]
-
-    class TestApp(App):
-
-        def build(self):
-            # wid = widget.Widget()
-            wid = RotateGridWidget()
-            # return wid
-            # desk = hgd.HexgridDesk((20, 20))
-            # desk_widget = desk.make_widget()
-            # cell = HexCellWidget(texture=texture, pos=(300, 300))
-            # background = FullImage(source='./grass.png', pos_hint={'x': 0.6, 'y': 0.6})
-            grid_ = Hexgrid(hexgrid=grid, pos_hint={'x': 0.0, 'y': 0.0})
-            wid.ids.rotator_sl.bind(value=lambda w, v: setattr(grid_, "rotation", v))
-            wid.ids.c_size.bind(value=lambda w, v: setattr(grid_, 'cell_size', v))
-            # wid.add_widget(background)
-            wid.ids.grid.add_widget(grid_)
-            return wid
-            # return desk_widget
-
-    TestApp().run()

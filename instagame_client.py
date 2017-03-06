@@ -22,7 +22,6 @@ from mlp.unit import Muzik
 # grid = GrassGrid((5, 3))
 
 
-
 class InstagameApp(App):
 
     def __init__(self, **kwargs):

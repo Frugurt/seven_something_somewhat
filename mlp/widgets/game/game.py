@@ -124,7 +124,7 @@ class RemoteGame(floatlayout.FloatLayout):
     def on_receive_message(self, struct):
         # print(struct)
         if not self.is_loaded:
-            self.grid = self.game.grid.make_widget(pos_hint={'x': 0.3, 'y': 0.3})
+            self.grid = self.game.grid.make_widget(pos_hint={'x': 0.0, 'y': 0.1})
             self.turn_order_indicator = self.game.turn_order_manager.make_widget()
             self.add_widget(self.grid)
             self.add_widget(self.turn_order_indicator)
