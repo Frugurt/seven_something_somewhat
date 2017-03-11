@@ -288,3 +288,4 @@ class FullImage(Image):
 #
 #     def dismiss_popup(self):
 #         self._popup.dismiss()
+
