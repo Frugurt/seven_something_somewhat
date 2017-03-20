@@ -69,6 +69,12 @@ class RemoteGame(floatlayout.FloatLayout):
             size_hint=(0.1, 0.1)
         )
         run_button.bind(on_press=self.run_game)     # TODO внести эту кнопку в главный курсор
+        change_state = button.Button(
+            text="CHANGE STATE",
+            pos_hint={'x': 0.73, 'y': 0.5},
+            size_hint=(0.15, 0.1)
+        )
+        change_state.bind(on_press=lambda x: self.game.switch_state())
         # attack_button = button.Button(
         #     text="Attack",
         #     pos_hint={'x': 0.3, 'y': 0.1},
@@ -76,6 +82,7 @@ class RemoteGame(floatlayout.FloatLayout):
         # )
         # attack_button.bind(on_press=self.attack)
         self.add_widget(run_button)
+        self.add_widget(change_state)
         # self.add_widget(attack_button)
         # Clock.schedule_interval(self.watcher, 0)
         # self.network_manager.start()

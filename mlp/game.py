@@ -79,25 +79,38 @@ class Game:
             players[0].main_unit.place_in(self._grid[3, 3])
             players[-1].main_unit.place_in(self._grid[-1, -1])
         self.winner = None
+        for unit in self.units:
+            print("STATE", unit.state)
+            unit.clear_presumed()
+            unit.update_position()
+            print(unit._presumed_stats.cell)
+            print(unit._stats.cell)
+        # self.switch_state()
+
+    @property
+    def units(self):
+        return self.registry.categories[Unit.__name__]
 
     def receive_message(self, struct):
         type_pair = tuple(struct['message_type'])
         self.handlers[type_pair](struct['payload'])
 
-    @staticmethod
-    def append_action(action_struct):
+    # @staticmethod
+    def append_action(self, action_struct):
         action = action_struct['action']
         author = action_struct['author']
         if author == action.owner.stats.owner or author == "overlord":
             action.owner.append_action(action)
+        self.apply_actions()
 
-    @staticmethod
-    def remove_action(action_struct):
+    # @staticmethod
+    def remove_action(self, action_struct):
         unit = action_struct['unit']
         # action_index = action_struct['action_index']
         author = action_struct['author']
         if unit.stats.owner == author or author == "overlord":
             unit.remove_action(None)
+        self.apply_actions()
 
     @property
     def units(self):
@@ -122,28 +135,10 @@ class Game:
         return self._turn_order_manager
 
     def run(self):
+        result = False
+        self.switch_state()
         if all((player.is_ready for player in self.players)):
-            self.action_log.append([])
-            anyone_not_pass = False
-            # print(self.units)
-            for unit in self.turn_order_manager:
-                # print(unit)
-                unit_is_not_pass = unit.apply_actions(speed=FAST)
-                self.action_log[-1].extend(unit.action_log)
-                unit.action_log.clear()
-                anyone_not_pass = anyone_not_pass or unit_is_not_pass
-            for unit in self.turn_order_manager:
-                # print(unit)
-                unit_is_not_pass = unit.apply_actions()
-                self.action_log[-1].extend(unit.action_log)
-                unit.action_log.clear()
-                anyone_not_pass = anyone_not_pass or unit_is_not_pass
-            for unit in self.turn_order_manager:
-                # print(unit)
-                unit_is_not_pass = unit.apply_actions(speed=SLOW)
-                self.action_log[-1].extend(unit.action_log)
-                unit.action_log.clear()
-                anyone_not_pass = anyone_not_pass or unit_is_not_pass
+            anyone_not_pass = self.apply_actions(True)
             for unit in self.turn_order_manager:
                 unit.current_action_bar.clear()
                 unit.clear_preparations()
@@ -160,8 +155,42 @@ class Game:
                     unit.refill_action_points()
             for player in self.players:
                 player.is_ready = False
-            return True
-        return False
+            result = True
+        self.switch_state()
+        return result
+
+    def apply_actions(self, logging=False):
+        anyone_not_pass = False
+        # print(self.units)
+        if logging:
+            self.action_log.append([])
+        for unit in self.turn_order_manager:
+            # print(unit)
+            unit_is_not_pass = unit.apply_actions(speed=FAST)
+            if logging:
+                self.action_log[-1].extend(unit.action_log)
+            unit.action_log.clear()
+            anyone_not_pass = anyone_not_pass or unit_is_not_pass
+        for unit in self.turn_order_manager:
+            # print(unit)
+            unit_is_not_pass = unit.apply_actions()
+            if logging:
+                self.action_log[-1].extend(unit.action_log)
+            unit.action_log.clear()
+            anyone_not_pass = anyone_not_pass or unit_is_not_pass
+        for unit in self.turn_order_manager:
+            # print(unit)
+            unit_is_not_pass = unit.apply_actions(speed=SLOW)
+            if logging:
+                self.action_log[-1].extend(unit.action_log)
+            unit.action_log.clear()
+            anyone_not_pass = anyone_not_pass or unit_is_not_pass
+        return anyone_not_pass
 
     def declare_winner(self, player):
         self.winner = player
+
+    def switch_state(self):
+        for unit in self.units:
+            unit.switch_state()
+            # unit.clear_presumed()

@@ -78,7 +78,9 @@ class TestServer(tcpserver.TCPServer):
             grid = GrassGrid((5, 5))
             self.game = Game(grid=grid, turn_order_manager=TurnOrderManager(), **inital_data)
             self.game.turn_order_manager.rearrange()
+            # self.game.switch_state()
         await self.send_update(stream)
+        # self.game.switch_state()
         while True:
             try:
                 msg = await stream.read_until(SEPARATOR)

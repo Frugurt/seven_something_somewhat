@@ -3,12 +3,16 @@ from .resource import Resource
 from .bind_widget import bind_widget
 
 
+PLANNING, ACTION = range(2)
+
+
 @bind_widget("Stats")
 class Stats:
 
     hooks = ['load']
 
-    def __init__(self, name, owner):
+    def __init__(self, name, owner, is_presumed=False):
+        self.state = PLANNING
         self.name = name
         self.owner = owner
         self.health = 100
@@ -23,6 +27,7 @@ class Stats:
         self.triggers = defaultdict(list)
         self.statuses = []
         self.cell = None
+        # self.presumed_stats = None if is_presumed else Stats(name, owner, True)
         # self.current_action_bar = CurrentActionBar(self.owner)
 
     # def setup_action(self, action=None):
@@ -52,7 +57,7 @@ class Stats:
             setattr(self, key, value)
 
     def dump(self):
-        return {
+        struct = {
             "name": self.name,
             "health": self.health,
             "attack": self.attack,
@@ -67,3 +72,17 @@ class Stats:
             'cell': self.cell,
             # "action": self.action.__class__.__name__ if self.action else ""
         }
+        # if self.presumed_stats:
+        #     struct.update({'presumed': self.presumed_stats.dump()})
+        return struct
+
+    # def update_presumed(self):
+    #     struct = self.dump()
+    #     struct.pop('presumed')
+    #     self.presumed_stats.load(struct)
+    #
+    # def switch_state(self):
+    #     self.state = int(not self.state)
+
+    # def __getattr__(self, item):
+    #     if

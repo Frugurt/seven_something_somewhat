@@ -23,7 +23,8 @@ class Unit(GameObject):
         super().__init__(id_)
         # self.master_name = None
         # self.cell = None
-        self.state = ACTION
+        self._last_cell = None
+        self.state = PLANNING
         self.presumed_path = []
         self.action_log = []
         # self.action = None
@@ -71,7 +72,9 @@ class Unit(GameObject):
 
     @property
     def cell(self):
+        # try:
         return self.stats.cell
+        # except AttributeError:
 
     @cell.setter
     def cell(self, cell):
@@ -94,30 +97,64 @@ class Unit(GameObject):
         self.presumed_path.remove((move_index, c))
 
     def place_in(self, cell):
+        """
+        Указать, что юнит на самом деле в этой клетке
+        :param cell:
+        :return:
+        """
         # self.pos = cell.pos
-        if self.cell:
-            self.cell.take(self)
-        self.cell = cell
-        cell.place(self)
+        # if self.cell:
+        #     self.cell.take(self)
+        # self.cell = cell
+        # if self.state == ACTION:
+        # cell.place(self)
+        self._stats.cell = cell
+        # self.update_position()
 
-    def move(self):
-        target_cell = choice(self.cell.adjacent)
-        self.place_in(target_cell)
+    def update_position(self):
+        """
+        Поместить юнит в нужную клетку
+        :return:
+        """
+        print("Update")
+        print(self._presumed_stats.cell)
+        print(self._stats.cell)
+        if self.cell:
+            if self._last_cell:
+                self._last_cell.take(self)
+            self._last_cell = self.cell
+            self.cell.place(self)
+
+    def move(self, cell):
+        """
+        Передвинуть юнит
+        :param cell:
+        :return:
+        """
+        self.cell = cell
+        self.update_position()
+        # target_cell = choice(self.cell.adjacent)
+        # self.place_in(cell)
 
     def dump(self):
         return dict_merge(
             super().dump(),
             {
-                'pos': self.pos,
-                'stats': self.stats.dump(),
-                'current_actions': self.current_action_bar.dump()
+                # 'pos': self.pos,
+                'stats': self._stats.dump(),
+                'presumed_stats': self._presumed_stats.dump(),
+                'current_actions': self.current_action_bar.dump(),
             }
         )
 
     def load(self, struct):
-        self.pos = struct['pos']
-        self.stats.load(struct['stats'])
+        # self.pos = struct['pos']
+        self._stats.load(struct['stats'])
+        self._presumed_stats.load(struct['presumed_stats'])
         self.current_action_bar.load(struct['current_actions'])
+        self.update_position()
+        # if self._stats.cell:
+        #     self.pos = self._stats.cell.pos
         # self.master_name = struct['master_name']
 
     @property
@@ -147,7 +184,7 @@ class Unit(GameObject):
         self.current_action_bar.remove_action(action_index)
 
     def apply_actions(self, speed=NORMAL):
-        return self.current_action_bar.apply_actions()
+        return self.current_action_bar.apply_actions(speed)
 
     def refill_action_points(self):
         self.stats.action_points += 100       # TODO сделать по людски
@@ -171,6 +208,18 @@ class Unit(GameObject):
 
     def __lt__(self, other):
         return id(self) < id(other)
+
+    def switch_state(self):
+        # self.stats.switch_state()
+        # self.cell.take(self)
+        self.state = int(not self.state)
+        # self.place_in(self.cell)
+        self.update_position()
+        # self.cell.place(self)
+        if self.state:
+            print("NOW IN ACTION")
+        else:
+            print("NOW IN PLANNING")
 
 
 @bind_widget('Muzik')

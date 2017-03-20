@@ -1,5 +1,6 @@
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
+from kivy.uix.button import Button
 import kivy.properties as prop
 
 
@@ -13,3 +14,4 @@ class GameScreen(Screen):
         self.game = game
         self.username = username
         self.add_widget(self.game.make_widget(network_manager=network_manager))
+        # self.add_widget(Button)

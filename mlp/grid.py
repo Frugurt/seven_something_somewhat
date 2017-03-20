@@ -10,7 +10,7 @@ from .tools import dict_merge
 
 
 def sum_iterables(iter1, iter2):
-    print(iter1, iter2)
+    # print(iter1, iter2)
     return [add(*x) for x in zip(iter1, iter2)]
 
 
@@ -33,6 +33,9 @@ class Cell:
 
     def take(self, _):
         self.object = None
+
+    def __repr__(self):
+        return "{} at {}".format(self.__class__.__name__, self.pos)
 
 
 class Grid(GameObject):
@@ -171,8 +174,8 @@ class HexGrid(Grid):
         return a + (b - a)*t
 
     def cube_inter(self, pos_a, pos_b, t):
-        print("CUBINTER")
-        print(pos_a, pos_b)
+        # print("CUBINTER")
+        # print(pos_a, pos_b)
         return tuple((self.inter(*args) for args in zip(pos_a, pos_b, repeat(t, 3))))
 
     @staticmethod
@@ -209,7 +212,7 @@ class HexGrid(Grid):
         else:
             q, r = item
             w, h = self.size
-            print(q, r)
+            # print(q, r)
             if q < w and r < h:
                 return self._grid[q][r]
             else:
