@@ -3,7 +3,7 @@ from ..replication_manager import (
     ActionsRegistry,
     ActionMeta,
 )
-from ..serialization import RefTag, ActionTag
+# from ..serialization import RefTag, ActionTag
 from ..protocol import Enum
 from .effect import EFFECTS
 from ..bind_widget import bind_widget
@@ -160,7 +160,7 @@ class Action(metaclass=ActionMeta):
         return dict_merge(
             {
                 'name': self.name,
-                'owner': RefTag(self.owner)
+                'owner': self.owner,
             },
             fields
         )

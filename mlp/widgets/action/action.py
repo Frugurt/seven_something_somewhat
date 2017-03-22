@@ -28,7 +28,7 @@ class RemoveActionButton(ImageButton):
     def on_press(self):
         super().on_press()
         self.parent.send_action(self.action)
-        self.parent.remove_widget(self)
+        # self.parent.remove_widget(self)
 
 
 class Action(ImageButton):
@@ -151,7 +151,11 @@ class ActionBar(GridLayout):
         return self.parent
 
     def send_action(self, action):
-        self.parent.network_manager.send(remote_action_append(action))
+        print(action)
+        print("parent", self.parent)
+        msg_struct = remote_action_append(action)
+        msg_struct['payload']["author"] = action.owner.stats.owner
+        self.parent.receive_message(msg_struct)
 
 
 class CurrentActionBar(GridLayout):
@@ -168,11 +172,18 @@ class CurrentActionBar(GridLayout):
             self.add_widget(self.remove_action_widgets[-1])
 
     def on_remove_action(self, action_index):
-        w = self.remove_action_widgets.pop(action_index)
-        self.remove_widget(w)
+        # w = self.remove_action_widgets.pop()
+        # self.remove_widget(w)
+        # for child in self.children:
+        #     self.remove_widget(child)
+        self.clear_widgets()
 
     def send_action(self, action):
-        self.parent.network_manager.send(remote_action_remove(action))
+        # print(action)
+        msg_struct = remote_action_remove(action)
+        msg_struct['payload']["author"] = action.owner.stats.owner
+        self.parent.receive_message(msg_struct)
+        # self.parent.network_manager.send(remote_action_remove(action))
 
 # if __name__ == '__main__':
 #     class SampleApp(App):

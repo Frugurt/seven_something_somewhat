@@ -4,8 +4,10 @@ from cbor2.types import CBORTag
 from .replication_manager import (
     GameObjectRegistry,
     ActionsRegistry,
+    GameObject,
 )
 from .grid import Cell
+from .actions.new_action import Action
 from .protocol import *
 
 
@@ -21,6 +23,9 @@ class RefDecoder:
 
     def __call__(self, decoder, id_, fp, shareable_index=None):
         return self.registry[id_]
+
+def encode_game_object(encoder, game_object, fp):
+    encoder.encode_custom_tag(RefTag(game_object), fp)
 
 
 class RemoteCallTag(CBORTag):
@@ -66,6 +71,10 @@ class ActionDecoder:
         return self.registry[action_name](**action_struct)
 
 
+def encode_action(encoder, action, fp):
+    encoder.encode_custom_tag(ActionTag(action), fp)
+
+
 class CreateOrUpdateTag(CBORTag):
 
     def __init__(self, obj):
@@ -84,20 +93,20 @@ def remote_action_append(action):
     msg_struct = {
         "message_type": (message_type.GAME, game_message.ACTION_APPEND),
         "payload": {
-            'action': ActionTag(action)
+            'action': action
         }
     }
     return msg_struct
 
 
 def remote_action_remove(action):
-    unit = action.target
+    unit = action.owner
     # action_index = unit.current_action_bar.actions.index(action)
     msg_struct = {
         "message_type": (message_type.GAME, game_message.ACTION_REMOVE),
         "payload": {
             # 'action_index': action_index,
-            'unit': RefTag(unit),
+            'unit': unit,
         }
     }
     return msg_struct
@@ -135,7 +144,9 @@ mlp_decoder = cbor2.CBORDecoder(semantic_decoders={
 mlp_encoder = cbor2.CBOREncoder(
     value_sharing=False,
     encoders={
-        Cell: encode_cell
+        Cell: encode_cell,
+        Action: encode_action,
+        GameObject: encode_game_object,
     }
 )
 

@@ -97,11 +97,13 @@ class Game:
 
     # @staticmethod
     def append_action(self, action_struct):
+        print("APPEND")
         action = action_struct['action']
         author = action_struct['author']
         if author == action.owner.stats.owner or author == "overlord":
             action.owner.append_action(action)
         self.apply_actions()
+        # self.update_position()
 
     # @staticmethod
     def remove_action(self, action_struct):
@@ -110,7 +112,9 @@ class Game:
         author = action_struct['author']
         if unit.stats.owner == author or author == "overlord":
             unit.remove_action(None)
-        self.apply_actions()
+        self.clear_presumed()
+        # self.apply_actions()
+        self.update_position()
 
     @property
     def units(self):
@@ -194,3 +198,11 @@ class Game:
         for unit in self.units:
             unit.switch_state()
             # unit.clear_presumed()
+
+    def update_position(self):
+        for unit in self.units:
+            unit.update_position()
+
+    def clear_presumed(self):
+        for unit in self.units:
+            unit.clear_presumed()

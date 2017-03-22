@@ -140,12 +140,20 @@ class RemoteGame(floatlayout.FloatLayout):
             self.is_loaded = True
         self.cursor.update()
 
+    # def loopback_message(self, message_struct):
+    #     message_struct['author'] =
+    #     self.receive_message(message_struct)
+
+    def receive_message(self, message_struct):
+        print(message_struct)
+        self.game.receive_message(message_struct)
+
     def watcher(self, _):
         # messages = self.network_manager.dump()
         for message in self.network_manager.dump():
             message_struct = self.network_manager.decode(message)
             # print(message_struct)
-            self.game.receive_message(message_struct)
+            self.receive_message(message_struct)
 
     # def show_stats(self, _, selected_cell):
     #     if self.stats:
