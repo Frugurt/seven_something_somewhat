@@ -7,7 +7,10 @@ from kivy.uix import (
 #     RandomMove,
 #     Attack,
 # )
-# from mlp.serialization import remote_action_setup
+from mlp.serialization import (
+    remote_action_append,
+    remote_action_remove,
+)
 from mlp.protocol import *
 from ..cursor import MainCursor
 from kivy.lang import Builder
@@ -116,6 +119,12 @@ class RemoteGame(floatlayout.FloatLayout):
     #         )
 
     def run_game(self, _):
+        # self.network_manager.send(
+        #     remote_action_remove()
+        # )
+        for unit in self.game.units:
+            for action in unit.current_action_bar:
+                self.network_manager.send(remote_action_append(action))
         self.network_manager.send(
             {
                 'message_type': (message_type.GAME, game_message.READY),

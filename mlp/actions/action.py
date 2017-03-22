@@ -92,6 +92,9 @@ class CurrentActionBar:
         for action in struct:
             self.append_action(action)
 
+    def __iter__(self):
+        return iter(self.actions)
+
 
 # class Action(metaclass=ActionMeta):
 #     hooks = []
