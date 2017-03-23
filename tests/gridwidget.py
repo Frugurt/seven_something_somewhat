@@ -99,30 +99,33 @@ if __name__ == '__main__':
     from kivy.uix.image import Image
     from kivy.uix.floatlayout import FloatLayout
     from mlp.game import Game
-    grid = GrassGrid((5, 3))
+    grid = GrassGrid((8, 8))
 
-    if sys.argv[1] == 's':
-        server = TestServer(Game(grid))
-        server.listen(1488)
-        ioloop.IOLoop.current().start()
-    else:
-        class TestApp(App):
+    # if sys.argv[1] == 's':
+        # server = TestServer(Game(grid))
+        # server.listen(1488)
+        # ioloop.IOLoop.current().start()
+    # else:
+    class TestApp(App):
 
-            def build(self):
-                # wid = FloatLayout()
-                # grid_ = grid.make_widget(pos_hint={'x': 0.5, 'y': 0.5})
-                # button_ = button.Button(text="MOVE", pos_hint={'x': 0.5, 'y': 0.2}, size_hint=(0.1, 0.1))
-                # button_.bind(on_press=lambda _: print(remote_call(m.move)))
-                # grid_ = RectGridWidget(grid=grid, pos=(200, 200))
-                # grid_ = Muzik().make_widget(pos=(200, 200))
-                # grid_ = Image(source='/home/alessandro/PycharmProjects/mlp/man2.png', pos=(200, 200), size=(100,100))
-                # wid.add_widget(grid_)
-                # wid.add_widget(button_)
-                # return grid_
-                self.w = Game(grid).make_widget()
-                return self.w
+        def build(self):
+            wid = FloatLayout()
+            # grid_ = grid.make_widget(pos_hint={'x': 0.5, 'y': 0.5})
+            # button_ = button.Button(text="MOVE", pos_hint={'x': 0.5, 'y': 0.2}, size_hint=(0.1, 0.1))
+            # button_.bind(on_press=lambda _: print(remote_call(m.move)))
+            # grid_ = RectGridWidget(grid=grid, pos=(200, 200))
+            # grid_ = Muzik().make_widget(pos=(200, 200))
+            # grid_ = Image(source='/home/alessandro/PycharmProjects/mlp/man2.png', pos=(200, 200), size=(100,100))
+            # wid.add_widget(grid_)
+            # wid.add_widget(button_)
+            # return grid_
+            wid.add_widget(grid.make_widget(pos_hint={'x': 0.1, 'y': 0.1}))
+            return wid
 
-            def on_stop(self):
-                self.w.network_manager.loop.stop()
 
-        TestApp().run()
+    # cells = grid.get_area((4, 4), 1)
+    cells = grid.get_ring((4, 4), 2)
+    for cell in cells:
+        cell.make_widget().is_selected = True
+
+    TestApp().run()

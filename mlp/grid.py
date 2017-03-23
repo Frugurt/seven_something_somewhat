@@ -4,6 +4,9 @@ from itertools import (
     permutations,
     repeat,
 )
+from functools import (
+    reduce,
+)
 from operator import add
 from mlp.replication_manager import GameObject
 from .tools import dict_merge
@@ -54,7 +57,7 @@ class Grid(GameObject):
     def create_cells(self):
         pass
 
-    def get_radius(self, pos_or_cell, r):
+    def get_ring(self, pos_or_cell, r):
         pass
 
     def get_area(self, pos_or_cell, r):
@@ -206,6 +209,27 @@ class HexGrid(Grid):
                 break
         return result
 
+    def _get_generations(self, pos_or_cell, r):
+        if not isinstance(pos_or_cell, Cell):
+            cell = self[pos_or_cell]
+        else:
+            cell = pos_or_cell
+
+        generations = [{cell}]
+        for i in range(r):
+            generations.append(
+                reduce(lambda prev, x: prev | set(x.adjacent), generations[-1], set())
+            )
+        return generations
+
+    def get_area(self, pos_or_cell, r):
+        generations = self._get_generations(pos_or_cell, r)
+        return reduce(lambda prev, x: prev | x, generations, set())
+
+    def get_ring(self, pos_or_cell, r):
+        generations = self._get_generations(pos_or_cell, r)
+        return generations[-1] - (reduce(lambda prev, x: prev | x, generations[:-1:], set()))
+
     def __getitem__(self, item):
         if len(item) == 3:
             return self[self.cube_to_offsets(item)]
@@ -220,3 +244,7 @@ class HexGrid(Grid):
 
     def __iter__(self):
         return iter(chain(*self._grid))
+
+if __name__ == '__main__':
+    grid = HexGrid((10, 10))
+    print(grid.get_area((4, 4), 2))
