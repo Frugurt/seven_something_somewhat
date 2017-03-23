@@ -35,6 +35,7 @@ class Unit(GameObject):
             self,
             [
                 ActionsRegistry()['Move'],
+                ActionsRegistry()['Attack'],
                 # Attack,
                 # Shoot,
                 # Reload,

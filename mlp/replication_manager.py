@@ -57,7 +57,9 @@ class GameObjectRegistry(Singleton):
     def dump(self):
         print(list(self.game_objects.items()))
         # return sorted([obj.dump() for id_, obj in self.game_objects.items()], key=lambda x: self.game_classes[x['cls']].load_priority, reverse=True)
-        return sorted([obj for id_, obj in self.game_objects.items()], key=lambda x: x.__class__.load_priority, reverse=True)
+        return sorted(
+            [obj for id_, obj in self.game_objects.items()], key=lambda x: x.__class__.load_priority, reverse=True
+        )
 
     def load(self, struct):
         pass

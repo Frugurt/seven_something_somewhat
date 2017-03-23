@@ -64,13 +64,20 @@ class Action(ImageButton):
     def setup(self):
         print("Start setup")
         setup_context = self.action.setup()
-        if setup_context is not None:
-            self.setup_context = setup_context
+        try:
             cursor_data = next(setup_context)
-            self.make_cursor(*cursor_data)
-        else:
+        except StopIteration:
             self.parent.send_action(self.action)
             self.action.clear()
+        else:
+        # print(setup_context)
+        # if setup_context is not None:
+            self.setup_context = setup_context
+            # cursor_data = next(setup_context)
+            self.make_cursor(*cursor_data)
+        # else:
+        #     self.parent.send_action(self.action)
+        #     self.action.clear()
 
     def on_select_result(self, _, select_result):
         if self.setup_context and select_result is not None:

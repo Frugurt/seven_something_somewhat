@@ -37,9 +37,22 @@ class Move(Effect):
 
 
 class Damage(Effect):
-    pass
+
+    info_message = "{} take {} damage"
+
+    def __init__(self, amount, **kwargs):
+        super().__init__(**kwargs)
+        self.amount = amount
+
+    def apply(self, source, cells):
+        for cell in cells:
+            if cell.object:
+                cell.object.stats.health -= self.amount
+                self.info_message = self.info_message.format(cell.object, self.amount)
+                super().apply(source, None)
 
 
 EFFECTS = {
-    'Move': Move
+    'Move': Move,
+    'Damage': Damage,
 }

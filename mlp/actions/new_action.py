@@ -6,33 +6,10 @@ from ..replication_manager import (
 # from ..serialization import RefTag, ActionTag
 from ..protocol import Enum
 from .effect import EFFECTS
+from .area import AREAS
 from ..bind_widget import bind_widget
 from ..tools import dict_merge
 
-# from ..serialization import RefTag, ActionTag
-# class Namespace:
-#
-#     def __init__(self, **consts):
-#         for const_name, const_val in consts.items():
-#             setattr(self, const_name, const_val)
-#
-#     def __repr__(self):
-#         return "\n".join(map(lambda name_val: "{0} = {1}".format(name_val[0], name_val[1]), self.items()))
-#
-#     def values(self):
-#         return self.__dict__.itervalues()
-#
-#     def names(self):
-#         return self.__dict__.iterkeys()
-#
-#     def items(self):
-#         return self.__dict__.items()
-#
-#
-# class Enum(Namespace):
-#     def __init__(self, *consts):
-#         for const_name, const_val in zip(consts, range(len(consts))):
-#             setattr(self, const_name, const_val)
 
 FULL, MOVE, STANDARD = range(3)
 type_ = Enum(
@@ -66,11 +43,7 @@ class Attribute(Property):
         return "get {} from action".format(self.name)
 
 
-class Area(Property):
-    pass
-
-
-class OwnerCell(Area):
+class OwnerCell(Property):
 
     def get(self, action):
         return action.owner.cell
@@ -208,6 +181,16 @@ def effect_constructor(loader, node):
     return effect
 
 yaml.add_constructor("!eff", effect_constructor)
+
+
+def area_constructor(loader, node):
+    a_s = loader.construct_mapping(node)
+    name = a_s.pop("name")
+    area = AREAS[name](**a_s)
+    return area
+
+yaml.add_constructor("!area", area_constructor)
+
 with open('./mlp/actions/actions.yaml') as a:
     c = yaml.load(a)
 
