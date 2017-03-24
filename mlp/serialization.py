@@ -8,6 +8,10 @@ from .replication_manager import (
 )
 from .grid import Cell
 from .actions.new_action import Action
+from .actions.status import (
+    Status,
+    STATUSES,
+)
 from .protocol import *
 
 
@@ -23,6 +27,7 @@ class RefDecoder:
 
     def __call__(self, decoder, id_, fp, shareable_index=None):
         return self.registry[id_]
+
 
 def encode_game_object(encoder, game_object, fp):
     encoder.encode_custom_tag(RefTag(game_object), fp)
@@ -134,12 +139,28 @@ class CellDecoder:
         return self.registry.categories['Grid'][0]
 
 
+class StatusTag(CBORTag):
+
+    def __init__(self, obj):
+        super().__init__(45, obj.dump())
+
+
+def status_decoder(decoder, status_struct, fp, shareable_index=None):
+    s_name = status_struct.pop("name")
+    return STATUSES[s_name](**status_struct)
+
+
+def encode_status(encoder, status, fp):
+    encoder.encode_custom_tag(StatusTag(status), fp)
+
+
 mlp_decoder = cbor2.CBORDecoder(semantic_decoders={
     40: RefDecoder(),
     41: remote_call_decoder,
     42: ActionDecoder(),
     43: CreateOrUpdateDecoder(),
     44: CellDecoder(),
+    45: status_decoder,
 })
 mlp_encoder = cbor2.CBOREncoder(
     value_sharing=False,
@@ -147,6 +168,7 @@ mlp_encoder = cbor2.CBOREncoder(
         Cell: encode_cell,
         Action: encode_action,
         GameObject: encode_game_object,
+        Status: encode_status,
     }
 )
 

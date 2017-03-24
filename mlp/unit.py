@@ -1,5 +1,6 @@
 from random import choice
 from functools import reduce
+import traceback
 from mlp.replication_manager import (
     GameObject,
     # RefTag,
@@ -31,12 +32,14 @@ class Unit(GameObject):
         self._stats = Stats(self.__class__.__name__, master_name)
         self._presumed_stats = Stats(self.__class__.__name__, master_name)
         self.current_action_bar = CurrentActionBar(self)
+        registry = ActionsRegistry()
         self.action_bar = ActionBar(
             self,
             [
-                ActionsRegistry()['Move'],
-                ActionsRegistry()['Attack'],
-                # Attack,
+                registry['Move'],
+                registry['Attack'],
+                registry['GetRifle'],
+                registry['GetSword'],
                 # Shoot,
                 # Reload,
                 # Parry,
@@ -221,6 +224,19 @@ class Unit(GameObject):
             print("NOW IN ACTION")
         else:
             print("NOW IN PLANNING")
+
+    def add_status(self, status):
+        self.stats.statuses[status.name] = status
+        status.on_add(self)
+        # print("STATUS", self.state, self.stats.statuses)
+
+    def remove_status(self, status):
+        # traceback.print_stack()
+        # i = self.stats.statuses.index(status)
+        # print("PLANNING STATUSES", self._presumed_stats.statuses)
+        # print("ACTION STATUSES", self._stats.statuses)
+        s = self.stats.statuses.pop(status.name)
+        s.on_remove(self)
 
 
 @bind_widget('Muzik')

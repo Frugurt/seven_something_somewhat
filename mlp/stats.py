@@ -1,4 +1,5 @@
 from collections import defaultdict
+import traceback
 from .resource import Resource
 from .bind_widget import bind_widget
 
@@ -25,13 +26,25 @@ class Stats:
         self.loaded = True
         self.parried = False
         self.triggers = defaultdict(list)
-        self.statuses = []
+        self.statuses = {}
         self.cell = None
         # self.presumed_stats = None if is_presumed else Stats(name, owner, True)
         # self.current_action_bar = CurrentActionBar(self.owner)
 
     # def setup_action(self, action=None):
     #     self.action = action
+
+    # @property
+    # def statuses(self):
+    #     return self._statuses
+
+    # @statuses.setter
+    # def statuses(self, value):
+        # print("STATUSES SET")
+        # print("NEW VALUE", value)
+        # print("OLD VALUE", self._statuses)
+        # traceback.print_stack()
+        # self._statuses = value
 
     @property
     def action_points(self):
@@ -55,6 +68,7 @@ class Stats:
     def load(self, struct):
         for key, value in struct.items():
             setattr(self, key, value)
+        # print(self.statuses)
 
     def dump(self):
         struct = {
@@ -70,6 +84,7 @@ class Stats:
             "loaded": self.loaded,
             "parried": self.parried,
             'cell': self.cell,
+            'statuses': self.statuses.copy(),
             # "action": self.action.__class__.__name__ if self.action else ""
         }
         # if self.presumed_stats:

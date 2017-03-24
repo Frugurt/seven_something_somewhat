@@ -160,6 +160,7 @@ class Game:
             for player in self.players:
                 player.is_ready = False
             result = True
+            self.clear_presumed()
         self.switch_state()
         return result
 

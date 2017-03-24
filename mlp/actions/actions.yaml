@@ -40,24 +40,36 @@
     icon: './data/punch(1).png'
     pressed_icon: './data/punch.png'
 
-#Attack: !attack
-#  action_type: STANDARD
-#  attack_type: MELEE
-#  cost: 1
-#  area:
-#    Range:
-#      r: 1
-#      source: owner_cell
-#  effects:
-#    - Damage:
-#      amount: 15
-#
-#Parry: #!action
-#  action_type: FULL
-#  speed: FAST
-#  cost: 1
-#  area: owner_cell
-#  effects:
-#    - AddStatus:
-#      status: !status
-#        Parry:
+- !new_action
+  name: GetRifle
+  action_type: MOVE
+  speed: NORMAL
+  cost: 1
+  setup: []
+  effects:
+    - effect: !eff
+        name: AddStatus
+        status: !status
+          name: WithRifle
+      configure: {}
+      area: !prop owner_cell
+  widget:
+    icon: './data/musket.png'
+    pressed_icon: './data/musket(1).png'
+
+- !new_action
+  name: GetSword
+  action_type: MOVE
+  speed: NORMAL
+  cost: 1
+  setup: []
+  effects:
+    - effect: !eff
+        name: RemoveStatus
+        status: !status
+          name: WithRifle
+      configure: {}
+      area: !prop owner_cell
+  widget:
+    icon: './data/two-handed-sword.png'
+    pressed_icon: './data/two-handed-sword1.png'

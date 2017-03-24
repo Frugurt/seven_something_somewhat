@@ -1,9 +1,9 @@
 import yaml
 from ..replication_manager import (
-    ActionsRegistry,
+    # ActionsRegistry,
     ActionMeta,
 )
-# from ..serialization import RefTag, ActionTag
+from  .status import STATUSES
 from ..protocol import Enum
 from .effect import EFFECTS
 from .area import AREAS
@@ -190,6 +190,15 @@ def area_constructor(loader, node):
     return area
 
 yaml.add_constructor("!area", area_constructor)
+
+
+def status_constructor(loader, node):
+    s_s = loader.construct_mapping(node)
+    name = s_s.pop("name")
+    status = STATUSES[name](**s_s)
+    return status
+
+yaml.add_constructor("!status", status_constructor)
 
 with open('./mlp/actions/actions.yaml') as a:
     c = yaml.load(a)
