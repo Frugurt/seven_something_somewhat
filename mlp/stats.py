@@ -25,7 +25,7 @@ class Stats:
         self.ammo = 3
         self.loaded = True
         self.parried = False
-        self.triggers = defaultdict(list)
+        self.triggers = defaultdict(dict)
         self.statuses = {}
         self.cell = None
         # self.presumed_stats = None if is_presumed else Stats(name, owner, True)

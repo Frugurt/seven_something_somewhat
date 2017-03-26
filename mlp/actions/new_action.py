@@ -3,9 +3,9 @@ from ..replication_manager import (
     # ActionsRegistry,
     ActionMeta,
 )
-from  .status import STATUSES
+from .base.status import STATUSES
 from ..protocol import Enum
-from .effect import EFFECTS
+from .base.effect import EFFECTS
 from .area import AREAS
 from ..bind_widget import bind_widget
 from ..tools import dict_merge

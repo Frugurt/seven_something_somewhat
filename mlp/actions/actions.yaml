@@ -73,3 +73,20 @@
   widget:
     icon: './data/two-handed-sword.png'
     pressed_icon: './data/two-handed-sword1.png'
+
+- !new_action
+  name: Parry
+  action_type: FULL
+  speed: FAST
+  cost: 1
+  setup: []
+  effects:
+    - effect: !eff
+      name: AddStatus
+      status: !status
+        name: Parry
+      configure: {}
+      area: !prop owner_cell
+  widget:
+    icon: './data/sword-clash(1).png'
+    pressed_icon: './data/sword-clash.png'

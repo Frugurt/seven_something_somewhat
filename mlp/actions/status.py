@@ -1,25 +1,8 @@
-class Status:
-
-    name = None
-
-    def __init__(self, **kwargs):
-        pass
-        # self.source = source
-
-    def on_add(self, target):
-        pass
-
-    def on_remove(self, target):
-        pass
-
-    def dump(self):
-        return {
-            "name": self.name,
-            # "source": self.source,
-        }
-
-    # def load(self):
-    #     pass
+from .base.status import (
+    Status,
+    STATUSES,
+)
+from .base.trigger import TRIGGERS
 
 
 class WithRifle(Status):
@@ -33,6 +16,18 @@ class WithRifle(Status):
         target.stats.unit_state = "sword"
 
 
-STATUSES = {
+class Parry(Status):
+
+    name = "Parry"
+
+    def on_add(self, target):
+        target.add_trigger(TRIGGERS['Parry']())
+
+    def on_remove(self, target):
+        target.remove_trigger(TRIGGERS['Parry']())
+
+
+STATUSES.update({
     "WithRifle": WithRifle,
-}
+    "Parry": Parry,
+})

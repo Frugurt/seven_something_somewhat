@@ -1,31 +1,11 @@
-from collections.abc import Iterable
-class Effect:
-
-    info_message = ""
-
-    def __init__(self, **kwargs):
-        # self.owner = owner
-        # self.source = source
-        self.info_message = self.info_message
-
-    def configure(self, **kwargs):
-        pass
-
-    def _apply(self, source_action, cell):
-        source_action.owner.action_log.append(self.info_message)
-
-    def apply(self, source_action, cells):
-        if not isinstance(cells, Iterable):
-            cells = [cells]
-        for cell in cells:
-            self._apply(source_action, cell)
-        # source_action.owner.action_log.append(self.info_message)
-
-    def copy(self):
-        return self.__class__(**vars(self))
+from .base.effect import (
+    UnitEffect,
+    MetaEffect,
+    EFFECTS
+)
 
 
-class Move(Effect):
+class Move(UnitEffect):
 
     info_message = "{} move to {}"
 
@@ -38,16 +18,16 @@ class Move(Effect):
 
     # def _apply(self, source_action, target):
 
-    def _apply(self, source_action, cell):
-        if cell.object:
-            print(self.info_message.format(cell, self.target_coord))
-            print(cell.object)
-            cell.object.move(self.target_coord)
-            self.info_message = self.info_message.format(cell, self.target_coord)
-            super()._apply(source_action, cell)
+    def _apply(self, target, source_action):
+        # if cell.object:
+        print(self.info_message.format(target, self.target_coord))
+        print(target.object)
+        target.object.move(self.target_coord)
+        self.info_message = self.info_message.format(target, self.target_coord)
+        super()._apply(target, source_action)
 
 
-class Damage(Effect):
+class Damage(UnitEffect):
 
     info_message = "{} take {} damage"
 
@@ -55,16 +35,16 @@ class Damage(Effect):
         super().__init__(**kwargs)
         self.amount = amount
 
-    def _apply(self, source_action, cell):
-        if cell.object:
+    def _apply(self, target, source_action):
+        # if cell.object:
             # for cell in cells:
             #     if cell.object:
-            cell.object.stats.health -= self.amount
-            self.info_message = self.info_message.format(cell.object, self.amount)
-            super()._apply(source_action, cell)
+        target.object.stats.health -= self.amount
+        self.info_message = self.info_message.format(target.object, self.amount)
+        super()._apply(target, source_action)
 
 
-class AddStatus(Effect):
+class AddStatus(UnitEffect):
 
     info_message = "add {} to {}"
 
@@ -72,14 +52,14 @@ class AddStatus(Effect):
         super().__init__(**kwargs)
         self.status = status
 
-    def _apply(self, source_action, cell):
-        if cell.object:
-            cell.object.add_status(self.status)
-            self.info_message = self.info_message.format(self.status, cell.object)
-            super()._apply(source_action, cell)
+    def _apply(self, target, source_action):
+        # if cell.object:
+        target.object.add_status(self.status)
+        self.info_message = self.info_message.format(self.status, target.object)
+        super()._apply(target, source_action)
 
 
-class RemoveStatus(Effect):
+class RemoveStatus(UnitEffect):
 
     info_message = "remove {} from {}"
 
@@ -87,16 +67,25 @@ class RemoveStatus(Effect):
         super().__init__(**kwargs)
         self.status = status
 
-    def _apply(self, source_action, cell):
-        if cell.object:
-            cell.object.remove_status(self.status)
-            self.info_message = self.info_message.format(self.status, cell.object)
-            super()._apply(source_action, cell)
+    def _apply(self, target, source_action):
+        # if cell.object:
+        target.object.remove_status(self.status)
+        self.info_message = self.info_message.format(self.status, target.object)
+        super()._apply(target, source_action)
 
 
-EFFECTS = {
+class Reflect(MetaEffect):
+
+    info_message = "reflect {} to {}"
+
+    def _apply(self, effect, source_action, effect_source_action):
+        effect.apply(source_action, effect_source_action.owner.cell)
+
+
+EFFECTS.update({
     'Move': Move,
     'Damage': Damage,
     'AddStatus': AddStatus,
     'RemoveStatus': RemoveStatus,
-}
+    'Reflect': Reflect,
+})

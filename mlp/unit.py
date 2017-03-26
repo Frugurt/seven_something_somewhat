@@ -238,6 +238,18 @@ class Unit(GameObject):
         s = self.stats.statuses.pop(status.name)
         s.on_remove(self)
 
+    def add_trigger(self, trigger):
+        for event in trigger.events:
+            self.stats.triggers[event][trigger.name] = trigger
+
+    def remove_trigger(self, trigger):
+        for event in trigger.events:
+            self.stats.triggers[event].pop(trigger.name)
+
+    def launch_triggers(self, event, *args, **kwargs):
+        for trigger in self.stats.triggers[event].values():
+            trigger.apply(event, self, *args, **kwargs)
+
 
 @bind_widget('Muzik')
 class Muzik(Unit):
