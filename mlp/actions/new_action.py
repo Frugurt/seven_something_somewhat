@@ -3,9 +3,11 @@ from ..replication_manager import (
     # ActionsRegistry,
     ActionMeta,
 )
+from . import base
 from .base.status import STATUSES
 from ..protocol import Enum
 from .base.effect import EFFECTS
+from .base.trigger import TRIGGERS
 from .area import AREAS
 from ..bind_widget import bind_widget
 from ..tools import dict_merge
@@ -111,7 +113,7 @@ class Action(metaclass=ActionMeta):
             effect_args = {k: arg.get(self) for k, arg in effect_struct['configure'].items()}
             effect.configure(**effect_args)
             cells = effect_struct['area'].get(self)
-            effect.apply(self, cells)
+            effect.apply(cells, self.owner)
 
     def pre_check(self):
         return True
@@ -199,6 +201,13 @@ def status_constructor(loader, node):
     return status
 
 yaml.add_constructor("!status", status_constructor)
+
+
+def trigger_constructor(loader, node):
+    s_s = loader.construct_mapping(node)
+    name = s_s.pop("name")
+    status = TRIGGERS[name](**s_s)
+    return status
 
 with open('./mlp/actions/actions.yaml') as a:
     c = yaml.load(a)

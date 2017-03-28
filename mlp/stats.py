@@ -25,26 +25,19 @@ class Stats:
         self.ammo = 3
         self.loaded = True
         self.parried = False
-        self.triggers = defaultdict(dict)
+        self._triggers = defaultdict(dict)
         self.statuses = {}
         self.cell = None
         # self.presumed_stats = None if is_presumed else Stats(name, owner, True)
         # self.current_action_bar = CurrentActionBar(self.owner)
 
-    # def setup_action(self, action=None):
-    #     self.action = action
-
-    # @property
-    # def statuses(self):
-    #     return self._statuses
-
-    # @statuses.setter
-    # def statuses(self, value):
-        # print("STATUSES SET")
-        # print("NEW VALUE", value)
-        # print("OLD VALUE", self._statuses)
-        # traceback.print_stack()
-        # self._statuses = value
+    @property
+    def triggers(self):
+        return self._triggers
+    
+    @triggers.setter
+    def triggers(self, value):
+        self._triggers = defaultdict(value)
 
     @property
     def action_points(self):

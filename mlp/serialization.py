@@ -8,9 +8,13 @@ from .replication_manager import (
 )
 from .grid import Cell
 from .actions.new_action import Action
-from .actions.status import (
+from .actions.base.status import (
     Status,
     STATUSES,
+)
+from .actions.base.trigger import (
+    Trigger,
+    TRIGGERS,
 )
 from .protocol import *
 
@@ -153,6 +157,20 @@ def status_decoder(decoder, status_struct, fp, shareable_index=None):
 def encode_status(encoder, status, fp):
     encoder.encode_custom_tag(StatusTag(status), fp)
 
+
+class TriggerTag(CBORTag):
+
+    def __init__(self, obj):
+        super().__init__(46, obj.dump())
+
+
+def trigger_decoder(decoder, trigger_struct, fp, shareable_index=None):
+    s_name = trigger_struct.pop("name")
+    return TRIGGERS[s_name](**trigger_struct)
+
+
+def encode_trigger(encoder, trigger, fp):
+    encoder.encode_custom_tag(TriggerTag(trigger), fp)
 
 mlp_decoder = cbor2.CBORDecoder(semantic_decoders={
     40: RefDecoder(),

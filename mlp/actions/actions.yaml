@@ -82,9 +82,9 @@
   setup: []
   effects:
     - effect: !eff
-      name: AddStatus
-      status: !status
-        name: Parry
+        name: AddStatus
+        status: !status
+          name: Parry
       configure: {}
       area: !prop owner_cell
   widget:
