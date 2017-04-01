@@ -58,3 +58,12 @@ class MetaEffect(AbstractEffect):
         return self.__class__(**vars(self))
 
 EFFECTS = {}
+
+
+def effect_constructor(loader, node):
+    e_s = loader.construct_mapping(node)
+    name = e_s.pop("name")
+    effect = EFFECTS[name](**e_s)
+    return effect
+
+EFFECT_TAG = "!eff"

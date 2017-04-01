@@ -1,6 +1,6 @@
 import operator
 from collections import deque
-from .new_action import Property
+from .property import Property
 
 
 class ExpressionError(Exception):
@@ -90,6 +90,13 @@ class Expression:
                 left = stack.pop()
                 stack.append(Oper(OPERATORS[token][0], left, right))
         return stack.pop()
+
+
+def expression_constructor(loader, node):
+    expression = loader.construct_sequence(node)
+    return Expression(expression)
+
+EXPRESSION_TAG = "!expr"
 
 if __name__ == '__main__':
     a = [3, '+', 4, '*', '(', 2, '-', 1, ')']

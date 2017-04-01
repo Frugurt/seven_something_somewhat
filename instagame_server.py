@@ -4,7 +4,7 @@ from tornado import (
     ioloop,
     tcpserver,
     gen,
-    queues,
+    # queues,
     iostream,
 )
 
@@ -25,7 +25,8 @@ from mlp.unit import Muzik
 from mlp.actions import action
 from mlp.player import Player
 from tests.gridwidget import GrassGrid
-
+from mlp.loader import load
+load()
 """
 Клиенты отсылают начальные данные (персонажей например)
 """

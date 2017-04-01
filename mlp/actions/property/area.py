@@ -1,4 +1,7 @@
-class Area:
+from .property import Property
+
+
+class Area(Property):
 
     def get(self, action):
         pass
@@ -34,3 +37,12 @@ AREAS = {
     "Melee": Melee,
     "Line": Line,
 }
+
+
+def area_constructor(loader, node):
+    a_s = loader.construct_mapping(node)
+    name = a_s.pop("name")
+    area = AREAS[name](**a_s)
+    return area
+
+AREA_TAG = "!area"

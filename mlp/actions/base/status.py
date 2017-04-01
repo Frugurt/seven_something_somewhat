@@ -29,3 +29,12 @@ class Status:
         return self.__class__(**vars(self))
 
 STATUSES = {}
+
+
+def status_constructor(loader, node):
+    s_s = loader.construct_mapping(node)
+    name = s_s.pop("name")
+    status = STATUSES[name](**s_s)
+    return status
+
+STATUS_TAG = "!status"

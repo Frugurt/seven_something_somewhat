@@ -13,9 +13,11 @@ from mlp import game
 from mlp import player
 from tests.gridwidget import (
     GrassGrid,
-    # GrassCell
+    GrassCell
 )
 from mlp.unit import Muzik
+from mlp.loader import load
+load()
 # grid = GrassGrid((5, 3))
 
 
