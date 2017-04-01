@@ -84,6 +84,29 @@ class RemoveStatus(UnitEffect):
         super()._apply(target, source)
 
 
+class ChangeStat(UnitEffect):
+
+    info_message = "change stat {} of {} to {}"
+
+    def __init__(self, stat_name, value=None, **kwargs):
+        super().__init__(**kwargs)
+        self.stat_name = stat_name
+        self.value = value
+
+    def configure(self, stat_name=None, value=None):
+        self.value = value or self.value
+        self.stat_name = stat_name or self.stat_name
+
+    def _apply(self, target, source):
+        self.info_message = self.info_message.format(
+            self.stat_name,
+            target,
+            self.value,
+        )
+        setattr(target.stats, self.stat_name, self.value)
+        super()._apply(target, source)
+
+
 class Reflect(MetaEffect):
 
     info_message = "reflect {} to {}"
@@ -139,4 +162,5 @@ EFFECTS.update({
     'AddStatus': AddStatus,
     'RemoveStatus': RemoveStatus,
     'Reflect': Reflect,
+    'ChangeStat': ChangeStat,
 })

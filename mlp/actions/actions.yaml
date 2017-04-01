@@ -51,6 +51,7 @@
           name: WithRifle
       configure: {}
       area: !prop owner_cell
+  check: !expr [!prop owner_unit_state, "==", "sword"]
   widget:
     icon: './data/musket.png'
     pressed_icon: './data/musket(1).png'
@@ -68,9 +69,10 @@
           name: WithRifle
       configure: {}
       area: !prop owner_cell
+  check: !expr [!prop owner_unit_state, "==", "rifle"]
   widget:
     icon: './data/two-handed-sword.png'
-    pressed_icon: './data/two-handed-sword1.png'
+    pressed_icon: './data/two-handed-sword2.png'
 
 - !new_action
   name: Parry
@@ -85,6 +87,7 @@
           name: Parry
       configure: {}
       area: !prop owner_cell
+  check: !expr [!prop owner_unit_state, "==", "sword"]
   widget:
     icon: './data/sword-clash(1).png'
     pressed_icon: './data/sword-clash.png'
@@ -110,6 +113,43 @@
         source: !prop owner_cell
         target: !prop target
         length: null
+    - effect: !eff
+        name: ChangeStat
+        stat_name: loaded
+        value: false
+      configure: {}
+      area: !prop owner_cell
+  check: !expr
+    - [!prop owner_unit_state, "==", "rifle"]
+    - and
+    - [!prop owner_loaded]
   widget:
     icon: './data/gunshot.png'
     pressed_icon: './data/gunshot(1).png'
+
+- !new_action
+  name: Reload
+  action_type: FULL
+  speed: NORMAL
+  cost: 1
+  setup: []
+  effects:
+    - effect: !eff
+        name: ChangeStat
+        stat_name: ammo
+      configure:
+        value: !expr [!prop owner_ammo, "-", 1]
+      area: !prop owner_cell
+    - effect: !eff
+        name: ChangeStat
+        stat_name: loaded
+        value: true
+      configure: {}
+      area: !prop owner_cell
+  check: !expr
+    - [!prop owner_ammo, ">", 0]
+    - and
+    - [!prop owner_loaded, "==", false]
+  widget:
+    icon: './data/clockwise-rotation(1).png'
+    pressed_icon: './data/clockwise-rotation.png'

@@ -51,6 +51,10 @@ class Oper(Property):
         self.right = right
 
     def get(self, action):
+        left = self.left.get(action)
+        right = self.right.get(action)
+        print(left, self.left)
+        print(right, self.right)
         return self.oper(self.left.get(action), self.right.get(action))
 
 

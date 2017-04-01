@@ -1,4 +1,5 @@
 import yaml
+# import ruamel.yaml as yaml
 from .actions.new_action import (
     actions_constructor,
     NEW_ACTION_TAG
@@ -23,7 +24,7 @@ from .actions.property.area import (
     area_constructor,
     AREA_TAG,
 )
-
+# loader = yaml.Loader()
 yaml.add_constructor(NEW_ACTION_TAG, actions_constructor)
 yaml.add_constructor(EFFECT_TAG, effect_constructor)
 yaml.add_constructor(STATUS_TAG, status_constructor)
@@ -35,6 +36,7 @@ yaml.add_constructor(AREA_TAG, area_constructor)
 def load(path=None):
     path = path or './mlp/actions/actions.yaml'
     with open(path) as a:
+        # loader = yaml.Loader(a)
         return yaml.load(a)
 
 if __name__ == '__main__':

@@ -84,7 +84,9 @@ class Action(metaclass=ActionMeta):
             effect.apply(cells, self.owner)
 
     def pre_check(self):
-        return self.check.get(self)
+        res = self.check.get(self)
+        # print(res, self.check)
+        return res
 
     def post_check(self):
         return self.pre_check()

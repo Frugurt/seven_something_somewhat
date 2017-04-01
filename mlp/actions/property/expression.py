@@ -1,4 +1,8 @@
 import operator
+from yaml import (
+    SequenceNode,
+    ScalarNode,
+)
 from collections import deque
 from .property import (
     Property,
@@ -14,14 +18,20 @@ class ExpressionError(Exception):
 class Expression:
 
     OPERATORS = {
-        '*': (operator.mul, 3),
-        '+': (operator.add, 2),
-        '-': (operator.sub, 2),
-        '==': (operator.eq, 1),
-        '!=': (operator.ne, 1),
+        '*': (operator.mul, 4),
+        '+': (operator.add, 3),
+        '-': (operator.sub, 3),
+        '==': (operator.eq, 2),
+        '!=': (operator.ne, 2),
+        '>': (operator.gt, 2),
+        '<': (operator.lt, 2),
+        '>=': (operator.ge, 2),
+        '<=': (operator.le, 2),
+        'and': (operator.and_, 1),
+        'or': (operator.or_, 1)
     }
 
-    UTILITY = {'+', '-', '*', '==', '!=', '(', ')'}
+    UTILITY = {'(', ')'} | set(OPERATORS.keys())
 
     def __init__(self, expression):
         self.expression = self.make_tree(self.inf_2_post(expression))
@@ -65,6 +75,7 @@ class Expression:
 
         for token in post_tokens:
             if token not in UTILITY:
+                # print(token, type(token), isinstance(token, Property))
                 if isinstance(token, Property):
                     stack.append(token)
                 else:
@@ -77,7 +88,31 @@ class Expression:
 
 
 def expression_constructor(loader, node):
-    expression = loader.construct_sequence(node)
+    # print(node)
+    # expression = loader.construct_sequence(node)
+    expression = []
+    for child in node.value:
+        if isinstance(child, SequenceNode):
+            expression.extend(loader.construct_sequence(child))
+        elif isinstance(child, ScalarNode):
+            expression.append(loader.construct_object(child))
+        else:
+            raise ExpressionError
+    #     print("ololo")
+    #     print(child)
+    #     expression.extend(loader.construct_object(child))
+    #     print(loader.construct_object(child))
+    #     print(loader.construct_sequence(child))
+    # expression = loader.construct_object(node)
+    # print(expression)
+    # result_expression = []
+    # for part in expression:
+    #     if isinstance(part, list):
+    #         result_expression.extend(part)
+    #     else:
+    #         result_expression.append(part)
+    # print(result_expression)
+    # print(expression)
     return Expression(expression)
 
 EXPRESSION_TAG = "!expr"

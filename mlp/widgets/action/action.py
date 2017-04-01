@@ -174,7 +174,7 @@ class CurrentActionBar(GridLayout):
 
     def on_append_action(self, action):
         print('accept action', action)
-        if self.current_action_bar.actions[-1] == action:
+        if self.current_action_bar.actions and self.current_action_bar.actions[-1] == action:
             self.remove_action_widgets.append(RemoveActionButton(action))
             self.add_widget(self.remove_action_widgets[-1])
 

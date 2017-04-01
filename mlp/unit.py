@@ -46,9 +46,7 @@ class Unit(GameObject):
                 registry['GetSword'],
                 registry['Parry'],
                 registry['Shoot'],
-                # Reload,
-                # Parry,
-                # ChangeWeapon,
+                registry['Reload'],
             ]
         )
         self.clear_presumed()
