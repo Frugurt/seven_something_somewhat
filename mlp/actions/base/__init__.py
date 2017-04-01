@@ -29,8 +29,8 @@ class Move(UnitEffect):
     def _apply(self, target, source):
         # if cell.object:
         print(self.info_message.format(target, self.target_coord))
-        print(target.object)
-        target.object.move(self.target_coord)
+        # print(target.object)
+        target.move(self.target_coord)
         self.info_message = self.info_message.format(target, self.target_coord)
         super()._apply(target, source)
 

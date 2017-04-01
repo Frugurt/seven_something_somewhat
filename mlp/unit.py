@@ -7,7 +7,10 @@ from mlp.replication_manager import (
     ActionsRegistry,
 )
 # from mlp.bind_widget import bind_widget
-from .stats import Stats
+from .stats import (
+    Stats,
+    MajorStats,
+)
 from .grid import Grid
 from .actions.action import *
 from .actions.new_action import *
@@ -29,8 +32,9 @@ class Unit(GameObject):
         self.presumed_path = []
         self.action_log = []
         # self.action = None
-        self._stats = Stats(self.__class__.__name__, master_name)
-        self._presumed_stats = Stats(self.__class__.__name__, master_name)
+        # self._stats = Stats(self.__class__.__name__, master_name)
+        self._stats = MajorStats(self.__class__.__name__, master_name)
+        # self._presumed_stats = Stats(self.__class__.__name__, master_name)
         self.current_action_bar = CurrentActionBar(self)
         registry = ActionsRegistry()
         self.action_bar = ActionBar(
@@ -48,6 +52,10 @@ class Unit(GameObject):
             ]
         )
         self.clear_presumed()
+
+    @property
+    def _presumed_stats(self):
+        return self._stats.presumed
 
     @property
     def presumed_cell(self):
@@ -74,6 +82,7 @@ class Unit(GameObject):
             return self._stats
         else:
             return self._presumed_stats
+            # return self._stats.presumed
 
     @property
     def cell(self):
@@ -147,7 +156,7 @@ class Unit(GameObject):
             {
                 # 'pos': self.pos,
                 'stats': self._stats.dump(),
-                'presumed_stats': self._presumed_stats.dump(),
+                # 'presumed_stats': self._presumed_stats.dump(),
                 'current_actions': self.current_action_bar.dump(),
             }
         )
@@ -155,7 +164,7 @@ class Unit(GameObject):
     def load(self, struct):
         # self.pos = struct['pos']
         self._stats.load(struct['stats'])
-        self._presumed_stats.load(struct['presumed_stats'])
+        # self._presumed_stats.load(struct['presumed_stats'])
         self.current_action_bar.load(struct['current_actions'])
         self.update_position()
         # if self._stats.cell:
@@ -200,7 +209,7 @@ class Unit(GameObject):
         self.current_action_bar.clear_preparations()
 
     def clear_presumed(self):
-        self._presumed_stats.load(self._stats.dump())
+        self._stats.update_presumed()
 
     def __repr__(self):
         return "{} {}".format(self.stats.owner, self.__class__.__name__)

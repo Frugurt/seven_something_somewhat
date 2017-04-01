@@ -2,17 +2,18 @@ from collections import defaultdict
 import traceback
 from .resource import Resource
 from .bind_widget import bind_widget
+from .tools import dict_merge
 
 
 PLANNING, ACTION = range(2)
 
 
-@bind_widget("Stats")
+# @bind_widget("Stats")
 class Stats:
 
     hooks = ['load']
 
-    def __init__(self, name, owner, is_presumed=False):
+    def __init__(self, name, owner):#, is_presumed=False):
         self.state = PLANNING
         self.name = name
         self.owner = owner
@@ -34,7 +35,7 @@ class Stats:
     @property
     def triggers(self):
         return self._triggers
-    
+
     @triggers.setter
     def triggers(self, value):
         self._triggers = defaultdict(value)
@@ -84,13 +85,26 @@ class Stats:
         #     struct.update({'presumed': self.presumed_stats.dump()})
         return struct
 
-    # def update_presumed(self):
-    #     struct = self.dump()
-    #     struct.pop('presumed')
-    #     self.presumed_stats.load(struct)
-    #
-    # def switch_state(self):
-    #     self.state = int(not self.state)
 
-    # def __getattr__(self, item):
-    #     if
+@bind_widget("Stats")
+class MajorStats(Stats):
+
+    def __init__(self, name, owner):
+        super().__init__(name, owner)
+        self.presumed = Stats(name, owner)
+
+    def load(self, struct):
+        presumed = struct.pop('presumed')
+        self.presumed.load(presumed)
+        super().load(struct)
+
+    def dump(self):
+        return dict_merge(
+            super().dump(),
+            {'presumed': self.presumed.dump()}
+        )
+
+    def update_presumed(self):
+        struct = self.dump()
+        struct.pop('presumed')
+        self.presumed.load(struct)
