@@ -54,8 +54,15 @@ class OwnerCell(Property):
         return "get action owner cell"
 
 
+class PresumedCell(Property):
+
+    def get(self, action):
+        return action.owner.presumed_cell
+
+
 PROPERTY_TABLE = {
-    'owner_cell': OwnerCell
+    'owner_cell': OwnerCell,
+    'presumed_cell': PresumedCell,
 }
 
 

@@ -71,10 +71,14 @@ class Unit(GameObject):
         :return:
         """
         # pos = reduce(lambda prev, cur: (prev[0] + cur[1][0], prev[1] + cur[1][1]), self.presumed_path, self.pos)
-        if self.presumed_path:
-            return self.cell.grid[self.presumed_path[-1][-1]]
-        else:
-            return self.cell
+        # if self.presumed_path:
+        #     return self.cell.grid[self.presumed_path[-1][-1]]
+        # else:
+        return self.cell
+
+    @property
+    def real_cell(self):
+        return self._stats.cell
 
     @property
     def stats(self):
@@ -145,8 +149,11 @@ class Unit(GameObject):
         :param cell:
         :return:
         """
-        self.cell = cell
-        self.update_position()
+        if self.state == PLANNING:
+            self._presumed_stats.cell = cell
+        else:
+            self._stats.cell = cell
+            self.update_position()
         # target_cell = choice(self.cell.adjacent)
         # self.place_in(cell)
 
