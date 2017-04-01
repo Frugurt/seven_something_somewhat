@@ -79,7 +79,7 @@ class RemoveStatus(UnitEffect):
 
     def _apply(self, target, source):
         # if cell.object:
-        target.object.remove_status(self.status)
+        target.remove_status(self.status)
         self.info_message = self.info_message.format(self.status, target.object)
         super()._apply(target, source)
 

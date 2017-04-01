@@ -11,9 +11,6 @@
   effects:
     - effect: !eff
         name: Move
-#      modifers:
-#        - expression: None
-#          modifer: None
       configure:
         target_coord: !prop target_coord
       area: !prop owner_cell
@@ -36,7 +33,7 @@
         name: Melee
         radius: 1
         center: !prop owner_cell
-#  check: !expr [!prop owner_unit_state, "==", "sword"]
+  check: !expr [!prop owner_unit_state, "==", "sword"]
   widget:
     icon: './data/punch(1).png'
     pressed_icon: './data/punch.png'

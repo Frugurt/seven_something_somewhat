@@ -22,7 +22,7 @@ class OwnerAttribute(Property):
         self.name = name
 
     def get(self, action):
-        return getattr(action.owner, self.name)
+        return getattr(action.owner.stats, self.name)
 
     def __repr__(self):
         return "get {} from action owner".format(self.name)
@@ -32,6 +32,26 @@ class PresumedCell(Property):
 
     def get(self, action):
         return action.owner.presumed_cell
+
+
+class Const(Property):
+
+    def __init__(self, v):
+        self.v = v
+
+    def get(self, action):
+        return self.v
+
+
+class Oper(Property):
+
+    def __init__(self, oper, left, right):
+        self.oper = oper
+        self.left = left
+        self.right = right
+
+    def get(self, action):
+        return self.oper(self.left.get(action), self.right.get(action))
 
 
 PROPERTY_TABLE = {

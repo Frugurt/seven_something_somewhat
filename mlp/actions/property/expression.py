@@ -1,30 +1,14 @@
 import operator
 from collections import deque
-from .property import Property
+from .property import (
+    Property,
+    Const,
+    Oper,
+)
 
 
 class ExpressionError(Exception):
     pass
-
-
-class Const(Property):
-
-    def __init__(self, v):
-        self.v = v
-
-    def get(self, action):
-        return self.v
-
-
-class Oper(Property):
-
-    def __init__(self, oper, left, right):
-        self.oper = oper
-        self.left = left
-        self.right = right
-
-    def get(self, action):
-        return self.oper(self.left.get(action), self.right.get(action))
 
 
 class Expression:

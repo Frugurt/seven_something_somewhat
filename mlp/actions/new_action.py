@@ -6,7 +6,10 @@ from ..replication_manager import (
 from ..protocol import Enum
 from ..bind_widget import bind_widget
 from ..tools import dict_merge
-from .property.property import Property
+from .property.property import (
+    Property,
+    Const,
+)
 
 
 FULL, MOVE, STANDARD = range(3)
@@ -37,6 +40,7 @@ class Action(metaclass=ActionMeta):
     # area = None
 
     widget = None
+    check = None
 
     def __init__(self, owner, **kwargs):
         self.owner = owner
@@ -80,10 +84,10 @@ class Action(metaclass=ActionMeta):
             effect.apply(cells, self.owner)
 
     def pre_check(self):
-        return True
+        return self.check.get(self)
 
     def post_check(self):
-        return True
+        return self.pre_check()
 
     def append_to_bar_effect(self):
         pass
@@ -124,6 +128,7 @@ def actions_constructor(loader, node):
         # area = a_s['area']
         effects = a_s['effects']
         widget = a_s['widget']
+        check = a_s.get('check', Const(True))
 
     return NewAction
 
