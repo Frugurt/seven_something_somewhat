@@ -12,11 +12,25 @@ class Melee(Area):
 
     def get(self, action):
         grid = action.owner.cell.grid
-        for cell in action.owner.cell.grid.get_area(self.center.get(action), self.radius):
+        for cell in grid.get_area(self.center.get(action), self.radius):
             if cell.object and cell.object.stats.owner != action.owner.stats.owner:
                 return [cell]
         return []
 
+
+class Line(Area):
+
+    def __init__(self, source, target, length):
+        self.source = source
+        self.target = target
+        self.length = length
+
+    def get(self, action):
+        grid = action.owner.cell.grid
+        return grid.get_line(self.source.get(action), self.target.get(action)[-1], self.length)
+
+
 AREAS = {
-    "Melee": Melee
+    "Melee": Melee,
+    "Line": Line,
 }

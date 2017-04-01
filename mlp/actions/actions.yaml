@@ -90,3 +90,28 @@
   widget:
     icon: './data/sword-clash(1).png'
     pressed_icon: './data/sword-clash.png'
+
+- !new_action
+  name: Shoot
+  action_type: STANDARD
+  speed: SLOW
+  cost: 1
+  setup:
+    - name: target
+      cursor: line
+      cursor_params:
+        - !prop owner_cell
+  effects:
+    - effect: !eff
+        name: Damage
+        amount: 35
+      configure:
+        target_coord: !prop target
+      area: !area
+        name: Line
+        source: !prop owner_cell
+        target: !prop target
+        length: null
+  widget:
+    icon: './data/gunshot.png'
+    pressed_icon: './data/gunshot(1).png'

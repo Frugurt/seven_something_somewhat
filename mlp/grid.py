@@ -194,7 +194,7 @@ class HexGrid(Grid):
             rz = -rx - ry
         return int(rx), int(ry), int(rz)
 
-    def line(self, source_cell, target_cell, length=None):
+    def get_line(self, source_cell, target_cell, length=None):
         # TODO правильно продлевать длину линий
         length = length or self.distance(source_cell, target_cell)
         result = []

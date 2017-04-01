@@ -45,7 +45,7 @@ class Unit(GameObject):
                 registry['GetRifle'],
                 registry['GetSword'],
                 registry['Parry'],
-                # Shoot,
+                registry['Shoot'],
                 # Reload,
                 # Parry,
                 # ChangeWeapon,

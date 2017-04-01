@@ -159,7 +159,7 @@ class LineSelectCursor(RequestCursor):
 
     def select(self, cell):
         self.deactivate()
-        line_cells = cell.cell.grid.line(self.source_cell, cell.cell, self.length)
+        line_cells = cell.cell.grid.get_line(self.source_cell, cell.cell, self.length)
         self.selected_cells = [c.make_widget() for c in line_cells]
         self.activate()
 
