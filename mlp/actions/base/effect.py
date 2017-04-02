@@ -6,6 +6,9 @@ class AbstractEffect:
 
     info_message = ""
 
+    def __init__(self, **kwargs):
+        self.is_canceled = False
+
     def log(self, source):
         source.action_log.append(self.info_message)
 
@@ -15,17 +18,25 @@ class AbstractEffect:
     def apply(self, *args, **kwargs):
         pass
 
+    def cancel(self):
+        self.is_canceled = True
+
     def __copy__(self):
         pass
 
 
 class UnitEffect(AbstractEffect):
 
+    # take_event_name = "on_take_" + convert(__name__)
+    # after_event_name = "after_take_" + convert(__name__)
+
     def __init__(self, **kwargs):
         # self.owner = owner
         # self.source = source
         self.info_message = self.info_message
+        super().__init__(**kwargs)
         self.take_event_name = "on_take_" + convert(self.__class__.__name__)
+        # self.
 
     def _apply(self, target, source):
         self.log(source)
@@ -35,11 +46,19 @@ class UnitEffect(AbstractEffect):
             cells = [cells]
         for cell in cells:
             if cell.object is not None:
+                print("EFFECT EVENT", self.take_event_name)
                 cell.object.launch_triggers(self.take_event_name, self, source)
-                self._apply(cell.object, source)
+                if not self.is_canceled:
+                    self._apply(cell.object, source)
+                else:
+                    self.is_canceled = False
+                    # cell.object.launch_triggers(self.after_event_name, self, source)
         # source_action.owner.action_log.append(self.info_message)
 
     def copy(self):
+        # params = vars(self)
+        # params.pop("is_canceled", None)
+        # return self.__class__(**params)
         return self.__class__(**vars(self))
 
 

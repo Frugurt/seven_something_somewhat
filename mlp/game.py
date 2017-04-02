@@ -151,12 +151,15 @@ class Game:
             if len(alive_players) == 1:
                 self.declare_winner(alive_players.pop())
                 return
+            for unit in self.units:
+                unit.launch_triggers("on_phase_start", unit)
             if not anyone_not_pass:
                 print("all pass")
                 self.action_log[-1].append("--------------")
                 self.turn_order_manager.rearrange()
                 for unit in self.units:
                     unit.refill_action_points()
+                    unit.launch_triggers("on_turn_start", unit)
             for player in self.players:
                 player.is_ready = False
             result = True

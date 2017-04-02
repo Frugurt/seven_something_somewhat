@@ -1,3 +1,12 @@
+from .effect import (
+    MetaEffect,
+)
+def source_selector(unit_effect):
+
+    def apply(target, source, *args, **kwargs):
+        pass
+
+
 class Trigger:
 
     name = ""
@@ -10,7 +19,10 @@ class Trigger:
         effects = getattr(self, event, [])
         # cell = target.stats.cell
         for effect in effects:
-            effect.apply(target, self.source, *args, **kwargs)
+            if isinstance(effect, MetaEffect):
+                effect.apply(target, self.source, *args, **kwargs)
+            else:
+                effect.apply(target.cell, self.source)
 
     def dump(self):
         return {

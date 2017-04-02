@@ -80,7 +80,8 @@ class RemoveStatus(UnitEffect):
     def _apply(self, target, source):
         # if cell.object:
         target.remove_status(self.status)
-        self.info_message = self.info_message.format(self.status, target.object)
+        self.info_message = self.info_message.format(self.status, target)
+        print(self.info_message)
         super()._apply(target, source)
 
 
@@ -112,12 +113,15 @@ class Reflect(MetaEffect):
     info_message = "reflect {} to {}"
 
     def _apply(self, effect, source, effect_source):
+        # print(source, "source")
+        # print(effect_source, "effect_source")
         effect.apply(effect_source.cell, source)
+        effect.cancel()
 
 
 class WithRifle(Status):
 
-    name = "WithRifle"
+    # name = "WithRifle"
 
     def on_add(self, target):
         target.stats.unit_state = "rifle"
@@ -140,9 +144,9 @@ class Parry(Status):
 class ParryTrigger(Trigger):
 
     name = "Parry"
-    events = ["on_turn_start", "on_take_damage"]
-    on_take_damage = [Reflect()]
-    # on_start_turn = [RemoveStatus(Parry())]
+    events = ["on_phase_start", "on_take_damage"]
+    on_take_damage = [Reflect()]#, RemoveStatus(Parry())]
+    on_phase_start = [RemoveStatus(Parry())]
 
 
 TRIGGERS.update({

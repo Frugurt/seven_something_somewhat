@@ -262,7 +262,8 @@ class Unit(GameObject):
             self.stats.triggers[event].pop(trigger.name)
 
     def launch_triggers(self, event, *args, **kwargs):
-        for trigger in self.stats.triggers[event].values():
+        # print("Launch")
+        for trigger in list(self.stats.triggers[event].values()):
             trigger.apply(event, self, *args, **kwargs)
 
 

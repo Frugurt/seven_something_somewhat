@@ -1,6 +1,6 @@
 class Status:
 
-    name = None
+    name = __name__
 
     def __init__(self, source=None, **kwargs):
         # pass
