@@ -121,7 +121,7 @@ class Reflect(MetaEffect):
 
 class WithRifle(Status):
 
-    # name = "WithRifle"
+    name = "WithRifle"
 
     def on_add(self, target):
         target.stats.unit_state = "rifle"
