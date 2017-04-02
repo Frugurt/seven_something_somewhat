@@ -33,7 +33,8 @@ class CurrentActionBar:
         self.preparations = []
 
     def append_action(self, action):
-        if self.check_slots(action) and action.pre_check() and action.post_check():
+        # if self.check_slots(action) and action.pre_check() and action.post_check():
+        if self.check_slots(action) and action.check():
             self.actions.append(action)
             # action.append_to_bar_effect()
 

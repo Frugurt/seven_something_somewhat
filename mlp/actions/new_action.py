@@ -40,7 +40,7 @@ class Action(metaclass=ActionMeta):
     # area = None
 
     widget = None
-    check = None
+    _check = None
 
     def __init__(self, owner, **kwargs):
         self.owner = owner
@@ -75,7 +75,7 @@ class Action(metaclass=ActionMeta):
             setattr(self, field_name, None)
 
     def apply(self):
-        # pass
+        self.owner.stats.action_points -= self.cost
         for effect_struct in self.effects:
             effect = effect_struct['effect']
             effect_args = {k: arg.get(self) for k, arg in effect_struct['configure'].items()}
@@ -83,13 +83,17 @@ class Action(metaclass=ActionMeta):
             cells = effect_struct['area'].get(self)
             effect.apply(cells, self.owner)
 
-    def pre_check(self):
-        res = self.check.get(self)
-        # print(res, self.check)
-        return res
+    def check(self):
+        res = self._check.get(self)
+        return res and self.owner.stats.action_points >= self.cost
 
-    def post_check(self):
-        return self.pre_check()
+    def pre_check(self):
+        # res = self.check.get(self)
+        # print(res, self.check)
+        return self.check()
+
+    # def post_check(self):
+    #     return self.pre_check()
 
     def append_to_bar_effect(self):
         pass
@@ -127,10 +131,9 @@ def actions_constructor(loader, node):
         action_speed = getattr(speed, a_s['speed'])
         cost = a_s['cost']
         setup_fields = a_s['setup']
-        # area = a_s['area']
         effects = a_s['effects']
         widget = a_s['widget']
-        check = a_s.get('check', Const(True))
+        _check = a_s.get('check', Const(True))
 
     return NewAction
 
