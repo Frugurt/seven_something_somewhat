@@ -1,0 +1,12 @@
+- !new_unit
+  name: Muzik
+  actions:
+    - Move
+    - Attack
+    - GetRifle
+    - GetSword
+    - Parry
+    - Shoot
+    - Reload
+  widget:
+    sprite: './data/duelist.png'

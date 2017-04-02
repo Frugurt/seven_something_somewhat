@@ -7,14 +7,14 @@ from mlp.replication_manager import (
     ActionsRegistry,
 )
 # from mlp.bind_widget import bind_widget
-from .stats import (
+from mlp.stats import (
     Stats,
     MajorStats,
 )
-from .grid import Grid
-from .actions.action import *
-from .actions.new_action import *
-from .tools import dict_merge
+from mlp.grid import Grid
+from mlp.actions.action import *
+from mlp.actions.new_action import *
+from mlp.tools import dict_merge
 
 PLANNING, ACTION = range(2)
 
@@ -22,6 +22,7 @@ PLANNING, ACTION = range(2)
 class Unit(GameObject):
 
     hooks = []
+    actions = []
 
     def __init__(self, master_name=None, id_=None):
         super().__init__(id_)
@@ -39,15 +40,7 @@ class Unit(GameObject):
         registry = ActionsRegistry()
         self.action_bar = ActionBar(
             self,
-            [
-                registry['Move'],
-                registry['Attack'],
-                registry['GetRifle'],
-                registry['GetSword'],
-                registry['Parry'],
-                registry['Shoot'],
-                registry['Reload'],
-            ]
+            [registry[action_name] for action_name in self.actions],
         )
         self.clear_presumed()
 
@@ -269,4 +262,12 @@ class Unit(GameObject):
 
 @bind_widget('Muzik')
 class Muzik(Unit):
-    pass
+    actions = [
+        'Move',
+        'Attack',
+        'GetRifle',
+        'GetSword',
+        'Parry',
+        'Shoot',
+        'Reload',
+    ]
