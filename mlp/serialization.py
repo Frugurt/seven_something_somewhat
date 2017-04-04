@@ -3,8 +3,9 @@ import cbor2
 from cbor2.types import CBORTag
 from .replication_manager import (
     GameObjectRegistry,
-    ActionsRegistry,
+    # ActionsRegistry,
     GameObject,
+    MetaRegistry,
 )
 from .grid import Cell
 from .actions.new_action import Action
@@ -70,11 +71,11 @@ class ActionTag(CBORTag):
 
 class ActionDecoder:
 
-    registry = ActionsRegistry()
+    registry = MetaRegistry()["Action"]
 
     def __call__(self, decoder, action_struct, fp, shareable_index=None):
         print("\n\nACTION STRUCT")
-        print(action_struct, self.registry.actions)
+        # print(action_struct, self.registry.actions)
         # action = action_struct['action']
         action_name = action_struct.pop('name')
         return self.registry[action_name](**action_struct)

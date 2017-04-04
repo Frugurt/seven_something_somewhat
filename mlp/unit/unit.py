@@ -4,7 +4,8 @@ import traceback
 from mlp.replication_manager import (
     GameObject,
     # RefTag,
-    ActionsRegistry,
+    # ActionsRegistry,
+    MetaRegistry,
 )
 # from mlp.bind_widget import bind_widget
 from mlp.stats import (
@@ -37,7 +38,7 @@ class Unit(GameObject):
         self._stats = MajorStats(self.__class__.__name__, master_name)
         # self._presumed_stats = Stats(self.__class__.__name__, master_name)
         self.current_action_bar = CurrentActionBar(self)
-        registry = ActionsRegistry()
+        registry = MetaRegistry()["Action"]
         self.action_bar = ActionBar(
             self,
             [registry[action_name] for action_name in self.actions],

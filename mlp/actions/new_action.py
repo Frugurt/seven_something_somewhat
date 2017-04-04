@@ -1,7 +1,8 @@
 import yaml
 from ..replication_manager import (
     # ActionsRegistry,
-    ActionMeta,
+    # ActionMeta,
+    MetaRegistry
 )
 from ..protocol import Enum
 from ..bind_widget import bind_widget
@@ -24,6 +25,8 @@ speed = Enum(
     "NORMAL",
     "SLOW",
 )
+
+ActionMeta = MetaRegistry().make_registred_meta("Action")
 
 
 class Action(metaclass=ActionMeta):

@@ -17,6 +17,47 @@ class Singleton:
         pass
 
 
+class Registry:
+
+    def __init__(self):
+        self.items = {}
+
+    def __getitem__(self, item):
+        return self.items[item]
+
+    def __setitem__(self, key, value):
+        self.items[key] = value
+
+    def __delitem__(self, key):
+        del self.items[key]
+
+
+class MetaRegistry(Singleton):
+
+    def init(self):
+        self.registry = defaultdict(Registry)
+
+    def __getitem__(self, item):
+        return self.registry[item]
+
+    def make_registred_meta(self, name):
+
+        class Meta(type):
+
+            registry = self[name]
+
+            def __new__(cls, name, bases, dct):
+                # print(bases, dct)
+                if 'name' in dct:
+                    name = dct['name'] or name
+                new_cls = super().__new__(cls, name, bases, dct)
+                if bases:
+                    cls.registry[name] = new_cls
+                # print(new_cls)
+                return new_cls
+        return Meta
+
+
 class GameObjectRegistry(Singleton):
 
     def init(self):
@@ -137,34 +178,3 @@ class GameObject(metaclass=GameObjectMeta):
 
     def load(self, struct):
         pass
-
-
-class ActionsRegistry(Singleton):
-
-    def init(self):
-        self.actions = {}
-
-    def __getitem__(self, item):
-        return self.actions[item]
-
-    def __setitem__(self, key, value):
-        self.actions[key] = value
-
-    def __delitem__(self, key):
-        del self.actions[key]
-
-
-class ActionMeta(type):
-
-    registry = ActionsRegistry()
-
-    def __new__(cls, name, bases, dct):
-        # print(bases, dct)
-        if 'name' in dct:
-            name = dct['name'] or name
-        new_cls = super().__new__(cls, name, bases, dct)
-        if bases:
-            cls.registry[name] = new_cls
-        # print(new_cls)
-        return new_cls
-
