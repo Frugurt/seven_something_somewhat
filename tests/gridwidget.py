@@ -24,7 +24,7 @@ from mlp.serialization import remote_call
 # )
 import json
 from mlp.protocol import *
-from mlp.unit import Muzik
+# from mlp.unit import Muzik
 
 
 @bind_widget('HexCellWidget')

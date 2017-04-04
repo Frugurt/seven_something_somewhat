@@ -4,8 +4,8 @@ from kivy.uix.image import Image
 class Unit(Image):
 
     def __init__(self, unit, **kwargs):
-        super().__init__(**kwargs)
         self.unit = unit
+        super().__init__(source=unit.widget['sprite'], **kwargs)
 
     def on_select(self, game_widget):
         print(self.unit.action_bar)
@@ -25,3 +25,5 @@ class Unit(Image):
     # def on_place_in_cell(self, cell):
     #     if self.parent:
     #         pass
+
+# class NewUnit(Unit):

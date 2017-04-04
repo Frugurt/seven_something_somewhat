@@ -17,47 +17,6 @@ class Singleton:
         pass
 
 
-class Registry:
-
-    def __init__(self):
-        self.items = {}
-
-    def __getitem__(self, item):
-        return self.items[item]
-
-    def __setitem__(self, key, value):
-        self.items[key] = value
-
-    def __delitem__(self, key):
-        del self.items[key]
-
-
-class MetaRegistry(Singleton):
-
-    def init(self):
-        self.registry = defaultdict(Registry)
-
-    def __getitem__(self, item):
-        return self.registry[item]
-
-    def make_registered_metaclass(self, name):
-
-        class Meta(type):
-
-            registry = self[name]
-
-            def __new__(cls, name, bases, dct):
-                # print(bases, dct)
-                if 'name' in dct:
-                    name = dct['name'] or name
-                new_cls = super().__new__(cls, name, bases, dct)
-                if bases:
-                    cls.registry[name] = new_cls
-                # print(new_cls)
-                return new_cls
-        return Meta
-
-
 class GameObjectRegistry(Singleton):
 
     def init(self):
@@ -93,7 +52,10 @@ class GameObjectRegistry(Singleton):
                 return id_
 
     def register_class(self, cls):
-        self.game_classes[cls.__name__] = cls
+        if hasattr(cls, 'name'):
+            self.game_classes[cls.name] = cls
+        else:
+            self.game_classes[cls.__name__] = cls
 
     def dump(self):
         print(list(self.game_objects.items()))
@@ -161,6 +123,7 @@ class GameObject(metaclass=GameObjectMeta):
         }
     """
 
+    # name = None
     registry = GameObjectRegistry()
     load_priority = 0
     hooks = []
@@ -172,9 +135,57 @@ class GameObject(metaclass=GameObjectMeta):
 
     def dump(self):
         return {
+            # 'cls': self.name or type(self).__name__,
             'cls': type(self).__name__,
             'id_': self.id_,
         }
 
     def load(self, struct):
         pass
+
+
+class Registry:
+
+    def __init__(self):
+        self.items = {}
+
+    def __getitem__(self, item):
+        return self.items[item]
+
+    def __setitem__(self, key, value):
+        self.items[key] = value
+
+    def __delitem__(self, key):
+        del self.items[key]
+
+
+class MetaRegistry(Singleton):
+
+    def init(self):
+        self.game_object_registry = GameObjectRegistry()
+        self.registry = defaultdict(Registry)
+
+    def __getitem__(self, item):
+        classes = self.game_object_registry.game_classes
+        print(classes)
+        if item not in self.registry and item in classes:
+            self.registry[item] = classes       # Актуально для юнитов
+        # else:
+        return self.registry[item]
+
+    def make_registered_metaclass(self, name):
+
+        class Meta(type):
+
+            registry = self[name]
+
+            def __new__(cls, name, bases, dct):
+                # print(bases, dct)
+                if 'name' in dct:
+                    name = dct['name'] or name
+                new_cls = super().__new__(cls, name, bases, dct)
+                if bases:
+                    cls.registry[name] = new_cls
+                # print(new_cls)
+                return new_cls
+        return Meta

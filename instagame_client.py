@@ -15,7 +15,8 @@ from tests.gridwidget import (
     GrassGrid,
     GrassCell
 )
-from mlp.unit import Muzik
+from mlp.replication_manager import MetaRegistry
+# from mlp.unit import Muzik
 from mlp.loader import load
 load()
 # grid = GrassGrid((5, 3))
@@ -32,6 +33,7 @@ class InstagameApp(App):
         sm.transition = FadeTransition()
         sm.add_widget(screens.GameScreen(self, game.Game(), self.network_manager, "overlord", name="game"))
         sm.add_widget(screens.GameOverScreen(self, name="game_over"))
+        Muzik = MetaRegistry()['Unit']['Muzik']
         self.players = [player.Player('Ustas', Muzik('Ustas')), player.Player('Vitaline', Muzik('Vitaline'))]
         self.screen_manager = sm
         # self.handlers = {

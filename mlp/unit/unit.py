@@ -261,14 +261,31 @@ class Unit(GameObject):
             trigger.apply(event, self, *args, **kwargs)
 
 
-@bind_widget('Muzik')
-class Muzik(Unit):
-    actions = [
-        'Move',
-        'Attack',
-        'GetRifle',
-        'GetSword',
-        'Parry',
-        'Shoot',
-        'Reload',
-    ]
+# @bind_widget('Muzik')
+# class Muzik(Unit):
+#     actions = [
+#         'Move',
+#         'Attack',
+#         'GetRifle',
+#         'GetSword',
+#         'Parry',
+#         'Shoot',
+#         'Reload',
+#     ]
+
+
+def unit_constructor(loader, node):
+    u_s = loader.construct_mapping(node)
+
+    print("LOAD", u_s['name'])
+
+    @bind_widget('Unit')
+    class NewUnit(Unit):
+        name = u_s['name']
+        actions = u_s['actions']
+        widget = u_s['widget']
+
+    NewUnit.__name__ = NewUnit.name
+    return NewUnit
+
+NEW_UNIT_TAG = "!new_unit"
