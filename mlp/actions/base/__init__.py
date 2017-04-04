@@ -154,10 +154,10 @@ TRIGGERS.update({
 })
 
 
-STATUSES.update({
-    "WithRifle": WithRifle,
-    "Parry": Parry,
-})
+# STATUSES.update({
+#     "WithRifle": WithRifle,
+#     "Parry": Parry,
+# })
 
 
 # EFFECTS.update({

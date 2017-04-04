@@ -1,4 +1,11 @@
-class Status:
+from ...replication_manager import MetaRegistry
+
+
+STATUSES = MetaRegistry()["Status"]
+StatusMeta = MetaRegistry().make_registered_metaclass("Status")
+
+
+class Status(metaclass=StatusMeta):
 
     name = None
 
@@ -28,7 +35,7 @@ class Status:
     def copy(self):
         return self.__class__(**vars(self))
 
-STATUSES = {}
+# STATUSES = {}
 
 
 def status_constructor(loader, node):
