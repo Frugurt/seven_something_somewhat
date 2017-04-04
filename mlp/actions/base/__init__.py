@@ -160,11 +160,11 @@ STATUSES.update({
 })
 
 
-EFFECTS.update({
-    'Move': Move,
-    'Damage': Damage,
-    'AddStatus': AddStatus,
-    'RemoveStatus': RemoveStatus,
-    'Reflect': Reflect,
-    'ChangeStat': ChangeStat,
-})
+# EFFECTS.update({
+#     'Move': Move,
+#     'Damage': Damage,
+#     'AddStatus': AddStatus,
+#     'RemoveStatus': RemoveStatus,
+#     'Reflect': Reflect,
+#     'ChangeStat': ChangeStat,
+# })

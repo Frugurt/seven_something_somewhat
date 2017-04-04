@@ -26,7 +26,7 @@ speed = Enum(
     "SLOW",
 )
 
-ActionMeta = MetaRegistry().make_registred_meta("Action")
+ActionMeta = MetaRegistry().make_registered_metaclass("Action")
 
 
 class Action(metaclass=ActionMeta):

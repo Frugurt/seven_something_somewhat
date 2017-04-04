@@ -40,7 +40,7 @@ class MetaRegistry(Singleton):
     def __getitem__(self, item):
         return self.registry[item]
 
-    def make_registred_meta(self, name):
+    def make_registered_metaclass(self, name):
 
         class Meta(type):
 

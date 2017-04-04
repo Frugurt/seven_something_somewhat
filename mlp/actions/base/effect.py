@@ -1,8 +1,12 @@
 from ...tools import convert
+from ...replication_manager import MetaRegistry
 from collections.abc import Iterable
 
+EFFECTS = MetaRegistry()['Effect']
+EffectMeta = MetaRegistry().make_registered_metaclass("Effect")
 
-class AbstractEffect:
+
+class AbstractEffect(metaclass=EffectMeta):
 
     info_message = ""
 
@@ -75,8 +79,6 @@ class MetaEffect(AbstractEffect):
 
     def copy(self):
         return self.__class__(**vars(self))
-
-EFFECTS = {}
 
 
 def effect_constructor(loader, node):
