@@ -1,13 +1,13 @@
 from .effect import (
     MetaEffect,
 )
-def source_selector(unit_effect):
+from ...replication_manager import MetaRegistry
 
-    def apply(target, source, *args, **kwargs):
-        pass
+TRIGGERS = MetaRegistry()['Trigger']
+TriggerMeta = MetaRegistry().make_registered_metaclass('Trigger')
 
 
-class Trigger:
+class Trigger(metaclass=TriggerMeta):
 
     name = ""
     events = []
@@ -34,4 +34,4 @@ class Trigger:
         return "Trigger {}".format(self.name)
 
 
-TRIGGERS = {}
+# TRIGGERS = {}

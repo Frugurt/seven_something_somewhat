@@ -147,24 +147,3 @@ class ParryTrigger(Trigger):
     events = ["on_phase_start", "on_take_damage"]
     on_take_damage = [Reflect()]#, RemoveStatus(Parry())]
     on_phase_start = [RemoveStatus(Parry())]
-
-
-TRIGGERS.update({
-    'Parry': ParryTrigger,
-})
-
-
-# STATUSES.update({
-#     "WithRifle": WithRifle,
-#     "Parry": Parry,
-# })
-
-
-# EFFECTS.update({
-#     'Move': Move,
-#     'Damage': Damage,
-#     'AddStatus': AddStatus,
-#     'RemoveStatus': RemoveStatus,
-#     'Reflect': Reflect,
-#     'ChangeStat': ChangeStat,
-# })
