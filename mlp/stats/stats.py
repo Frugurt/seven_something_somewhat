@@ -1,8 +1,8 @@
 from collections import defaultdict
 import traceback
-from .resource import Resource
-from .bind_widget import bind_widget
-from .tools import dict_merge
+from ..resource import NumericResource
+from ..bind_widget import bind_widget
+from ..tools import dict_merge
 
 
 PLANNING, ACTION = range(2)
@@ -20,8 +20,8 @@ class Stats:
         self.health = 100
         self.attack = 15
         self.initiative = 3
-        self._action_points = Resource(3, 0, 3)
-        self._move_points = Resource(3, 0, 3)
+        self._action_points = NumericResource(3, 0, 3)
+        self._move_points = NumericResource(3, 0, 3)
         self.unit_state = "sword"
         self.ammo = 3
         self.loaded = True

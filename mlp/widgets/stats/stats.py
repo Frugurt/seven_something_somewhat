@@ -27,7 +27,7 @@ class Stats(grl.GridLayout):
         # self.action = stats.action
         self.owner = stats.owner
         self.action_points = stats.action_points
-        self.move_points = stats.move_points
+        # self.move_points = stats.move_points
         self.initiative = stats.initiative
         self.unit_state = stats.unit_state
         self.ammo = stats.ammo
@@ -38,5 +38,5 @@ class Stats(grl.GridLayout):
 
     def on_load(self, struct):
         print(struct)
-        for key in struct:
+        for key in struct['resources']:
             setattr(self, key, getattr(self.stats, key))

@@ -8,10 +8,11 @@ from mlp.replication_manager import (
     MetaRegistry,
 )
 # from mlp.bind_widget import bind_widget
-from mlp.stats import (
-    Stats,
-    MajorStats,
-)
+# from mlp.stats import (
+#     Stats,
+#     MajorStats,
+# )
+from mlp.stats.new_stats import MajorStats
 from mlp.grid import Grid
 from mlp.actions.action import *
 from mlp.actions.new_action import *
@@ -24,19 +25,15 @@ class Unit(GameObject):
 
     hooks = []
     actions = []
+    resources = {}
 
     def __init__(self, master_name=None, id_=None):
         super().__init__(id_)
-        # self.master_name = None
-        # self.cell = None
         self._last_cell = None
         self.state = PLANNING
         self.presumed_path = []
         self.action_log = []
-        # self.action = None
-        # self._stats = Stats(self.__class__.__name__, master_name)
-        self._stats = MajorStats(self.__class__.__name__, master_name)
-        # self._presumed_stats = Stats(self.__class__.__name__, master_name)
+        self._stats = MajorStats(self.__class__.__name__, master_name, self.resources)
         self.current_action_bar = CurrentActionBar(self)
         registry = MetaRegistry()["Action"]
         self.action_bar = ActionBar(
@@ -90,21 +87,21 @@ class Unit(GameObject):
     def cell(self, cell):
         self.stats.cell = cell
 
-    def append_to_path(self, target_coord):
-        try:
-            max_i = max(self.presumed_path, key=lambda x: x[0])[0]
-        except ValueError:
-            max_i = -1
-        self.presumed_path.append((max_i + 1, target_coord))
-        return max_i + 1
+    # def append_to_path(self, target_coord):
+    #     try:
+    #         max_i = max(self.presumed_path, key=lambda x: x[0])[0]
+    #     except ValueError:
+    #         max_i = -1
+    #     self.presumed_path.append((max_i + 1, target_coord))
+    #     return max_i + 1
 
-    def remove_from_path(self, move_index):
-        c = None
-        for i, cell_coord in self.presumed_path:
-            if i == move_index:
-                c = cell_coord
-                break
-        self.presumed_path.remove((move_index, c))
+    # def remove_from_path(self, move_index):
+    #     c = None
+    #     for i, cell_coord in self.presumed_path:
+    #         if i == move_index:
+    #             c = cell_coord
+    #             break
+    #     self.presumed_path.remove((move_index, c))
 
     def place_in(self, cell):
         """
@@ -284,6 +281,7 @@ def unit_constructor(loader, node):
         name = u_s['name']
         actions = u_s['actions']
         widget = u_s['widget']
+        resources = u_s['resources']
 
     NewUnit.__name__ = NewUnit.name
     return NewUnit

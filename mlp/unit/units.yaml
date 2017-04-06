@@ -1,5 +1,12 @@
 - !new_unit
   name: Muzik
+  resources:
+    health: 150
+    initiative: 3
+    action_points: 3
+    unit_state: "sword"
+    ammo: 3
+    loaded: true
   actions:
     - Move
     - Attack
