@@ -1,0 +1,17 @@
+- !new_eff
+  name: Fatigue
+  params:
+    - amount
+  effects:
+    - effect: !eff
+        name: Damage
+        amount: 1
+      configure: {}
+      late_configure: {}
+    - effect: !eff
+        name: ChangeStat
+        stat_name: action_points
+      configure: {}
+      late_configure:
+        amount: !expr [!prop target_action_points, '-', !prop amount]
+      condition: !expr [!prop source_action_points, '>', !prop target_action_points]

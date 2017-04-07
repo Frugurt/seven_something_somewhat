@@ -81,10 +81,20 @@ class MetaEffect(AbstractEffect):
         return self.__class__(**vars(self))
 
 
+class CustomUnitEffect(UnitEffect):
+    pass
+
+
 def effect_constructor(loader, node):
     e_s = loader.construct_mapping(node)
     name = e_s.pop("name")
     effect = EFFECTS[name](**e_s)
     return effect
 
+
+def new_effect_constructor(loader, node):
+    n_e = loader.construct_mapping(node)
+    return
+
 EFFECT_TAG = "!eff"
+NEW_EFFECT_TAG = "!new_eff"
