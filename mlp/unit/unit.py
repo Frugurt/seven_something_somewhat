@@ -87,22 +87,6 @@ class Unit(GameObject):
     def cell(self, cell):
         self.stats.cell = cell
 
-    # def append_to_path(self, target_coord):
-    #     try:
-    #         max_i = max(self.presumed_path, key=lambda x: x[0])[0]
-    #     except ValueError:
-    #         max_i = -1
-    #     self.presumed_path.append((max_i + 1, target_coord))
-    #     return max_i + 1
-
-    # def remove_from_path(self, move_index):
-    #     c = None
-    #     for i, cell_coord in self.presumed_path:
-    #         if i == move_index:
-    #             c = cell_coord
-    #             break
-    #     self.presumed_path.remove((move_index, c))
-
     def place_in(self, cell):
         """
         Указать, что юнит на самом деле в этой клетке
@@ -197,12 +181,8 @@ class Unit(GameObject):
         return self.current_action_bar.apply_actions(speed)
 
     def refill_action_points(self):
-        self.stats.action_points += 100       # TODO сделать по людски
-        self.stats.move_points += 100
-        self.stats.parried = False
-
-    def clear_preparations(self):
-        self.current_action_bar.clear_preparations()
+        self.stats.action_points = 3       # TODO сделать по людски
+        self.stats.move_points = 3
 
     def clear_presumed(self):
         self._stats.update_presumed()
@@ -256,19 +236,6 @@ class Unit(GameObject):
         # print("Launch")
         for trigger in list(self.stats.triggers[event].values()):
             trigger.apply(event, self, *args, **kwargs)
-
-
-# @bind_widget('Muzik')
-# class Muzik(Unit):
-#     actions = [
-#         'Move',
-#         'Attack',
-#         'GetRifle',
-#         'GetSword',
-#         'Parry',
-#         'Shoot',
-#         'Reload',
-#     ]
 
 
 def unit_constructor(loader, node):

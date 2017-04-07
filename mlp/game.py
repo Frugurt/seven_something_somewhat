@@ -145,7 +145,6 @@ class Game:
             anyone_not_pass = self.apply_actions(True)
             for unit in self.turn_order_manager:
                 unit.current_action_bar.clear()
-                unit.clear_preparations()
             dead_players = {player for player in self.players if player.main_unit.stats.health <= 0}
             alive_players = set(self.players) - dead_players
             if len(alive_players) == 1:
