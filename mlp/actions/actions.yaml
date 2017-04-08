@@ -70,22 +70,22 @@
 #    icon: './data/two-handed-sword.png'
 #    pressed_icon: './data/two-handed-sword2.png'
 #
-#- !new_action
-#  name: Parry
-#  action_type: FULL
-#  speed: FAST
-#  cost: 1
-#  setup: []
-#  effects:
-#    - effect: !eff
-#        name: AddStatus
-#        status: !status
-#          name: Parry
-#      area: !prop source.cell
-#  check: !expr [!prop source.unit_state, "==", "sword"]
-#  widget:
-#    icon: './data/sword-clash(1).png'
-#    pressed_icon: './data/sword-clash.png'
+- !new_action
+  name: Parry
+  action_type: FULL
+  speed: FAST
+  cost: 1
+  setup: []
+  effects:
+    - effect: !eff
+        name: AddStatus
+        status: !status
+          name: Parry
+      area: !prop source.cell
+  check: !expr [!prop source.unit_state, "==", "sword"]
+  widget:
+    icon: './data/sword-clash(1).png'
+    pressed_icon: './data/sword-clash.png'
 #
 #- !new_action
 #  name: Shoot

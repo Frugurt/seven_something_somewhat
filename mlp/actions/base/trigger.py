@@ -12,22 +12,22 @@ class Trigger(metaclass=TriggerMeta):
     name = ""
     events = []
 
-    def __init__(self, source=None, **kwargs):
-        self.source = source
+    def __init__(self, context=None):
+        self.context = context
 
-    def apply(self, event, owner, target, *args, **kwargs):
+    def apply(self, event, target, context):
         effects = getattr(self, event, [])
         # cell = target.stats.cell
         for effect in effects:
             if isinstance(effect, MetaEffect):
-                effect.apply(target, self.source, *args, **kwargs)
+                effect.apply(target, self.context, effect_context=context)
             else:
-                effect.apply(target.cell, self.source)
+                effect.apply(target.cell, self.context)
 
     def dump(self):
         return {
             'name': self.name,
-            'source': self.source,
+            'context': self.context,
         }
 
     def __repr__(self):

@@ -41,6 +41,7 @@ class Unit(GameObject):
             [registry[action_name] for action_name in self.actions],
         )
         self.clear_presumed()
+        self.context = {'source': self}
 
     @property
     def _presumed_stats(self):
@@ -232,10 +233,10 @@ class Unit(GameObject):
         for event in trigger.events:
             self.stats.triggers[event].pop(trigger.name)
 
-    def launch_triggers(self, event, *args, **kwargs):
+    def launch_triggers(self, event, target, target_context):
         # print("Launch")
         for trigger in list(self.stats.triggers[event].values()):
-            trigger.apply(event, self, *args, **kwargs)
+            trigger.apply(event, target, target_context)
 
 
 def unit_constructor(loader, node):

@@ -12,7 +12,7 @@
     - Attack
 #    - GetRifle
 #    - GetSword
-#    - Parry
+    - Parry
 #    - Shoot
 #    - Reload
   widget:

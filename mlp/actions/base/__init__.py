@@ -43,13 +43,13 @@ class Damage(UnitEffect):
         super().__init__(**kwargs)
         self.amount = amount
 
-    def _apply(self, target, source):
+    def _apply(self, target, context):
         # if cell.object:
             # for cell in cells:
             #     if cell.object:
         target.stats.health -= self.amount
         self.info_message = self.info_message.format(target, self.amount)
-        super()._apply(target, source)
+        super()._apply(target, context)
 
 
 class AddStatus(UnitEffect):
@@ -60,13 +60,13 @@ class AddStatus(UnitEffect):
         super().__init__(**kwargs)
         self.status = status
 
-    def _apply(self, target, source):
+    def _apply(self, target, context):
         # if cell.object:
         status = self.status.copy()
-        status.configure(source=source)
+        status.configure(context=context)
         target.add_status(status)
         self.info_message = self.info_message.format(self.status, target)
-        super()._apply(target, source)
+        super()._apply(target, context)
 
 
 class RemoveStatus(UnitEffect):
@@ -113,9 +113,9 @@ class Reflect(MetaEffect):
     info_message = "reflect {} to {}"
 
     def _apply(self, effect, context, effect_context):
-        # print(source, "source")
-        # print(effect_source, "effect_source")
-        effect.apply(effect_context.cell, context)
+        print(context, "context")
+        print(effect_context, "effect_context")
+        effect.apply(effect_context['source'].cell, context)
         effect.cancel()
 
 
@@ -135,7 +135,7 @@ class Parry(Status):
     name = "Parry"
 
     def on_add(self, target):
-        target.add_trigger(ParryTrigger(source=self.source))
+        target.add_trigger(ParryTrigger(context=self.context))
 
     def on_remove(self, target):
         target.remove_trigger(ParryTrigger())
