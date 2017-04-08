@@ -3,7 +3,7 @@ from .property import Property
 
 class Area(Property):
 
-    def get(self, action):
+    def get(self, context):
         pass
 
 
@@ -13,10 +13,10 @@ class Melee(Area):
         self.radius = radius
         self.center = center
 
-    def get(self, action):
-        grid = action.owner.cell.grid
-        for cell in grid.get_area(self.center.get(action), self.radius):
-            if cell.object and cell.object.stats.owner != action.owner.stats.owner:
+    def get(self, context):
+        grid = context.owner.cell.grid
+        for cell in grid.get_area(self.center.get(context), self.radius):
+            if cell.object and cell.object.stats.owner != context.owner.stats.owner:
                 return [cell]
         return []
 
@@ -28,9 +28,9 @@ class Line(Area):
         self.target = target
         self.length = length
 
-    def get(self, action):
-        grid = action.owner.cell.grid
-        return grid.get_line(self.source.get(action), self.target.get(action)[-1], self.length)
+    def get(self, context):
+        grid = context.owner.cell.grid
+        return grid.get_line(self.source.get(context), self.target.get(context)[-1], self.length)
 
 
 AREAS = {

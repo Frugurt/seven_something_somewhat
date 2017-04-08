@@ -15,7 +15,7 @@ class ExpressionError(Exception):
     pass
 
 
-class Expression:
+class Expression(Property):
 
     OPERATORS = {
         '*': (operator.mul, 4),
@@ -36,8 +36,8 @@ class Expression:
     def __init__(self, expression):
         self.expression = self.make_tree(self.inf_2_post(expression))
 
-    def get(self, action):
-        return self.expression.get(action)
+    def get(self, context):
+        return self.expression.get(context)
 
     def inf_2_post(self, expression):
         OPERATORS = self.OPERATORS

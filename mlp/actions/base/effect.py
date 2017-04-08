@@ -1,6 +1,11 @@
-from ...tools import convert
+from ...tools import (
+    convert,
+    dotdict,
+)
+from ..property.property import Property
 from ...replication_manager import MetaRegistry
 from collections.abc import Iterable
+from contextlib import contextmanager
 
 EFFECTS = MetaRegistry()['Effect']
 EffectMeta = MetaRegistry().make_registered_metaclass("Effect")
@@ -16,8 +21,14 @@ class AbstractEffect(metaclass=EffectMeta):
     def log(self, source):
         source.action_log.append(self.info_message)
 
-    def configure(self, **kwargs):
-        pass
+    @contextmanager
+    def configure(self, context):
+        context_values = dotdict()
+        print("CONFIGURE", vars(self))
+        for k, v in vars(self).items():
+            if isinstance(v, Property):
+                context_values[k] = v.get(context)
+        yield context_values
 
     def apply(self, *args, **kwargs):
         pass
@@ -42,18 +53,22 @@ class UnitEffect(AbstractEffect):
         self.take_event_name = "on_take_" + convert(self.__class__.__name__)
         # self.
 
-    def _apply(self, target, source):
+    def _apply(self, target, context):
+        source = context['source']
+        # self.configure(context)
         self.log(source)
 
-    def apply(self, cells, source):
+    def apply(self, cells, context):
         if not isinstance(cells, Iterable):
             cells = [cells]
         for cell in cells:
             if cell.object is not None:
-                print("EFFECT EVENT", self.take_event_name)
-                cell.object.launch_triggers(self.take_event_name, self, source)
+                effect_context = context.copy()
+                effect_context['target'] = cell.object
+                # print("EFFECT EVENT", self.take_event_name)
+                cell.object.launch_triggers(self.take_event_name, self, effect_context)
                 if not self.is_canceled:
-                    self._apply(cell.object, source)
+                    self._apply(cell.object, effect_context)
                 else:
                     self.is_canceled = False
                     # cell.object.launch_triggers(self.after_event_name, self, source)
@@ -71,11 +86,11 @@ class MetaEffect(AbstractEffect):
     def log(self, source):
         source.action_log.append(self.info_message)
 
-    def _apply(self, effect, source, effect_source):
-        self.log(source)
+    def _apply(self, effect, context, effect_context):
+        self.log(context)
 
-    def apply(self, effect, source, effect_source):
-        self._apply(effect, source, effect_source)
+    def apply(self, effect, context, effect_context):
+        self._apply(effect, context, effect_context)
 
     def copy(self):
         return self.__class__(**vars(self))

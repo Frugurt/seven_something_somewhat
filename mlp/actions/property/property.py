@@ -1,37 +1,55 @@
+"""
+context - это словарь в котором могут быть такие параметры
+
+target -> то к чему применяется эффект
+source -> тот кто использует действие применяющее эффект
+action -> действие накладывающее эффект
+
+У мета эффектов
+effect_context -> контекст эффекта на который применяется метаэффект
+"""
+
+
 class Property:
 
-    def get(self, action):
+    def get(self, context):
         pass
 
 
 class Attribute(Property):
 
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, path):
+        path = path.split(".")
+        self.donor = path[0]
+        self.path = path[1::]
+        print("ATTR", self.donor, self.path)
 
-    def get(self, action):
-        return getattr(action, self.name)
-
-    def __repr__(self):
-        return "get {} from action".format(self.name)
-
-
-class OwnerAttribute(Property):
-
-    def __init__(self, name):
-        self.name = name
-
-    def get(self, action):
-        return getattr(action.owner.stats, self.name)
+    def get(self, context):
+        print(context, self.donor, self.path)
+        donor = context[self.donor]
+        for p in self.path:
+            donor = getattr(donor, p)
+        return donor
 
     def __repr__(self):
-        return "get {} from action owner".format(self.name)
+        return "get {} from {}".format(
+            ".".join(self.path),
+            self.path[0],
+        )
 
 
-class PresumedCell(Property):
+class SourceAttribute(Attribute):
 
-    def get(self, action):
-        return action.owner.presumed_cell
+    def __init__(self, path):
+        path = path.split(".")
+        self.donor = path[0]
+        self.path = ["stats"] + path[1::]
+
+
+# class PresumedCell(Property):
+#
+#     def get(self, context):
+#         return context.owner.presumed_cell
 
 
 class Const(Property):
@@ -39,7 +57,7 @@ class Const(Property):
     def __init__(self, v):
         self.v = v
 
-    def get(self, action):
+    def get(self, context):
         return self.v
 
 
@@ -50,12 +68,12 @@ class Oper(Property):
         self.left = left
         self.right = right
 
-    def get(self, action):
-        left = self.left.get(action)
-        right = self.right.get(action)
+    def get(self, context):
+        left = self.left.get(context)
+        right = self.right.get(context)
         print(left, self.left)
         print(right, self.right)
-        return self.oper(self.left.get(action), self.right.get(action))
+        return self.oper(self.left.get(context), self.right.get(context))
 
 
 PROPERTY_TABLE = {
@@ -66,8 +84,8 @@ def property_constructor(loader, node):
     property_ = loader.construct_scalar(node)
     if property_ in PROPERTY_TABLE:
         return PROPERTY_TABLE[property_]()
-    elif property_.startswith("owner"):
-        return OwnerAttribute(property_.split("_", 1)[-1])  # !prop owner_ololo_kuku --> OwnerAttribute("ololo_kuku")
+    elif property_.startswith("source"):
+        return SourceAttribute(property_)
     else:
         return Attribute(property_)
 

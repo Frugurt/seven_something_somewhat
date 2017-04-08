@@ -46,6 +46,8 @@ class Action(metaclass=ActionMeta):
     _check = None
 
     def __init__(self, owner, **kwargs):
+        print("CREATE NEW")
+        print(kwargs)
         self.owner = owner
         for setup_struct in self.setup_fields:
             field_name = setup_struct['name']
@@ -57,20 +59,27 @@ class Action(metaclass=ActionMeta):
         for effect in self.effects:
             effects.append({
                 'effect': effect['effect'].copy(),
-                'configure': effect['configure'],
+                # 'configure': effect['configure'],
                 'area': effect['area']
             })
         self.effects = effects
+        self.context = {
+            'action': self,
+            'source': self.owner,
+        }
+        # print()
         # self.effects = [effect.copy() for effect in self.effects]
 
     def setup(self):
         for setup_struct in self.setup_fields:
+            print(setup_struct)
             cursor_params = [
-                p.get(self) if isinstance(p, Property) else p
+                p.get(self.context) if isinstance(p, Property) else p
                 for p in setup_struct['cursor_params']
             ]
             value = yield [setup_struct['cursor']] + [cursor_params]
             setattr(self, setup_struct['name'], value)
+            # print("AFTER SETUP", vars(self))
 
     def clear(self):
         for setup_struct in self.setup_fields:
@@ -81,13 +90,17 @@ class Action(metaclass=ActionMeta):
         self.owner.stats.action_points -= self.cost
         for effect_struct in self.effects:
             effect = effect_struct['effect']
-            effect_args = {k: arg.get(self) for k, arg in effect_struct['configure'].items()}
-            effect.configure(**effect_args)
-            cells = effect_struct['area'].get(self)
-            effect.apply(cells, self.owner)
+            # effect_args = {k: arg.get(self) for k, arg in effect_struct['configure'].items()}
+            # effect.configure(**effect_args)
+            cells = effect_struct['area'].get(self.context)
+            # effect.apply(cells, self.owner)
+            effect.apply(cells, self.context)
 
     def check(self):
-        res = self._check.get(self)
+        if self._check:
+            res = self._check.get(self.context)
+        else:
+            res = True
         return res and self.owner.stats.action_points >= self.cost
 
     def pre_check(self):
@@ -109,13 +122,20 @@ class Action(metaclass=ActionMeta):
         for setup_field in self.setup_fields:
             name = setup_field['name']
             fields[name] = getattr(self, name)
-        return dict_merge(
+        s = dict_merge(
             {
                 'name': self.name,
                 'owner': self.owner,
             },
             fields
         )
+
+        # print("DUMP ACTION", s)
+        return s
+
+    def copy(self):
+        kwargs = {ss['name']: getattr(self, ss['name']) for ss in self.setup_fields}
+        return self.__class__(self.owner, **kwargs)
 
     # def load(self, struct):
     #     for name, val in struct:
@@ -136,7 +156,7 @@ def actions_constructor(loader, node):
         setup_fields = a_s['setup']
         effects = a_s['effects']
         widget = a_s['widget']
-        _check = a_s.get('check', Const(True))
+        _check = a_s.get('check')
 
     return NewAction
 

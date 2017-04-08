@@ -67,7 +67,9 @@ class Action(ImageButton):
         try:
             cursor_data = next(setup_context)
         except StopIteration:
-            self.parent.send_action(self.action)
+            print("SEND")
+            self.parent.send_action(self.action.copy())
+            print("SENDED")
             self.action.clear()
         else:
         # print(setup_context)
@@ -85,12 +87,17 @@ class Action(ImageButton):
                 cursor_data = self.setup_context.send(select_result)
                 self.make_cursor(*cursor_data)
             except StopIteration:
-                self.parent.send_action(self.action)
+                print("SEND")
+                c_action = self.action.copy()
+                print("Copied")
+                self.parent.send_action(c_action)
+                print("Sended")
                 self.setup_context = None
                 self.select_result = None
         elif self.setup_context and select_result is None:
             self.setup_context = None
             self.action.clear()
+        print("Done")
 
     def make_cursor(self, cursor_name, cursor_args=None, cursor_kwargs=None):
         cursor_cls = CURSOR_TABLE[cursor_name]
@@ -106,44 +113,44 @@ class NewAction(Action):
         super().__init__(action, **kwargs)
 
 
-class RandomMove(Action):
-
-    on_press_source = './data/run2.png'
-    on_release_source = './data/run.png'
-
-
-# class Move(Action)
-
-
-class Attack(Action):
-
-    on_press_source = './data/punch.png'
-    on_release_source = './data/punch(1).png'
-
-
-class Shoot(Action):
-
-    on_press_source = './data/gunshot(1).png'
-    on_release_source = './data/gunshot.png'
-
-
-class Parry(Action):
-
-    on_press_source = './data/sword-clash.png'
-    on_release_source = './data/sword-clash(1).png'
-
-
-class ChangeWeapon(Action):
-
-    on_press_source = './data/usable(1).png'
-    on_release_source = './data/usable.png'
-
-
-class Reload(Action):
-
-    on_press_source = './data/clockwise-rotation.png'
-    on_release_source = './data/clockwise-rotation(1).png'
-
+# class RandomMove(Action):
+#
+#     on_press_source = './data/run2.png'
+#     on_release_source = './data/run.png'
+#
+#
+# # class Move(Action)
+#
+#
+# class Attack(Action):
+#
+#     on_press_source = './data/punch.png'
+#     on_release_source = './data/punch(1).png'
+#
+#
+# class Shoot(Action):
+#
+#     on_press_source = './data/gunshot(1).png'
+#     on_release_source = './data/gunshot.png'
+#
+#
+# class Parry(Action):
+#
+#     on_press_source = './data/sword-clash.png'
+#     on_release_source = './data/sword-clash(1).png'
+#
+#
+# class ChangeWeapon(Action):
+#
+#     on_press_source = './data/usable(1).png'
+#     on_release_source = './data/usable.png'
+#
+#
+# class Reload(Action):
+#
+#     on_press_source = './data/clockwise-rotation.png'
+#     on_release_source = './data/clockwise-rotation(1).png'
+#
 
 class ActionBar(GridLayout):
 
@@ -158,8 +165,8 @@ class ActionBar(GridLayout):
         return self.parent
 
     def send_action(self, action):
-        print(action)
-        print("parent", self.parent)
+        # print("SEND ACTION CONTEXT")
+        # print("parent", self.parent)
         msg_struct = remote_action_append(action)
         msg_struct['payload']["author"] = action.owner.stats.owner
         self.parent.receive_message(msg_struct)

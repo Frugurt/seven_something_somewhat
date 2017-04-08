@@ -53,7 +53,7 @@ class NetworkManager(Thread):
         while True:
             # text = await self.inqueue.get()
             text = yield self.inqueue.get()
-            print("bytes sended", text)
+            # print("bytes sended", text)
             # await stream.write(text)
             yield stream.write(text + SEPARATOR)
 
@@ -70,7 +70,7 @@ class NetworkManager(Thread):
                 # status = stream.get_fd_error()
                 # if status:
                 #     print(str(status))
-                print("bytes recieved", text)
+                # print("bytes recieved", text)
             except iostream.StreamClosedError:
                 break
             else:

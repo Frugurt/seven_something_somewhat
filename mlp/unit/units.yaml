@@ -9,11 +9,11 @@
     loaded: true
   actions:
     - Move
-    - Attack
-    - GetRifle
-    - GetSword
-    - Parry
-    - Shoot
-    - Reload
+#    - Attack
+#    - GetRifle
+#    - GetSword
+#    - Parry
+#    - Shoot
+#    - Reload
   widget:
     sprite: './data/duelist.png'

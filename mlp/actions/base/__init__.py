@@ -18,21 +18,21 @@ class Move(UnitEffect):
     info_message = "{} move to {}"
 
     def __init__(self, **kwargs):
+        self.target_coord = kwargs['target_coord']
+        print("TARGET COORD", self.target_coord)
         super().__init__(**kwargs)
-        self.target_coord = None
-
-    def configure(self, target_coord):
-        self.target_coord = target_coord
 
     # def _apply(self, source_action, target):
 
-    def _apply(self, target, source):
-        # if cell.object:
-        print(self.info_message.format(target, self.target_coord))
-        # print(target.object)
-        target.move(self.target_coord)
-        self.info_message = self.info_message.format(target, self.target_coord)
-        super()._apply(target, source)
+    def _apply(self, target, context):
+        print("CONTEXT", context['action'].target_coord)
+        with self.configure(context) as c:
+            print("CONTEXT", vars(c))
+            print(self.info_message.format(target, c.target_coord))
+            print("context target coord", c.target_coord)
+            target.move(c.target_coord)
+            self.info_message = self.info_message.format(target, self.target_coord)
+            super()._apply(target, context)
 
 
 class Damage(UnitEffect):
@@ -112,10 +112,10 @@ class Reflect(MetaEffect):
 
     info_message = "reflect {} to {}"
 
-    def _apply(self, effect, source, effect_source):
+    def _apply(self, effect, context, effect_context):
         # print(source, "source")
         # print(effect_source, "effect_source")
-        effect.apply(effect_source.cell, source)
+        effect.apply(effect_context.cell, context)
         effect.cancel()
 
 

@@ -9,9 +9,9 @@ class Status(metaclass=StatusMeta):
 
     name = None
 
-    def __init__(self, source=None, **kwargs):
+    def __init__(self, context=None, **kwargs):
         # pass
-        self.source = source
+        self.context = context
 
     def configure(self, **kwargs):
         for key, val in kwargs.items():
@@ -26,7 +26,7 @@ class Status(metaclass=StatusMeta):
     def dump(self):
         return {
             "name": self.name,
-            "source": self.source,
+            "context": self.context,
         }
 
     def __repr__(self):
