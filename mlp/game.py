@@ -97,10 +97,10 @@ class Game:
 
     # @staticmethod
     def append_action(self, action_struct):
-        print("APPEND")
+        # print("APPEND")
         action = action_struct['action']
         author = action_struct['author']
-        print(action.target_coord, action.context['action'].target_coord)
+        # print(action.target_coord, action.context['action'].target_coord)
         if author == action.owner.stats.owner or author == "overlord":
             action.owner.append_action(action)
         self.apply_actions()

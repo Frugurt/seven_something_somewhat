@@ -113,45 +113,6 @@ class NewAction(Action):
         super().__init__(action, **kwargs)
 
 
-# class RandomMove(Action):
-#
-#     on_press_source = './data/run2.png'
-#     on_release_source = './data/run.png'
-#
-#
-# # class Move(Action)
-#
-#
-# class Attack(Action):
-#
-#     on_press_source = './data/punch.png'
-#     on_release_source = './data/punch(1).png'
-#
-#
-# class Shoot(Action):
-#
-#     on_press_source = './data/gunshot(1).png'
-#     on_release_source = './data/gunshot.png'
-#
-#
-# class Parry(Action):
-#
-#     on_press_source = './data/sword-clash.png'
-#     on_release_source = './data/sword-clash(1).png'
-#
-#
-# class ChangeWeapon(Action):
-#
-#     on_press_source = './data/usable(1).png'
-#     on_release_source = './data/usable.png'
-#
-#
-# class Reload(Action):
-#
-#     on_press_source = './data/clockwise-rotation.png'
-#     on_release_source = './data/clockwise-rotation(1).png'
-#
-
 class ActionBar(GridLayout):
 
     def __init__(self, action_bar, **kwargs):

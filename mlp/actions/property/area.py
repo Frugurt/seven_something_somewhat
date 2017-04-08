@@ -14,9 +14,9 @@ class Melee(Area):
         self.center = center
 
     def get(self, context):
-        grid = context.owner.cell.grid
+        grid = context['source'].cell.grid
         for cell in grid.get_area(self.center.get(context), self.radius):
-            if cell.object and cell.object.stats.owner != context.owner.stats.owner:
+            if cell.object and cell.object.stats.owner != context['source'].stats.owner:
                 return [cell]
         return []
 
@@ -29,7 +29,7 @@ class Line(Area):
         self.length = length
 
     def get(self, context):
-        grid = context.owner.cell.grid
+        grid = context['source'].cell.grid
         return grid.get_line(self.source.get(context), self.target.get(context)[-1], self.length)
 
 

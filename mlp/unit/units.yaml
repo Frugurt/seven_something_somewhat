@@ -9,7 +9,7 @@
     loaded: true
   actions:
     - Move
-#    - Attack
+    - Attack
 #    - GetRifle
 #    - GetSword
 #    - Parry
