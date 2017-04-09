@@ -90,22 +90,23 @@ class ChangeStat(UnitEffect):
     info_message = "change stat {} of {} to {}"
 
     def __init__(self, stat_name, value=None, **kwargs):
-        super().__init__(**kwargs)
         self.stat_name = stat_name
         self.value = value
+        super().__init__(stat_name=stat_name, value=value, **kwargs)
 
-    def configure(self, stat_name=None, value=None):
-        self.value = value or self.value
-        self.stat_name = stat_name or self.stat_name
+    # def configure(self, stat_name=None, value=None):
+    #     self.value = value or self.value
+    #     self.stat_name = stat_name or self.stat_name
 
-    def _apply(self, target, source):
-        self.info_message = self.info_message.format(
-            self.stat_name,
-            target,
-            self.value,
-        )
-        setattr(target.stats, self.stat_name, self.value)
-        super()._apply(target, source)
+    def _apply(self, target, context):
+        with self.configure(context) as c:
+            self.info_message = self.info_message.format(
+                c.stat_name,
+                target,
+                c.value,
+            )
+            setattr(target.stats, c.stat_name, c.value)
+            super()._apply(target, context)
 
 
 class Reflect(MetaEffect):

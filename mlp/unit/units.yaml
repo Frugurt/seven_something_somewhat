@@ -10,10 +10,10 @@
   actions:
     - Move
     - Attack
-#    - GetRifle
-#    - GetSword
+    - GetRifle
+    - GetSword
     - Parry
-#    - Shoot
-#    - Reload
+    - Shoot
+    - Reload
   widget:
     sprite: './data/duelist.png'

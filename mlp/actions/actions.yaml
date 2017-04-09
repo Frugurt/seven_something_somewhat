@@ -35,40 +35,40 @@
   widget:
     icon: './data/punch(1).png'
     pressed_icon: './data/punch.png'
-#
-#- !new_action
-#  name: GetRifle
-#  action_type: MOVE
-#  speed: NORMAL
-#  cost: 1
-#  setup: []
-#  effects:
-#    - effect: !eff
-#        name: AddStatus
-#        status: !status
-#          name: WithRifle
-#      area: !prop source.cell
-#  check: !expr [!prop source.unit_state, "==", "sword"]
-#  widget:
-#    icon: './data/musket.png'
-#    pressed_icon: './data/musket(1).png'
-#
-#- !new_action
-#  name: GetSword
-#  action_type: MOVE
-#  speed: NORMAL
-#  cost: 1
-#  setup: []
-#  effects:
-#    - effect: !eff
-#        name: RemoveStatus
-#        status: !status
-#          name: WithRifle
-#      area: !prop source.cell
-#  check: !expr [!prop source.unit_state, "==", "rifle"]
-#  widget:
-#    icon: './data/two-handed-sword.png'
-#    pressed_icon: './data/two-handed-sword2.png'
+
+- !new_action
+  name: GetRifle
+  action_type: MOVE
+  speed: NORMAL
+  cost: 1
+  setup: []
+  effects:
+    - effect: !eff
+        name: AddStatus
+        status: !status
+          name: WithRifle
+      area: !prop source.cell
+  check: !expr [!prop source.unit_state, "==", "sword"]
+  widget:
+    icon: './data/musket.png'
+    pressed_icon: './data/musket(1).png'
+
+- !new_action
+  name: GetSword
+  action_type: MOVE
+  speed: NORMAL
+  cost: 1
+  setup: []
+  effects:
+    - effect: !eff
+        name: RemoveStatus
+        status: !status
+          name: WithRifle
+      area: !prop source.cell
+  check: !expr [!prop source.unit_state, "==", "rifle"]
+  widget:
+    icon: './data/two-handed-sword.png'
+    pressed_icon: './data/two-handed-sword2.png'
 #
 - !new_action
   name: Parry
@@ -86,61 +86,61 @@
   widget:
     icon: './data/sword-clash(1).png'
     pressed_icon: './data/sword-clash.png'
-#
-#- !new_action
-#  name: Shoot
-#  action_type: STANDARD
-#  speed: SLOW
-#  cost: 1
-#  setup:
-#    - name: target
-#      cursor: line
-#      cursor_params:
-#        - !prop source.cell
-#  effects:
-#    - effect: !eff
-#        name: Damage
-#        amount: 35
-#        target_coord: !prop action.target
-#      area: !area
-#        name: Line
-#        source: !prop source.cell
-#        target: !prop action.target
-#        length: null
-#    - effect: !eff
-#        name: ChangeStat
-#        stat_name: loaded
-#        value: false
-#      area: !prop source.cell
-#  check: !expr
-#    - [!prop source.unit_state, "==", "rifle"]
-#    - and
-#    - [!prop source.loaded]
-#  widget:
-#    icon: './data/gunshot.png'
-#    pressed_icon: './data/gunshot(1).png'
-#
-#- !new_action
-#  name: Reload
-#  action_type: FULL
-#  speed: NORMAL
-#  cost: 1
-#  setup: []
-#  effects:
-#    - effect: !eff
-#        name: ChangeStat
-#        stat_name: ammo
-#        value: !expr [!prop source.ammo, "-", 1]
-#      area: !prop source.cell
-#    - effect: !eff
-#        name: ChangeStat
-#        stat_name: loaded
-#        value: true
-#      area: !prop source.cell
-#  check: !expr
-#    - [!prop source.ammo, ">", 0]
-#    - and
-#    - [!prop source.loaded, "==", false]
-#  widget:
-#    icon: './data/clockwise-rotation(1).png'
-#    pressed_icon: './data/clockwise-rotation.png'
+
+- !new_action
+  name: Shoot
+  action_type: STANDARD
+  speed: SLOW
+  cost: 1
+  setup:
+    - name: target
+      cursor: line
+      cursor_params:
+        - !prop source.cell
+  effects:
+    - effect: !eff
+        name: Damage
+        amount: 35
+        target_coord: !prop action.target
+      area: !area
+        name: Line
+        source: !prop source.cell
+        target: !prop action.target
+        length: null
+    - effect: !eff
+        name: ChangeStat
+        stat_name: loaded
+        value: false
+      area: !prop source.cell
+  check: !expr
+    - [!prop source.unit_state, "==", "rifle"]
+    - and
+    - [!prop source.loaded]
+  widget:
+    icon: './data/gunshot.png'
+    pressed_icon: './data/gunshot(1).png'
+
+- !new_action
+  name: Reload
+  action_type: FULL
+  speed: NORMAL
+  cost: 1
+  setup: []
+  effects:
+    - effect: !eff
+        name: ChangeStat
+        stat_name: ammo
+        value: !expr [!prop target.ammo, "-", 1]
+      area: !prop source.cell
+    - effect: !eff
+        name: ChangeStat
+        stat_name: loaded
+        value: true
+      area: !prop source.cell
+  check: !expr
+    - [!prop source.ammo, ">", 0]
+    - and
+    - [!prop source.loaded, "==", false]
+  widget:
+    icon: './data/clockwise-rotation(1).png'
+    pressed_icon: './data/clockwise-rotation.png'

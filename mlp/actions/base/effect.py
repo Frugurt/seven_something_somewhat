@@ -2,7 +2,9 @@ from ...tools import (
     convert,
     dotdict,
 )
-from ..property.property import Property
+from ..property.property import (
+    Property,
+)
 from ...replication_manager import MetaRegistry
 from collections.abc import Iterable
 from contextlib import contextmanager
@@ -28,6 +30,8 @@ class AbstractEffect(metaclass=EffectMeta):
         for k, v in vars(self).items():
             if isinstance(v, Property):
                 context_values[k] = v.get(context)
+            else:
+                context_values[k] = v
         yield context_values
 
     def apply(self, *args, **kwargs):
