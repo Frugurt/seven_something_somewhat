@@ -44,9 +44,6 @@ class Damage(UnitEffect):
         self.amount = amount
 
     def _apply(self, target, context):
-        # if cell.object:
-            # for cell in cells:
-            #     if cell.object:
         target.stats.health -= self.amount
         self.info_message = self.info_message.format(target, self.amount)
         super()._apply(target, context)

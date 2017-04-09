@@ -4,6 +4,7 @@ from ...tools import (
 )
 from ..property.property import (
     Property,
+    # Const,
 )
 from ...replication_manager import MetaRegistry
 from collections.abc import Iterable
@@ -16,6 +17,7 @@ EffectMeta = MetaRegistry().make_registered_metaclass("Effect")
 class AbstractEffect(metaclass=EffectMeta):
 
     info_message = ""
+    name = ""
 
     def __init__(self, **kwargs):
         self.is_canceled = False
@@ -54,7 +56,7 @@ class UnitEffect(AbstractEffect):
         # self.source = source
         self.info_message = self.info_message
         super().__init__(**kwargs)
-        self.take_event_name = "on_take_" + convert(self.__class__.__name__)
+        self.take_event_name = "on_take_" + convert(self.name or self.__class__.__name__)
         # self.
 
     def _apply(self, target, context):
@@ -101,7 +103,27 @@ class MetaEffect(AbstractEffect):
 
 
 class CustomUnitEffect(UnitEffect):
-    pass
+
+    name = None
+    params = []
+    effects = []
+
+    def __init__(self, **kwargs):
+        # assert set(self.params) == set(kwargs.keys())
+        super().__init__(**kwargs)
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+
+    def apply(self, cells, context):
+        context['effect'] = self
+        super().apply(cells, context)
+
+    def _apply(self, target, context):
+        for e_s in self.effects:
+            cond = e_s.get('condition')
+            if cond is None or cond.get(context):
+                effect = e_s['effect']
+                effect._apply(target, context)     # TODO перепроектировать это
 
 
 def effect_constructor(loader, node):
@@ -113,7 +135,13 @@ def effect_constructor(loader, node):
 
 def new_effect_constructor(loader, node):
     n_e = loader.construct_mapping(node)
-    return
+
+    class NewEffect(CustomUnitEffect):
+        name = n_e["name"]
+        effects = n_e['effects']
+        params = n_e['params']
+
+    return NewEffect
 
 EFFECT_TAG = "!eff"
 NEW_EFFECT_TAG = "!new_eff"
