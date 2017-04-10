@@ -10,4 +10,4 @@
         name: ChangeStat
         stat_name: action_points
         value: !expr [!prop target.action_points, '-', !prop effect.amount]
-      condition: !expr [!prop target.action_points, '>', 0]
+      condition: !expr [!prop target.action_points, '>=', !prop effect.amount]
