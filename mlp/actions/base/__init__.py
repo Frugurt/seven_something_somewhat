@@ -145,6 +145,9 @@ class Parry(Status):
 class ParryTrigger(Trigger):
 
     name = "Parry"
-    events = ["on_phase_start", "on_take_damage"]
-    on_take_damage = [Reflect()]#, RemoveStatus(Parry())]
-    on_phase_start = [RemoveStatus(Parry())]
+    events = {
+        "on_phase_start": [RemoveStatus(Parry())],
+        "on_take_damage": [Reflect()],
+    }
+    # on_take_damage = [Reflect()]#, RemoveStatus(Parry())]
+    # on_phase_start = [RemoveStatus(Parry())]

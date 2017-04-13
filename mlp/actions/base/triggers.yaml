@@ -1,0 +1,10 @@
+- !new_trigger
+  name: Parry
+  on_take_damage:
+    - !eff
+      name: Reflect
+  on_phase_start:
+    - !eff
+      name: RemoveStatus
+      status: !status
+        name: Parry
