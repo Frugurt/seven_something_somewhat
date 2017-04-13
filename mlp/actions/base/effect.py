@@ -28,7 +28,7 @@ class AbstractEffect(metaclass=EffectMeta):
     @contextmanager
     def configure(self, context):
         context_values = dotdict()
-        print("CONFIGURE", vars(self))
+        # print("CONFIGURE", vars(self))
         for k, v in vars(self).items():
             if isinstance(v, Property):
                 context_values[k] = v.get(context)

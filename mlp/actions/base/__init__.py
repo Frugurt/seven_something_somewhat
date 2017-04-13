@@ -25,11 +25,11 @@ class Move(UnitEffect):
     # def _apply(self, source_action, target):
 
     def _apply(self, target, context):
-        print("CONTEXT", context['action'].target_coord)
+        # print("CONTEXT", context['action'].target_coord)
         with self.configure(context) as c:
-            print("CONTEXT", vars(c))
-            print(self.info_message.format(target, c.target_coord))
-            print("context target coord", c.target_coord)
+            # print("CONTEXT", vars(c))
+            # print(self.info_message.format(target, c.target_coord))
+            # print("context target coord", c.target_coord)
             target.move(c.target_coord)
             self.info_message = self.info_message.format(target, self.target_coord)
             super()._apply(target, context)
@@ -44,9 +44,10 @@ class Damage(UnitEffect):
         self.amount = amount
 
     def _apply(self, target, context):
-        target.stats.health -= self.amount
-        self.info_message = self.info_message.format(target, self.amount)
-        super()._apply(target, context)
+        with self.configure(context) as c:
+            target.stats.health -= c.amount
+            self.info_message = self.info_message.format(target, c.amount)
+            super()._apply(target, context)
 
 
 class AddStatus(UnitEffect):
@@ -59,11 +60,12 @@ class AddStatus(UnitEffect):
 
     def _apply(self, target, context):
         # if cell.object:
-        status = self.status.copy()
-        status.configure(context=context)
-        target.add_status(status)
-        self.info_message = self.info_message.format(self.status, target)
-        super()._apply(target, context)
+        with self.configure(context) as c:
+            status = c.status.copy()
+            status.configure(context=context)
+            target.add_status(status)
+            self.info_message = self.info_message.format(c.status, target)
+            super()._apply(target, context)
 
 
 class RemoveStatus(UnitEffect):
@@ -74,12 +76,13 @@ class RemoveStatus(UnitEffect):
         super().__init__(**kwargs)
         self.status = status
 
-    def _apply(self, target, source):
+    def _apply(self, target, context):
         # if cell.object:
-        target.remove_status(self.status)
-        self.info_message = self.info_message.format(self.status, target)
-        print(self.info_message)
-        super()._apply(target, source)
+        with self.configure(context) as c:
+            target.remove_status(c.status)
+            self.info_message = self.info_message.format(c.status, target)
+            # print(self.info_message)
+            super()._apply(target, context)
 
 
 class ChangeStat(UnitEffect):
