@@ -120,15 +120,15 @@ class Reflect(MetaEffect):
         effect.cancel()
 
 
-class WithRifle(Status):
-
-    name = "WithRifle"
-
-    def on_add(self, target):
-        target.stats.unit_state = "rifle"
-
-    def on_remove(self, target):
-        target.stats.unit_state = "sword"
+# class WithRifle(Status):
+#
+#     name = "WithRifle"
+#
+#     def on_add(self, target):
+#         target.stats.unit_state = "rifle"
+#
+#     def on_remove(self, target):
+#         target.stats.unit_state = "sword"
 
 
 class Parry(Status):

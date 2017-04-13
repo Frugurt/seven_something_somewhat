@@ -1,0 +1,12 @@
+- !new_status
+  name: WithRifle
+  on_add:
+    - !eff
+      name: ChangeStat
+      stat_name: unit_state
+      value: "rifle"
+  on_remove:
+    - !eff
+      name: ChangeStat
+      stat_name: unit_state
+      value: "sword"
