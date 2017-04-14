@@ -242,6 +242,38 @@ class HexGrid(Grid):
             else:
                 return None
 
+    def find_path(self, from_pos_or_cell, to_pos_or_cell):
+
+        if isinstance(from_pos_or_cell, tuple):
+            fcell = self[from_pos_or_cell]
+        else:
+            fcell = from_pos_or_cell
+
+        if isinstance(to_pos_or_cell, tuple):
+            tcell = self[to_pos_or_cell]
+        else:
+            tcell = to_pos_or_cell
+
+        return self._find_path(fcell, tcell)
+
+    def _find_path(self, fcell, tcell):
+        paths = [[fcell]]
+        already = set()
+        while True:
+            new_paths = []
+            for path in paths:
+                last_cell = path[-1]
+                for cell in (cell for cell in last_cell.adjacent if cell not in already):
+                    already.add(cell)
+                    if cell is tcell:
+                        return path + [cell]
+                    else:
+                        new_paths.append(path + [cell])
+            if new_paths:
+                paths = new_paths
+            else:
+                return []
+
     def __iter__(self):
         return iter(chain(*self._grid))
 
