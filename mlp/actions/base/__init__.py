@@ -1,3 +1,4 @@
+from collections.abc import Iterable
 from .effect import (
     UnitEffect,
     MetaEffect,
@@ -18,8 +19,8 @@ class Move(UnitEffect):
     info_message = "{} move to {}"
 
     def __init__(self, **kwargs):
-        self.target_coord = kwargs['target_coord']
-        print("TARGET COORD", self.target_coord)
+        self.path = kwargs['path']
+        # print("TARGET COORD", self.target_coord)
         super().__init__(**kwargs)
 
     # def _apply(self, source_action, target):
@@ -27,11 +28,15 @@ class Move(UnitEffect):
     def _apply(self, target, context):
         # print("CONTEXT", context['action'].target_coord)
         with self.configure(context) as c:
-            # print("CONTEXT", vars(c))
-            # print(self.info_message.format(target, c.target_coord))
-            # print("context target coord", c.target_coord)
-            target.move(c.target_coord)
-            self.info_message = self.info_message.format(target, self.target_coord)
+            path = c.path
+            grid = target.cell.grid
+            if not isinstance(path, Iterable):
+                path = [path]
+            for path_part in path:
+                next_cell = grid.find_path(target.cell, path_part)[1]
+                if next_cell.object is None:
+                    target.move(c.path)
+            self.info_message = self.info_message.format(target, c.path)
             super()._apply(target, context)
 
 

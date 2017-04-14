@@ -4,14 +4,14 @@
   speed: NORMAL
   cost: 1
   setup:
-    - name: target_coord
+    - name: path
       cursor: adjacent_cell
       cursor_params:
         - !prop source.cell
   effects:
     - effect: !eff
         name: Move
-        target_coord: !prop action.target_coord
+        path: !prop action.path
       area: !prop source.cell
   widget:
     icon: './data/run.png'

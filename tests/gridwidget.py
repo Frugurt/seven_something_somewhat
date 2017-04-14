@@ -124,7 +124,8 @@ if __name__ == '__main__':
 
 
     # cells = grid.get_area((4, 4), 1)
-    cells = grid.get_ring((4, 4), 2)
+    # cells = grid.get_ring((4, 4), 2)
+    cells = grid.find_path((4, 5), (6, 0))
     for cell in cells:
         cell.make_widget().is_selected = True
 
