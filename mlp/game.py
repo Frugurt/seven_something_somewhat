@@ -10,10 +10,7 @@ from .bind_widget import bind_widget
 from .grid import Grid
 from .unit import Unit
 from .tools import dict_merge
-from .actions.action import (
-    SLOW, NORMAL, FAST
-)
-
+from .actions.new_action import SPEED
 
 @bind_widget("TurnOrderIndicator")
 class TurnOrderManager(GameObject):
@@ -174,7 +171,7 @@ class Game:
             self.action_log.append([])
         for unit in self.turn_order_manager:
             # print(unit)
-            unit_is_not_pass = unit.apply_actions(speed=FAST)
+            unit_is_not_pass = unit.apply_actions(speed=SPEED.FAST)
             if logging:
                 self.action_log[-1].extend(unit.action_log)
             unit.action_log.clear()
@@ -188,7 +185,7 @@ class Game:
             anyone_not_pass = anyone_not_pass or unit_is_not_pass
         for unit in self.turn_order_manager:
             # print(unit)
-            unit_is_not_pass = unit.apply_actions(speed=SLOW)
+            unit_is_not_pass = unit.apply_actions(speed=SPEED.SLOW)
             if logging:
                 self.action_log[-1].extend(unit.action_log)
             unit.action_log.clear()

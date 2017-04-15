@@ -1,4 +1,6 @@
 import sys
+import os
+os.environ["IS_SERVER"] = "1"
 sys.path.insert(0, '/home/alessandro/PycharmProjects/mlp')
 from tornado import (
     ioloop,
