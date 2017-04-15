@@ -162,3 +162,25 @@
   widget:
     icon: './data/high-kick(1).png'
     pressed_icon: './data/high-kick.png'
+    
+- !new_action
+  name: MagicMushrooms
+  action_type: STANDARD
+  speed: FAST
+  cost: 1
+  setup: []
+  effects: 
+    - effect: !eff
+        name: AddStatus
+        status: !status
+          name: MushroomBuff
+      area: !prop source.cell
+    - effect: !eff
+        name: ChangeStat
+        stat_name: mushrooms
+        value: !expr [!prop source.mushrooms, "-", 1]
+      area: !prop source.cell
+  check: !expr [!prop source.mushrooms, ">", 0]
+  widget:
+    icon: './data/mushroom.png'
+    pressed_icon: './data/mushroom_pressed.png'

@@ -1,3 +1,5 @@
+import os
+os.environ['KIVY_IMAGE'] = 'pil,sdl2'
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.clock import Clock
@@ -18,8 +20,10 @@ from tests.gridwidget import (
 from mlp.replication_manager import MetaRegistry
 # from mlp.unit import Muzik
 from mlp.loader import load
+
 load()
 # grid = GrassGrid((5, 3))
+
 
 
 class InstagameApp(App):

@@ -10,3 +10,16 @@
       name: ChangeStat
       stat_name: unit_state
       value: "sword"
+      
+- !new_status
+  name: MushroomBuff
+  duration: 2
+  on_add:
+    - !eff
+      name: CreateTrigger
+      trigger_name: MushroomBuffTrigger
+  on_remove:
+    - !eff
+      name: RemoveTrigger
+      trigger_name: MushroomBuffTrigger
+    

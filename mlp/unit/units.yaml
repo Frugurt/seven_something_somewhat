@@ -19,10 +19,13 @@
     - Reload
   widget:
     sprite: './data/duelist.png'
-#- !new_unit
--
+- !new_unit
   name: Mbvaga
-  resources: []
+  resources:
+    health: 80
+    initiative: 3
+    action_points: 3
+    mushrooms: 2
   actions:
     - Move
     # ~15dmg
@@ -33,10 +36,12 @@
     # and stops there. If no unit was encountered,
     # performs attack at finish cell
     # SLOW, cost 2, FULL, ~30 dmg
-    - Charge
-    # FAST, cost 1, STANDART, 2 mushrooms in inventory
+    #- Charge
+    # FAST, cost 1, STANDART?, 2 mushrooms in inventory
     # consumes magic mushrooms which provide
     # BUFF for current and next turn
     # halves incoming damage and restores 10 hp at the
     # end of turn
     - MagicMushrooms
+    widget:
+      sprite: './data/pepe.png'

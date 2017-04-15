@@ -53,6 +53,20 @@ class Damage(UnitEffect):
             target.stats.health -= c.amount
             self.info_message = self.info_message.format(target, c.amount)
             super()._apply(target, context)
+            
+class Heal(UnitEffect):
+
+    info_message = "{} restore {} health"
+
+    def __init__(self, amount, **kwargs):
+        super().__init__(**kwargs)
+        self.amount = amount
+
+    def _apply(self, target, context):
+        with self.configure(context) as c:
+            target.stats.health += c.amount
+            self.info_message = self.info_message.format(target, c.amount)
+            super()._apply(target, context)
 
 
 class AddStatus(UnitEffect):
