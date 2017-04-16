@@ -28,6 +28,14 @@ from mlp.actions import action
 from mlp.player import Player
 from tests.gridwidget import GrassGrid
 from mlp.loader import load
+import logging
+logger = logging.getLogger(__name__)
+handler = logging.FileHandler(
+    './game_logs/instagame_server.log',
+    'w',
+)
+logger.addHandler(handler)
+logger.setLevel(logging.DEBUG)
 load()
 """
 Клиенты отсылают начальные данные (персонажей например)
@@ -99,7 +107,9 @@ class TestServer(tcpserver.TCPServer):
                         # if player.name == player_name:
                         player.is_ready = True
                     self.game.run()
+                    logger.debug("RUN")
                 else:
+                    logger.debug("RECEIVE")
                     self.game.receive_message(message_struct)
                 if self.game.winner is not None:
                     print("WINNER")

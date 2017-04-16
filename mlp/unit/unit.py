@@ -189,7 +189,9 @@ class Unit(GameObject):
         self._stats.update_presumed()
 
     def __repr__(self):
-        return "{} {}".format(self.stats.owner, self.__class__.__name__)
+        who = "{} {} at".format(self.stats.owner, self.__class__.__name__)
+        where = "{}".format(self.stats.cell)
+        return " ".join((who, where))
 
     # def __cmp__(self, other):
     #     return 1 if id(self) > id(other) else (-1 if id(self) < id(other) else 0)

@@ -78,8 +78,8 @@ class CurrentActionBar:
         any_action = bool(self.actions)
         for action in (action for action in self.actions if action.action_speed == speed):
             if action.pre_check():
-                logger.debug("Action {}, Owner {}, Speed {}, Actual Speed {}".format(
-                    action, action.owner, speed, action.action_speed
+                logger.debug("Action {}, Owner {}, Owner State {}, Speed {}, Actual Speed {}".format(
+                    action, action.owner, action.owner.state, speed, action.action_speed
                 ))
                 action.apply()
         # self.clear()

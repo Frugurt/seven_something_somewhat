@@ -1,3 +1,4 @@
+import os
 from itertools import cycle
 from .serialization import RefTag
 from .replication_manager import (
@@ -11,6 +12,15 @@ from .grid import Grid
 from .unit import Unit
 from .tools import dict_merge
 from .actions.new_action import SPEED
+import logging
+logger = logging.getLogger(__name__)
+handler = logging.FileHandler(
+    './game_logs/apply_actions{}.log'.format("_server" if os.environ.get("IS_SERVER") else ""),
+    'w',
+)
+logger.addHandler(handler)
+logger.setLevel(logging.DEBUG)
+
 
 @bind_widget("TurnOrderIndicator")
 class TurnOrderManager(GameObject):
@@ -164,32 +174,47 @@ class Game:
         self.switch_state()
         return result
 
-    def apply_actions(self, logging=False):
+    def apply_actions(self, log=False):
         anyone_not_pass = False
+        logger.debug("START APPLING ACTIONS")
         # print(self.units)
-        if logging:
+        if log:
             self.action_log.append([])
         for unit in self.turn_order_manager:
+            logger.debug("APPLY FAST FOR {} in state {}".format(unit, unit.state))
             # print(unit)
             unit_is_not_pass = unit.apply_actions(speed=SPEED.FAST)
-            if logging:
+            for unit_ in self.units:
+                logger.debug("{} real stats {}".format(unit_, unit_._stats))
+                logger.debug("{} presumed stats {}".format(unit_, unit_._stats.presumed))
+            if log:
                 self.action_log[-1].extend(unit.action_log)
             unit.action_log.clear()
             anyone_not_pass = anyone_not_pass or unit_is_not_pass
         for unit in self.turn_order_manager:
+            logger.debug("APPLY NORMAL FOR {} in state {}".format(unit, unit.state))
             # print(unit)
             unit_is_not_pass = unit.apply_actions()
-            if logging:
+            for unit_ in self.units:
+                logger.debug("{} real stats {}".format(unit_, unit_._stats))
+                logger.debug("{} presumed stats {}".format(unit_, unit_._stats.presumed))
+            if log:
                 self.action_log[-1].extend(unit.action_log)
             unit.action_log.clear()
             anyone_not_pass = anyone_not_pass or unit_is_not_pass
         for unit in self.turn_order_manager:
             # print(unit)
+            logger.debug("APPLY SLOW FOR {} in state {}".format(unit, unit.state))
             unit_is_not_pass = unit.apply_actions(speed=SPEED.SLOW)
-            if logging:
+            for unit_ in self.units:
+                logger.debug("{} real stats {}".format(unit_, unit_._stats))
+                logger.debug("{} presumed stats {}".format(unit_, unit_._stats.presumed))
+            if log:
                 self.action_log[-1].extend(unit.action_log)
             unit.action_log.clear()
             anyone_not_pass = anyone_not_pass or unit_is_not_pass
+        # for unit in self.units:
+        #     logger.debug("{} real stats {}".format(unit, unit.stats.resources))
         return anyone_not_pass
 
     def declare_winner(self, player):
@@ -197,7 +222,9 @@ class Game:
 
     def switch_state(self):
         for unit in self.units:
+            logger.debug("{} OLD STATS {}".format(unit, unit.stats))
             unit.switch_state()
+            logger.debug("{} NEW STATS {}".format(unit, unit.stats))
             # unit.clear_presumed()
 
     def update_position(self):

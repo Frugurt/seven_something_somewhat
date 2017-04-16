@@ -54,7 +54,7 @@ class Stats:
             "owner": self.owner,
             'cell': self.cell,
             'statuses': self.statuses.copy(),
-            'resources': self.resources,
+            'resources': self.resources.copy(),
         }
         return struct
 
@@ -62,6 +62,9 @@ class Stats:
         super().__setattr__(key, value)
         if key in self.resources:
             self.resources[key] = value
+
+    def __repr__(self):
+        return "Stats with resources {}".format(self.resources)
 
 
 @bind_widget("Stats")
@@ -86,3 +89,6 @@ class MajorStats(Stats):
         struct = self.dump()
         struct.pop('presumed')
         self.presumed.load(struct)
+
+    def __repr__(self):
+        return "Major stats with resources {}".format(self.resources)
