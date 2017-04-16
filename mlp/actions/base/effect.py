@@ -71,12 +71,11 @@ class UnitEffect(AbstractEffect):
             if cell.object is not None:
                 effect_context = context.copy()
                 effect_context['target'] = cell.object
+                effect = self.copy()
                 # print("EFFECT EVENT", self.take_event_name)
-                cell.object.launch_triggers(self.take_event_name, self, effect_context)
-                if not self.is_canceled:
-                    self._apply(cell.object, effect_context)
-                else:
-                    self.is_canceled = False
+                cell.object.launch_triggers(self.take_event_name, effect, effect_context)
+                if not effect.is_canceled:
+                    effect._apply(cell.object, effect_context)
                     # cell.object.launch_triggers(self.after_event_name, self, source)
         # source_action.owner.action_log.append(self.info_message)
 
