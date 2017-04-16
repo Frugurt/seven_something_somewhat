@@ -216,6 +216,8 @@ class Unit(GameObject):
 
     def add_status(self, status):
         self.stats.statuses[status.name] = status
+        for event in status.events:
+            self.stats.triggers[event][status.name] = status
         status.on_add(self)
         # print("STATUS", self.state, self.stats.statuses)
 
@@ -225,15 +227,17 @@ class Unit(GameObject):
         # print("PLANNING STATUSES", self._presumed_stats.statuses)
         # print("ACTION STATUSES", self._stats.statuses)
         s = self.stats.statuses.pop(status.name)
+        for event in status.events:
+            self.stats.triggers[event].pop(status.name)
         s.on_remove(self)
 
-    def add_trigger(self, trigger):
-        for event in trigger.events:
-            self.stats.triggers[event][trigger.name] = trigger
+    # def add_trigger(self, trigger):
+    #     for event in trigger.events:
+    #         self.stats.triggers[event][trigger.name] = trigger
 
-    def remove_trigger(self, trigger):
-        for event in trigger.events:
-            self.stats.triggers[event].pop(trigger.name)
+    # def remove_trigger(self, trigger):
+    #     for event in trigger.events:
+    #         self.stats.triggers[event].pop(trigger.name)
 
     def launch_triggers(self, event, target, target_context):
         # print("Launch")

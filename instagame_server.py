@@ -14,6 +14,7 @@ from mlp.serialization import (
     mlp_dumps as encode,
     mlp_loads as decode,
     CreateOrUpdateTag,
+    mlp_encoder,
 )
 from mlp.replication_manager import (
     GameObjectRegistry
@@ -82,6 +83,7 @@ class TestServer(tcpserver.TCPServer):
         else:
             registry = GameObjectRegistry()
             registry.purge()
+            mlp_encoder.purge()
             inital_data = decode(inital_message)
             print(inital_data['players'])
             inital_data['players'] = [registry.load_obj(pl_struct) for pl_struct in inital_data['players']]

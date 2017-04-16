@@ -10,3 +10,16 @@
       name: ChangeStat
       stat_name: unit_state
       value: "sword"
+
+#- !new_status
+#  name
+
+- !new_status
+  name: Regeneration
+  params:
+    - power
+  on_turn_start:
+    - !eff
+      name: ChangeStat
+      stat_name: health
+      value: !expr [!prop target.health, "+", !prop status.power]

@@ -8,10 +8,7 @@ from .status import (
     Status,
     STATUSES,
 )
-from .trigger import (
-    Trigger,
-    TRIGGERS,
-)
+
 
 
 class Move(UnitEffect):
@@ -66,8 +63,7 @@ class AddStatus(UnitEffect):
     def _apply(self, target, context):
         # if cell.object:
         with self.configure(context) as c:
-            status = c.status.copy()
-            status.configure(context=context)
+            status = c.status.configure(context=context)
             target.add_status(status)
             self.info_message = self.info_message.format(c.status, target)
             super()._apply(target, context)
@@ -136,23 +132,27 @@ class Reflect(MetaEffect):
 #         target.stats.unit_state = "sword"
 
 
-class Parry(Status):
-
-    name = "Parry"
-
-    def on_add(self, target):
-        target.add_trigger(ParryTrigger(context=self.context))
-
-    def on_remove(self, target):
-        target.remove_trigger(ParryTrigger())
-
-
-class ParryTrigger(Trigger):
-
-    name = "Parry"
-    events = {
-        "on_phase_start": [RemoveStatus(Parry())],
-        "on_take_damage": [Reflect()],
-    }
+# class Parry(Status):
+#
+#     name = "Parry"
+#     events = {
+#         "on_phase_start": [RemoveStatus(Parry())],
+#         "on_take_damage": [Reflect()],
+#     }
+#
+#     def on_add(self, target):
+#         target.add_trigger(ParryTrigger(context=self.context))
+#
+#     def on_remove(self, target):
+#         target.remove_trigger(ParryTrigger())
+#
+#
+# class ParryTrigger(Trigger):
+#
+#     name = "Parry"
+#     events = {
+#         "on_phase_start": [RemoveStatus(Parry())],
+#         "on_take_damage": [Reflect()],
+#     }
     # on_take_damage = [Reflect()]#, RemoveStatus(Parry())]
     # on_phase_start = [RemoveStatus(Parry())]

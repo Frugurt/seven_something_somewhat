@@ -13,10 +13,7 @@ from .actions.base.status import (
     Status,
     STATUSES,
 )
-from .actions.base.trigger import (
-    Trigger,
-    TRIGGERS,
-)
+
 from .protocol import *
 
 
@@ -152,26 +149,18 @@ class StatusTag(CBORTag):
 
 def status_decoder(decoder, status_struct, fp, shareable_index=None):
     s_name = status_struct.pop("name")
-    return STATUSES[s_name](**status_struct)
+    return STATUSES[s_name](**status_struct['params'])
 
 
+# @cbor2.shareable_encoder
 def encode_status(encoder, status, fp):
     encoder.encode_custom_tag(StatusTag(status), fp)
 
 
-class TriggerTag(CBORTag):
+class PurgeableCBOREncoder(cbor2.CBOREncoder):
 
-    def __init__(self, obj):
-        super().__init__(46, obj.dump())
-
-
-def trigger_decoder(decoder, trigger_struct, fp, shareable_index=None):
-    s_name = trigger_struct.pop("name")
-    return TRIGGERS[s_name](**trigger_struct)
-
-
-def encode_trigger(encoder, trigger, fp):
-    encoder.encode_custom_tag(TriggerTag(trigger), fp)
+    def purge(self):
+        self.shared_containers.clear()
 
 mlp_decoder = cbor2.CBORDecoder(semantic_decoders={
     40: RefDecoder(),
@@ -181,8 +170,8 @@ mlp_decoder = cbor2.CBORDecoder(semantic_decoders={
     44: CellDecoder(),
     45: status_decoder,
 })
-mlp_encoder = cbor2.CBOREncoder(
-    value_sharing=False,
+mlp_encoder = PurgeableCBOREncoder(
+    value_sharing=True,
     encoders={
         Cell: encode_cell,
         Action: encode_action,

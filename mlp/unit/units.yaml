@@ -14,9 +14,10 @@
 #    - Kick
     - GetRifle
     - GetSword
-    - Parry
+#    - Parry
     - Shoot
     - Reload
+    - Regenerate
   widget:
     sprite: './data/duelist.png'
 #- !new_unit

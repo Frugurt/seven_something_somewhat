@@ -42,8 +42,8 @@ class AbstractEffect(metaclass=EffectMeta):
     def cancel(self):
         self.is_canceled = True
 
-    def __copy__(self):
-        pass
+    # def __copy__(self):
+    #     pass
 
 
 class UnitEffect(AbstractEffect):
