@@ -14,7 +14,7 @@
 #    - Kick
     - GetRifle
     - GetSword
-#    - Parry
+    - Parry
     - Shoot
     - Reload
     - Regenerate

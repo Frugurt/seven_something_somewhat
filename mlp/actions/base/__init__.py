@@ -10,7 +10,6 @@ from .status import (
 )
 
 
-
 class Move(UnitEffect):
 
     info_message = "{} move to {}"
@@ -119,40 +118,3 @@ class Reflect(MetaEffect):
         print(effect_context, "effect_context")
         effect.apply(effect_context['source'].cell, context)
         effect.cancel()
-
-
-# class WithRifle(Status):
-#
-#     name = "WithRifle"
-#
-#     def on_add(self, target):
-#         target.stats.unit_state = "rifle"
-#
-#     def on_remove(self, target):
-#         target.stats.unit_state = "sword"
-
-
-# class Parry(Status):
-#
-#     name = "Parry"
-#     events = {
-#         "on_phase_start": [RemoveStatus(Parry())],
-#         "on_take_damage": [Reflect()],
-#     }
-#
-#     def on_add(self, target):
-#         target.add_trigger(ParryTrigger(context=self.context))
-#
-#     def on_remove(self, target):
-#         target.remove_trigger(ParryTrigger())
-#
-#
-# class ParryTrigger(Trigger):
-#
-#     name = "Parry"
-#     events = {
-#         "on_phase_start": [RemoveStatus(Parry())],
-#         "on_take_damage": [Reflect()],
-#     }
-    # on_take_damage = [Reflect()]#, RemoveStatus(Parry())]
-    # on_phase_start = [RemoveStatus(Parry())]

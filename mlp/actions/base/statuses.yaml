@@ -11,8 +11,16 @@
       stat_name: unit_state
       value: "sword"
 
-#- !new_status
-#  name
+- !new_status
+  name: Parry
+  on_phase_start:
+    - !eff
+      name: RemoveStatus
+      status: !status
+        name: Parry
+  on_take_damage:
+    - !eff
+      name: Reflect
 
 - !new_status
   name: Regeneration
