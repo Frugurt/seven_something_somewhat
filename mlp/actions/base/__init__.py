@@ -38,7 +38,9 @@ class Move(UnitEffect):
 
 class Damage(UnitEffect):
 
+    name = "Damage"
     info_message = "{} take {} damage"
+    _tags = ['harmful']
 
     def __init__(self, amount, **kwargs):
         super().__init__(**kwargs)

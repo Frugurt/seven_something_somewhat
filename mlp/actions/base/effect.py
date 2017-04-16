@@ -1,3 +1,4 @@
+from yaml import SequenceNode
 from ...tools import (
     convert,
     dotdict,
@@ -18,12 +19,20 @@ class AbstractEffect(metaclass=EffectMeta):
 
     info_message = ""
     name = ""
+    _tags = []
 
     def __init__(self, **kwargs):
         self.is_canceled = False
+        self.extra_tags = kwargs.pop('extra_tags', [])
+        print("\n\nEXXTRA TAGSSS", self.name, self.tags)
+        # self
 
     def log(self, source):
         source.action_log.append(self.info_message)
+
+    @property
+    def tags(self):
+        return self.extra_tags + self._tags
 
     @contextmanager
     def configure(self, context):
@@ -56,7 +65,7 @@ class UnitEffect(AbstractEffect):
         # self.source = source
         self.info_message = self.info_message
         super().__init__(**kwargs)
-        self.take_event_name = "on_take_" + convert(self.name or self.__class__.__name__)
+        # self.take_event_name = "on_take_" + convert(self.name or self.__class__.__name__)
         # self.
 
     def _apply(self, target, context):
@@ -73,7 +82,7 @@ class UnitEffect(AbstractEffect):
                 effect_context['target'] = cell.object
                 effect = self.copy()
                 # print("EFFECT EVENT", self.take_event_name)
-                cell.object.launch_triggers(self.take_event_name, effect, effect_context)
+                cell.object.launch_triggers(self.tags, effect, effect_context)
                 if not effect.is_canceled:
                     effect._apply(cell.object, effect_context)
                     # cell.object.launch_triggers(self.after_event_name, self, source)
@@ -126,7 +135,15 @@ class CustomUnitEffect(UnitEffect):
 
 
 def effect_constructor(loader, node):
-    e_s = loader.construct_mapping(node)
+    print("\n\n\n", node)
+    e_s = {}
+    for key_node, value_node in node.value:
+        if isinstance(value_node, SequenceNode):
+            value = loader.construct_sequence(value_node)
+        else:
+            value = loader.construct_object(value_node)
+        e_s[key_node.value] = value
+    # e_s = loader.construct_mapping(node)
     name = e_s.pop("name")
     effect = EFFECTS[name](**e_s)
     return effect

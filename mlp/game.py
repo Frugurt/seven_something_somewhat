@@ -171,11 +171,11 @@ class Game:
                 print("all pass")
                 self.action_log[-1].append("--------------")
                 for unit in self.units:
-                    unit.launch_triggers("on_turn_end", unit, unit.context)
+                    unit.launch_triggers(["turn", "end"], unit, unit.context)
                 self.turn_order_manager.rearrange()
                 for unit in self.units:
                     unit.refill_action_points()
-                    unit.launch_triggers("on_turn_start", unit, unit.context)
+                    unit.launch_triggers(["turn","start"], unit, unit.context)
             for player in self.players:
                 player.is_ready = False
             result = True
@@ -187,7 +187,7 @@ class Game:
         anyone_not_pass = False
         logger.debug("START APPLING ACTIONS")
         for unit in self.units:
-            unit.launch_triggers("on_phase_start", unit, unit.context)
+            unit.launch_triggers(["phase", "start"], unit, unit.context)
         if log:
             self.action_log.append([])
         for unit in self.turn_order_manager:
@@ -224,7 +224,7 @@ class Game:
             unit.action_log.clear()
             anyone_not_pass = anyone_not_pass or unit_is_not_pass
         for unit in self.units:
-            unit.launch_triggers("on_phase_end", unit, unit.context)
+            unit.launch_triggers(["phase", "end"], unit, unit.context)
         # for unit in self.units:
         #     logger.debug("{} real stats {}".format(unit, unit.stats.resources))
         return anyone_not_pass

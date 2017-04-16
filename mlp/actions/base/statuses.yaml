@@ -18,7 +18,7 @@
       name: RemoveStatus
       status: !status
         name: Parry
-  on_take_damage:
+  on_harmful_melee:
     - !eff
       name: Reflect
 

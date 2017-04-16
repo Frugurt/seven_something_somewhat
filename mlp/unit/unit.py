@@ -1,6 +1,7 @@
-from random import choice
-from functools import reduce
-import traceback
+from itertools import (
+    chain,
+    combinations,
+)
 from mlp.replication_manager import (
     GameObject,
     # RefTag,
@@ -241,10 +242,14 @@ class Unit(GameObject):
     #     for event in trigger.events:
     #         self.stats.triggers[event].pop(trigger.name)
 
-    def launch_triggers(self, event, target, target_context):
-        # print("Launch")
-        for trigger in list(self.stats.triggers[event].values()):
-            trigger.apply(event, target, target_context)
+    def launch_triggers(self, tags, target, target_context):
+        print("\n\n\n\nLaunch")
+        print(tags)
+        l = len(tags)
+        for event in chain(*(combinations(tags, j) for j in range(1, l+1))):
+            event = frozenset(event)
+            for trigger in list(self.stats.triggers[event].values()):
+                trigger.apply(event, target, target_context)
 
 
 def unit_constructor(loader, node):
