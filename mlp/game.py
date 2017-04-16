@@ -147,6 +147,15 @@ class Game:
         return self._turn_order_manager
 
     def run(self):
+        """
+        1) Начинается ход
+        2) Начинается фаза
+        3) Чуваки действуют
+        4) Заканчивается фаза
+        5) Повторяется 2-4
+        6) Заканчивается ход
+        :return:
+        """
         result = False
         self.switch_state()
         if all((player.is_ready for player in self.players)):
@@ -158,11 +167,11 @@ class Game:
             if len(alive_players) == 1:
                 self.declare_winner(alive_players.pop())
                 return
-            for unit in self.units:
-                unit.launch_triggers("on_phase_start", unit, unit.context)
             if not anyone_not_pass:
                 print("all pass")
                 self.action_log[-1].append("--------------")
+                for unit in self.units:
+                    unit.launch_triggers("on_turn_end", unit, unit.context)
                 self.turn_order_manager.rearrange()
                 for unit in self.units:
                     unit.refill_action_points()
@@ -177,7 +186,8 @@ class Game:
     def apply_actions(self, log=False):
         anyone_not_pass = False
         logger.debug("START APPLING ACTIONS")
-        # print(self.units)
+        for unit in self.units:
+            unit.launch_triggers("on_phase_start", unit, unit.context)
         if log:
             self.action_log.append([])
         for unit in self.turn_order_manager:
@@ -213,6 +223,8 @@ class Game:
                 self.action_log[-1].extend(unit.action_log)
             unit.action_log.clear()
             anyone_not_pass = anyone_not_pass or unit_is_not_pass
+        for unit in self.units:
+            unit.launch_triggers("on_phase_end", unit, unit.context)
         # for unit in self.units:
         #     logger.debug("{} real stats {}".format(unit, unit.stats.resources))
         return anyone_not_pass
