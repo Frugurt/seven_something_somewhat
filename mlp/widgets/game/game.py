@@ -3,6 +3,7 @@ from kivy.uix import (
     floatlayout,
     button,
 )
+from ..grid import CompositeArena
 from ..general import camera
 from mlp.protocol import *
 from ..cursor import MainCursor
@@ -150,8 +151,9 @@ class RemoteGame(floatlayout.FloatLayout):
     def on_receive_message(self, struct):
         # print(struct)
         if not self.is_loaded:
-            self.grid = self.game.grid.make_widget()
-            self.camera = camera.Camera(self.grid)
+            self.grid = self.game.grid.make_widget(pos_hint={'center_x':0.5, 'center_y':0.5})
+            arena = CompositeArena(self.grid)
+            self.camera = camera.Camera(arena)
             self.turn_order_indicator = self.game.turn_order_manager.make_widget()
             # self.add_widget(self.grid)
             self.add_widget(self.camera, index=-1)

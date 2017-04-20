@@ -56,13 +56,13 @@ class Camera(relativelayout.RelativeLayout):
         return self.sub_widget.size
 
     def pos_from_normed(self, _, normed_pos):
-        print("Norm", normed_pos)
+        # print("Norm", normed_pos)
         sub_width, sub_height = self.sub_size
         x, y = (
             normed_pos[0]*(sub_width - self.width),
             normed_pos[1]*(sub_height - self.height)
         )
-        print("SUB", self.sub_size)
+        # print("SUB", self.sub_size)
         self.inner_pos = (x, y)
         # ox, oy = self.old_inner_pos
         # print("INNER POS")
@@ -74,12 +74,12 @@ class Camera(relativelayout.RelativeLayout):
         if scale < self.min_zoom:
             self.zoom = self.min_zoom
         else:
-            print("OLOLO")
+            # print("OLOLO")
             self.sub_widget.scale = scale
             self.pos_from_normed(None, self.normed_inner_pos)
 
     def normed_from_pos(self, pos):
-        print("Hello")
+        # print("Hello")
         x, y = pos
         sw, sh = self.sub_size
         nx, ny = (

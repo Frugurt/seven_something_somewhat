@@ -41,13 +41,28 @@
 <-Hexgrid>:
     id: grid
     size_hint: (None, None)
+#    size: background.size
+#    FullImage:
+#        id: background
+#        scale: grid.scale
+#        pos: (grid.x - self.width/2, grid.y)
+#        pos: grid.pos
+#        source: "./data/fonchik_pustynka1.png"
+
+<CompositeArena@RelativeLayout>:
+    id: arena
+    scale: 1.0
+    size_hint: (None, None)
     size: background.size
     FullImage:
         id: background
-        scale: grid.scale
+        scale: arena.scale
 #        pos: (grid.x - self.width/2, grid.y)
-        pos: grid.pos
+#        pos: grid.pos
         source: "./data/fonchik_pustynka1.png"
+#    Hexgrid:
+#        id: grid
+#        scale:
 
 
 <FullImage@Image>:

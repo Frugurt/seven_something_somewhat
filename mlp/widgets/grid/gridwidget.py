@@ -184,7 +184,8 @@ class Hexgrid(widget.Widget):
         self.bind(rotation=self.change_rotator)
         self.bind(cell_size=self.update_children)
         self.bind(scale=self.rescale)
-        self.rotation = 56
+        # child_size = (0, 0)
+        self.update_size()
 
     def make_cells(self):
         for cell in self.grid:
@@ -223,12 +224,25 @@ class Hexgrid(widget.Widget):
         self.update_children()
         # self.slider = Slider(pos=(100, 100), )
 
+    def update_size(self):
+        xs = []
+        ys = []
+        self.rotation = 56
+        for child in self.children:
+            xs.append(child.x)
+            ys.append(child.y)
+        width, height = self._grid[0][0].size
+        self.size = (int(max(xs) - min(xs)) + width, int(max(ys) - min(ys)) + height)
+
     def on_pos(self, inst, value):
         self.update_children()
 
     def rescale(self, _, scale):
         # print(self.scale)
         self.cell_size = self.base_cell_size*scale
+        self.update_size()
+        # self.center_x = self.parent.width/2
+        # self.center_y = self.parent.height/2
 
     def update_children(self, _=None, __=None):
         for child in self.children:
@@ -256,12 +270,27 @@ class Hexgrid(widget.Widget):
         return x, y
 
     def select_cell(self, cell):
-        self.parent.parent.cursor.select(cell)
+        self.parent.cursor.select(cell)
 
 
 class FullImage(Image):
     pass
 
+
+class CompositeArena(relativelayout.RelativeLayout):
+
+    def __init__(self, gridwidget, **kwargs):
+        super().__init__(**kwargs)
+        self.gridwidget = gridwidget
+        self.add_widget(gridwidget)
+        self.bind(scale=self.rescale)
+
+    def rescale(self, _, scale):
+        self.gridwidget.scale = scale
+
+    @property
+    def cursor(self):
+        return self.parent.parent.cursor
 
 # class RotateGridWidget(widget.Widget):
 #
