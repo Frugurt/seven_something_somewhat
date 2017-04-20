@@ -3,14 +3,11 @@ from kivy.uix import (
     floatlayout,
     button,
 )
-# from mlp.actions.action import (
-#     RandomMove,
-#     Attack,
-# )
-# from mlp.serialization import remote_action_setup
+from ..general import camera
 from mlp.protocol import *
 from ..cursor import MainCursor
 from kivy.lang import Builder
+from kivy.core.window import Window
 
 # Builder.load_file('/home/alessandro/PycharmProjects/mlp/mlp/widgets/game/game.kv')
 
@@ -56,29 +53,58 @@ class RemoteGame(floatlayout.FloatLayout):
         self._cursor = deque([MainCursor(self)])
         super().__init__(**kwargs)
         self.is_loaded = False
+        self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
+        self._keyboard.bind(on_key_down=self._on_keyboard_down)
         self.grid = None
+        self.camera = None
         self.turn_order_indicator = None
         # self.network_manager = NetworkManager('localhost', 1488)
         self.game = game
         self.stats = None
         self.action_bar = None
         self.current_action_bar = None
-        run_button = button.Button(
-            text="RUN",
-            pos_hint={'x': 0.73, 'y': 0.8},
-            size_hint=(0.1, 0.1)
-        )
-        run_button.bind(on_press=self.run_game)     # TODO внести эту кнопку в главный курсор
-        # attack_button = button.Button(
-        #     text="Attack",
-        #     pos_hint={'x': 0.3, 'y': 0.1},
-        #     size_hint=(0.1, 0.1)
-        # )
-        # attack_button.bind(on_press=self.attack)
-        self.add_widget(run_button)
+        # self.size = self.ids.background.size
         # self.add_widget(attack_button)
         # Clock.schedule_interval(self.watcher, 0)
         # self.network_manager.start()
+
+    def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
+        # print(keycode, text, modifiers)
+        dx, dy = 0, 0
+        ds = 0.0
+        if keycode[1] == 'w':
+            # self.ny += 0.01
+            dy += 0.01
+            # dy += 10
+        elif keycode[1] == 's':
+            # self.ny -= 0.01
+            dy -= 0.01
+            # dy -= 10
+        elif keycode[1] == 'a':
+            # self.nx -= 0.01
+            dx -= 0.01
+            # dx -= 10
+        elif keycode[1] == 'd':
+            # self.nx += 0.01
+            dx += 0.01
+            # dx += 10
+        elif keycode[1] == 'numpadadd':
+            ds += 0.01
+        elif keycode[1] == 'numpadsubstract':
+            ds -= 0.01
+        # print(self.zoom)
+        self.camera.zoom += ds
+        # self.camera.normed_inner_x = self.nx
+        # self.camera.normed_inner_y = self.ny
+        ix, iy = self.camera.normed_inner_pos
+        # print("get", (ix, iy))
+        self.camera.normed_inner_pos = (ix + dx, iy + dy)
+        # self.camera.inner_pos = (ix + dx, iy + dy)
+        return False
+
+    def _keyboard_closed(self):
+        self._keyboard.unbind(on_key_down=self._on_keyboard_down)
+        self._keyboard = None
 
     # def move_muzik(self, _):
     #     for cell in self.game.grid:
@@ -124,13 +150,22 @@ class RemoteGame(floatlayout.FloatLayout):
     def on_receive_message(self, struct):
         # print(struct)
         if not self.is_loaded:
-            self.grid = self.game.grid.make_widget(pos_hint={'x': 0.0, 'y': 0.1})
+            self.grid = self.game.grid.make_widget()
+            self.camera = camera.Camera(self.grid)
             self.turn_order_indicator = self.game.turn_order_manager.make_widget()
-            self.add_widget(self.grid)
+            # self.add_widget(self.grid)
+            self.add_widget(self.camera, index=-1)
             self.add_widget(self.turn_order_indicator)
             # self.grid.update_children()
             # self.grid.bind(selected_cell=self.show_stats)
             self.is_loaded = True
+            run_button = button.Button(
+                text="RUN",
+                pos_hint={'x': 0.73, 'y': 0.8},
+                size_hint=(0.1, 0.1)
+            )
+            run_button.bind(on_press=self.run_game)  # TODO внести эту кнопку в главный курсор
+            self.add_widget(run_button, index=1)
         self.cursor.update()
 
     def watcher(self, _):

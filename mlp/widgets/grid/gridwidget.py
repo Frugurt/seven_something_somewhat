@@ -25,6 +25,8 @@ from kivy.uix.slider import Slider
 from kivy.graphics import Mesh, Color, Translate
 from math import cos, sin, pi, sqrt, degrees, radians
 from kivy.uix.image import Image
+# from ..general.camera.camera import FullImage
+from ..unit.unit import Unit
 import random as rnd
 from kivy.uix.filechooser import *
 from kivy.uix.popup import Popup
@@ -94,7 +96,8 @@ class HexCellWidget(relativelayout.FloatLayout):
         # indices = []
         step = 6
         istep = (pi * 2) / float(step)
-        # xx, yy = self.pos
+        xs = []
+        ys = []
         for i in range(step):
             x = cos(istep * i) * self.hex_size + self.hex_size
             y = sin(istep * i) * self.hex_size + self.hex_size*H_COEF
@@ -107,16 +110,17 @@ class HexCellWidget(relativelayout.FloatLayout):
 
             vertices.extend([x, y, 0.5 + cos(istep * i)/2, 0.5 + sin(istep * i)/2])
             points.extend([x, y])
+            xs.append(x)
+            ys.append(y)
             # indices.append(i)
         # print id(self.mesh_vertices)
         self.circuit = points + points[0:2]
-        # print(self, points)
         self.mesh_vertices = vertices
-        # for child in self.children:
-        #     try:
-        #         child.update_verticies()
-        #     except AttributeError:
-        #         pass
+        self.size = (int(max(xs) - min(xs)), int(max(ys) - min(ys)))
+        for child in self.children:
+            if isinstance(child, Unit):
+                print("\n\nSCALE", 123)
+                child.scale = self.parent.scale * child.default_scale
 
     # def on_pos(self, _, __):
     #     for child in self.children:
@@ -154,8 +158,10 @@ class Hexgrid(widget.Widget):
 
     cell_indices = range(6)
     cell_size = NumericProperty(110)
+    base_cell_size = 110
     rotation = NumericProperty(0)
     rotator = mtl.eye(3)
+    scale = NumericProperty(1.0)
 
     def __init__(self, grid, **kwargs):
         # hexgrid = kwargs.pop('hexgrid')
@@ -170,12 +176,15 @@ class Hexgrid(widget.Widget):
             **kwargs
         )
         self.make_cells()
+        # self.size = self.ids.background.size
         # for column in self._grid:
         #     for cell in column:
         #         self.add_widget(cell)
         # self.update_children()
         self.bind(rotation=self.change_rotator)
-        # self.bind(cell_size=self.update_children)
+        self.bind(cell_size=self.update_children)
+        self.bind(scale=self.rescale)
+        self.rotation = 56
 
     def make_cells(self):
         for cell in self.grid:
@@ -189,16 +198,17 @@ class Hexgrid(widget.Widget):
             self._grid[x][y] = w
             self.add_widget(w)
             if terrain:
-                t = terrain.make_widget(pos_hint={'center_x': 0.5, 'center_y': 0.5})
-                w.add_widget(t)
+                # t = terrain.make_widget(pos_hint={'center_x': 0.5, 'center_y': 0.5})
+                # w.add_widget(t)
                 # t.update_vertices()
                 if cell.object:
-                    o = cell.object.make_widget(pos_hint={'center_x': 0.5, 'center_y': 0.5})
+                    o = cell.object.make_widget(pos_hint={'center_x': 0.5, 'y': 0.3})
                     w.add_widget(o)
-                for _, content in enumerate(cell.additional_content):
-                    c = content.make_widget(pos_hint={'center_x': 0.5, 'center_y': 0.5})
-                    w.add_widget(c)
+                # for _, content in enumerate(cell.additional_content):
+                #     c = content.make_widget(pos_hint={'center_x': 0.5, 'center_y': 0.5})
+                #     w.add_widget(c)
             w.add_widget(label.Label(text=str(pos), pos_hint={'center_x': 0.5, 'center_y': 0.5}))
+        self.update_children()
 
     def change_rotator(self, _, value):
         rad = radians(value)
@@ -208,15 +218,17 @@ class Hexgrid(widget.Widget):
             [0.0, -sin(rad), cos(rad)]
         ])
         for child in self.children:
-            child.rotator = self.rotator
-            child.pos = self.grid_to_window(child.cell_pos)
-            child.update_vertices()
+            if isinstance(child, HexCellWidget):
+                child.rotator = self.rotator
+        self.update_children()
         # self.slider = Slider(pos=(100, 100), )
 
     def on_pos(self, inst, value):
-        # print(self, new_pos, ololo)
-        # super().on_pos(new_pos, ololo)
         self.update_children()
+
+    def rescale(self, _, scale):
+        # print(self.scale)
+        self.cell_size = self.base_cell_size*scale
 
     def update_children(self, _=None, __=None):
         for child in self.children:
@@ -241,13 +253,10 @@ class Hexgrid(widget.Widget):
         # print(m)
         nx, ny = m[0, 0], m[1, 0]
         x, y = float(nx), float(ny)
-
-
-        # print(x, y)
         return x, y
 
     def select_cell(self, cell):
-        self.parent.cursor.select(cell)
+        self.parent.parent.cursor.select(cell)
 
 
 class FullImage(Image):

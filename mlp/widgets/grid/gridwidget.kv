@@ -18,9 +18,9 @@
 #            indices: range(6)
 #        PopMatrix:
 
-<-HexCellWidget>:
+<HexCellWidget>:
     id: cell
-    canvas.after:
+    canvas.before:
         PushMatrix
         Translate:
             xy: self.pos
@@ -31,7 +31,7 @@
             mode: 'triangle_fan'
             indices: range(6)
         Color:
-            rgba: 1.0, 0, 0, 1.0*self.is_selected
+            rgba: ((1.0, 0, 0, 1.0) if self.is_selected else (0, 0, 0, 1.0))
         Line:
             points: self.circuit
             width: 1.5
@@ -39,30 +39,28 @@
 
 
 <-Hexgrid>:
-#    FloatLayout:
     id: grid
-#    size: (600, 600)
+    size_hint: (None, None)
+    size: background.size
     FullImage:
         id: background
-#        size: grid.size
+        scale: grid.scale
+#        pos: (grid.x - self.width/2, grid.y)
         pos: grid.pos
         source: "./data/fonchik_pustynka1.png"
 
 
-<-FullImage>:
+<FullImage@Image>:
     id: img
+    scale: 1.0
     allow_stretch: True
-    keep_ratio: True
-#    size_hint_y: None
-#    size_hint_x: None
+    size: self.texture.size if self.texture else (0, 0)
     size_hint: (None, None)
+    on_scale: self.width = self.texture.width * self.scale; self.height = self.texture.height * self.scale
     canvas:
-        PushMatrix
-        Translate:
-            xy: self.pos
         Color:
             rgb: (1, 1, 1)
         Rectangle:
+            pos: self.pos
             texture: self.texture
-            size: self.texture.size if self.texture else (0, 0)
-        PopMatrix
+            size: self.size

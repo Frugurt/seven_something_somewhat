@@ -1,14 +1,19 @@
-from kivy.uix.image import Image
+from ..general.camera.camera import FullImage
+from kivy.properties import NumericProperty
 
 
-class Unit(Image):
+class Unit(FullImage):
+
+    default_scale = 0.33
+    scale = NumericProperty(0.33)
 
     def __init__(self, unit, **kwargs):
         super().__init__(**kwargs)
         self.unit = unit
+        self.scale = self.default_scale
 
     def on_select(self, game_widget):
-        print(self.unit.action_bar)
+        # print(self.unit.action_bar)
         game_widget.stats = self.unit.stats.make_widget(pos_hint={'x': 0.0, 'y': 0.5})
         game_widget.add_widget(game_widget.stats)
         if game_widget.parent.username == self.unit.stats.owner or game_widget.parent.username == 'overlord':

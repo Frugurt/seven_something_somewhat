@@ -62,7 +62,7 @@ class Camera(relativelayout.RelativeLayout):
             normed_pos[0]*(sub_width - self.width),
             normed_pos[1]*(sub_height - self.height)
         )
-        print(x, y)
+        print("SUB", self.sub_size)
         self.inner_pos = (x, y)
         # ox, oy = self.old_inner_pos
         # print("INNER POS")

@@ -2,20 +2,13 @@
     id: img
     scale: 1.0
     allow_stretch: True
-#    keep_ratio: True
     size: self.texture.size if self.texture else (0, 0)
-#    size_hint_y: None
-#    size_hint_x: None
     size_hint: (None, None)
     on_scale: self.width = self.texture.width * self.scale; self.height = self.texture.height * self.scale
     canvas:
-#        PushMatrix
-#        Translate:
-#            xy: self.pos
         Color:
             rgb: (1, 1, 1)
         Rectangle:
             pos: self.pos
             texture: self.texture
             size: self.size
-#        PopMatrix
