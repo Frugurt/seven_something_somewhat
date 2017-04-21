@@ -188,7 +188,7 @@ class Hexgrid(widget.Widget):
         self.update_size()
 
     def make_cells(self):
-        for cell in self.grid:
+        for cell in reversed(list(self.grid)):
             pos = cell.pos
             terrain = cell.terrain
             x, y = pos

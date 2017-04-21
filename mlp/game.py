@@ -76,7 +76,7 @@ class Game:
         self._turn_order_manager = turn_order_manager
         self.players = players
         if players:
-            players[0].main_unit.place_in(self._grid[3, 3])
+            players[0].main_unit.place_in(self._grid[4, 3])
             players[-1].main_unit.place_in(self._grid[-1, -1])
         self.winner = None
 

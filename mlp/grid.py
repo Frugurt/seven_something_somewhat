@@ -4,7 +4,7 @@ from itertools import (
     permutations,
     repeat,
 )
-from operator import add
+from operator import add, mul
 from mlp.replication_manager import GameObject
 from .tools import dict_merge
 
@@ -217,3 +217,6 @@ class HexGrid(Grid):
 
     def __iter__(self):
         return iter(chain(*self._grid))
+
+    # def __len__(self):
+    #     return mul(*self.size)

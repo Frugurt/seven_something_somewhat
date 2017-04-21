@@ -20,7 +20,7 @@
 
 <HexCellWidget>:
     id: cell
-    canvas.before:
+    canvas:
         PushMatrix
         Translate:
             xy: self.pos
@@ -36,6 +36,7 @@
             points: self.circuit
             width: 1.5
         PopMatrix
+
 
 
 <-Hexgrid>:
