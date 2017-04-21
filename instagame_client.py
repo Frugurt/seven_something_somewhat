@@ -1,3 +1,6 @@
+import os
+from os import path
+os.environ['KIVY_HOME'] = path.abspath(os.curdir)
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.clock import Clock

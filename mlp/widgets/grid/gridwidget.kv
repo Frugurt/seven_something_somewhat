@@ -18,9 +18,9 @@
 #            indices: range(6)
 #        PopMatrix:
 
-<-HexCellWidget>:
+<HexCellWidget>:
     id: cell
-    canvas.after:
+    canvas:
         PushMatrix
         Translate:
             xy: self.pos
@@ -31,7 +31,7 @@
             mode: 'triangle_fan'
             indices: range(6)
         Color:
-            rgba: 1.0, 0, 0, 1.0*self.is_selected
+            rgba: ((1.0, 0, 0, 1.0) if self.is_selected else (0, 0, 0, 1.0))
         Line:
             points: self.circuit
             width: 1.5
@@ -39,109 +39,44 @@
 
 
 
+<-Hexgrid>:
+    id: grid
+    size_hint: (None, None)
+#    size: background.size
+#    FullImage:
+#        id: background
+#        scale: grid.scale
+#        pos: (grid.x - self.width/2, grid.y)
+#        pos: grid.pos
+#        source: "./data/fonchik_pustynka1.png"
 
-
-<-RotateGridWidget>:
-    FloatLayout:
-        id: grid
-        size: (600, 600)
-        Image:
-            id: background
-            source: "./grass.png"
+<CompositeArena@RelativeLayout>:
+    id: arena
+    scale: 1.0
+    size_hint: (None, None)
+    size: background.size
     FullImage:
-        pos: (model_x.value, model_y.value)
-        id: model
-        source: "./man2.png"
-    Slider:
-        pos: (600, 110)
-        id: model_x
-        value: 300
-        min: 200
-        max: 400
-        step: 5
-        width: 200
-    Slider:
-        pos: (650, 180)
-        id: model_y
-        value: 300
-        min: 0
-        max: 600
-        step: 5
-        height: 300
-        orientation: 'vertical'
-    Slider:
-        id: rotator_sl
-        pos: (600, 200)
-        value: 0
-        max: 90
-        min: 0
-        step: 1
-        height: 200
-        orientation: 'vertical'
-    Label:
-        pos: (600, 140)
-        text: str(rotator_sl.value)
-    Slider:
-        id: c_size
-        pos: (700, 200)
-        value: 40
-        max: 120
-        min: 20
-        step: 1
-        height: 200
-        orientation: 'vertical'
-    Label:
-        pos: (700, 160)
-        text: str(c_size.value)
-
-    Button:
-        pos: (650, 20)
-        size: (140, 100)
-        text: 'load background'
-        on_release: root.show_load_background()
-
-    Button:
-        pos: (650, 490)
-        text: 'load model'
-        on_release: root.show_load_model()
-
-#    Button:
-#        pos()
-
-<LoadDialog>:
-    BoxLayout:
-        size: root.size
-        pos: root.pos
-        orientation: "vertical"
-        FileChooserListView:
-            id: filechooser
-            path: "./"
-
-        BoxLayout:
-            size_hint_y: None
-            height: 30
-            Button:
-                text: "Cancel"
-                on_release: root.cancel()
-
-            Button:
-                text: "Load"
-                on_release: root.load(filechooser.path, filechooser.selection)
+        id: background
+        scale: arena.scale
+#        pos: (grid.x - self.width/2, grid.y)
+#        pos: grid.pos
+        source: "./data/fonchik_pustynka1.png"
+#    Hexgrid:
+#        id: grid
+#        scale:
 
 
-
-<-FullImage>:
+<FullImage@Image>:
+    id: img
+    scale: 1.0
     allow_stretch: True
-    keep_ratio: True
-    size_hint_y: None
-    size_hint_x: None
+    size: self.texture.size if self.texture else (0, 0)
+    size_hint: (None, None)
+    on_scale: self.width = self.texture.width * self.scale; self.height = self.texture.height * self.scale
     canvas:
-        PushMatrix
-        Translate:
-            xy: self.pos
         Color:
             rgb: (1, 1, 1)
         Rectangle:
+            pos: self.pos
             texture: self.texture
             size: self.size
-        PopMatrix
