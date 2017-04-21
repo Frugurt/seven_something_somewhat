@@ -45,9 +45,9 @@ class TestApp(App):
         self.camera.zoom += ds
         # self.camera.normed_inner_x = self.nx
         # self.camera.normed_inner_y = self.ny
-        ix, iy = self.camera.normed_inner_pos
-        print("get", (ix, iy))
-        self.camera.normed_inner_pos = (ix + dx, iy + dy)
+        ix, iy = self.camera.normed_camera_pos
+        # print("get", (ix, iy))
+        self.camera.normed_camera_pos = (ix + dx, iy + dy)
         # self.camera.inner_pos = (ix + dx, iy + dy)
         return False
 

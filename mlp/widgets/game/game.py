@@ -54,8 +54,8 @@ class RemoteGame(floatlayout.FloatLayout):
         self._cursor = deque([MainCursor(self)])
         super().__init__(**kwargs)
         self.is_loaded = False
-        self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
-        self._keyboard.bind(on_key_down=self._on_keyboard_down)
+        # self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
+        # self._keyboard.bind(on_key_down=self._on_keyboard_down)
         self.grid = None
         self.camera = None
         self.turn_order_indicator = None
@@ -69,43 +69,12 @@ class RemoteGame(floatlayout.FloatLayout):
         # Clock.schedule_interval(self.watcher, 0)
         # self.network_manager.start()
 
-    def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
-        # print(keycode, text, modifiers)
-        dx, dy = 0, 0
-        ds = 0.0
-        if keycode[1] == 'w':
-            # self.ny += 0.01
-            dy += 0.01
-            # dy += 10
-        elif keycode[1] == 's':
-            # self.ny -= 0.01
-            dy -= 0.01
-            # dy -= 10
-        elif keycode[1] == 'a':
-            # self.nx -= 0.01
-            dx -= 0.01
-            # dx -= 10
-        elif keycode[1] == 'd':
-            # self.nx += 0.01
-            dx += 0.01
-            # dx += 10
-        elif keycode[1] == 'numpadadd':
-            ds += 0.01
-        elif keycode[1] == 'numpadsubstract':
-            ds -= 0.01
-        # print(self.zoom)
-        self.camera.zoom += ds
-        # self.camera.normed_inner_x = self.nx
-        # self.camera.normed_inner_y = self.ny
-        ix, iy = self.camera.normed_inner_pos
-        # print("get", (ix, iy))
-        self.camera.normed_inner_pos = (ix + dx, iy + dy)
-        # self.camera.inner_pos = (ix + dx, iy + dy)
-        return False
+    # def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
+    #     return False
 
-    def _keyboard_closed(self):
-        self._keyboard.unbind(on_key_down=self._on_keyboard_down)
-        self._keyboard = None
+    # def _keyboard_closed(self):
+    #     self._keyboard.unbind(on_key_down=self._on_keyboard_down)
+    #     self._keyboard = None
 
     # def move_muzik(self, _):
     #     for cell in self.game.grid:

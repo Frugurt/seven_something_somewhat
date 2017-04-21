@@ -119,7 +119,7 @@ class HexCellWidget(relativelayout.FloatLayout):
         self.size = (int(max(xs) - min(xs)), int(max(ys) - min(ys)))
         for child in self.children:
             if isinstance(child, Unit):
-                print("\n\nSCALE", 123)
+                # print("\n\nSCALE", 123)
                 child.scale = self.parent.scale * child.default_scale
 
     # def on_pos(self, _, __):
