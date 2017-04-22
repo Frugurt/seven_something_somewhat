@@ -13,7 +13,7 @@
 
 - !new_status
   name: Parry
-  on_phase_start:
+  on_phase_end:
     - !eff
       name: RemoveStatus
       status: !status

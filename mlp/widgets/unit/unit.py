@@ -4,12 +4,13 @@ from kivy.properties import NumericProperty
 
 class Unit(FullImage):
 
-    default_scale = 0.33
+    # default_scale = 0.33
     scale = NumericProperty(0.33)
 
     def __init__(self, unit, **kwargs):
         self.unit = unit
         super().__init__(source=unit.widget['sprite'], **kwargs)
+        self.default_scale = unit.widget.get('scale', 1.0)
         self.scale = self.default_scale
 
     def on_select(self, game_widget):

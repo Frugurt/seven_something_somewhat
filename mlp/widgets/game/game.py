@@ -134,7 +134,7 @@ class RemoteGame(floatlayout.FloatLayout):
     def on_receive_message(self, struct):
         # print(struct)
         if not self.is_loaded:
-            self.grid = self.game.grid.make_widget(pos_hint={'center_x':0.5, 'center_y':0.5})
+            self.grid = self.game.grid.make_widget(pos_hint={'center_x': 0.5, 'center_y': 0.5})
             arena = CompositeArena(self.grid)
             self.camera = camera.Camera(arena)
             self.turn_order_indicator = self.game.turn_order_manager.make_widget()
@@ -150,6 +150,7 @@ class RemoteGame(floatlayout.FloatLayout):
                 size_hint=(0.1, 0.1)
             )
             run_button.bind(on_press=self.run_game)  # TODO внести эту кнопку в главный курсор
+            self.camera.normed_camera_pos = (0.25, 0.25)
             self.add_widget(run_button, index=1)
         self.cursor.update()
 

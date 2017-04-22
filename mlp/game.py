@@ -110,7 +110,7 @@ class Game:
         # print(action.target_coord, action.context['action'].target_coord)
         if author == action.owner.stats.owner or author == "overlord":
             action.owner.append_action(action)
-        self.clear_presumed()
+        # self.clear_presumed()
         self.apply_actions()
         # self.update_position()
 
