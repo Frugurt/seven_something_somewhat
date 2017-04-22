@@ -135,10 +135,10 @@ class CustomUnitEffect(UnitEffect):
 
 
 def effect_constructor(loader, node):
-    print("\n\n\n", node)
     e_s = {}
     for key_node, value_node in node.value:
-        if isinstance(value_node, SequenceNode):
+        # print("\n\nTAG", value_node.tag)
+        if isinstance(value_node, SequenceNode) and value_node.tag == "tag:yaml.org,2002:seq":
             value = loader.construct_sequence(value_node)
         else:
             value = loader.construct_object(value_node)
