@@ -49,6 +49,7 @@ class Stats:
         # print(self.statuses)
 
     def dump(self):
+        # status = self.statuses.copy()
         struct = {
             "name": self.name,
             "owner": self.owner,
