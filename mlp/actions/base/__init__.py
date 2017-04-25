@@ -2,6 +2,7 @@ from collections.abc import Iterable
 from .effect import (
     UnitEffect,
     MetaEffect,
+    CellEffect,
     EFFECTS,
 )
 from .status import (
@@ -120,3 +121,11 @@ class Reflect(MetaEffect):
         print(effect_context, "effect_context")
         effect.apply(effect_context['source'].cell, context)
         effect.cancel()
+
+
+class Summon(CellEffect):
+
+    def _apply(self, cell, context):
+        with self.configure(context) as c:
+            cell.grid.summon(c.unit.copy(), cell)
+            super()._apply(cell, context)

@@ -4,13 +4,15 @@ from itertools import (
     permutations,
     repeat,
 )
-from operator import add, mul
 from functools import (
     reduce,
 )
 from operator import add
+import blinker
 from mlp.replication_manager import GameObject
 from .tools import dict_merge
+
+on_summon_event = blinker.signal("on_summon")
 
 
 def sum_iterables(iter1, iter2):
@@ -52,8 +54,27 @@ class Grid(GameObject):
         super().__init__(id_)
         self.size = size
         self._grid = None
+        self._new_objects = []
+        self._changed_terrains = []
         if size is not None:
             self.create_cells()
+
+    def change_terrain(self):
+        pass
+
+    def summon(self, unit, cell):
+        # unit = unit(owner)
+        self._new_objects.append(unit)
+        unit.place_in(cell)
+        print(unit)
+        on_summon_event.send('Unit', obj=unit)
+
+    def undo(self):
+        pass
+
+    def confirm(self):
+        self._new_objects.clear()
+        # self._changed_terrains.clear()
 
     def create_cells(self):
         pass

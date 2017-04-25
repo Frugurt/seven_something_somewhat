@@ -24,6 +24,7 @@ PLANNING, ACTION = range(2)
 
 class Unit(GameObject):
 
+    name = "Unit"
     hooks = []
     actions = []
     resources = {}

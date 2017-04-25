@@ -95,6 +95,27 @@ class UnitEffect(AbstractEffect):
         return self.__class__(**vars(self))
 
 
+class CellEffect(AbstractEffect):
+
+    def _apply(self, cell, context):
+        source = context['source']
+        # self.configure(context)
+        self.log(source)
+
+    def apply(self, cells, context):
+        if not isinstance(cells, Iterable):
+            cells = [cells]
+        for cell in cells:
+            effect_context = context.copy()
+            effect_context['cell'] = cell
+            effect = self.copy()
+            if not effect.is_canceled:
+                effect._apply(cell, effect_context)
+
+    def copy(self):
+        return self.__class__(**vars(self))
+
+
 class MetaEffect(AbstractEffect):
 
     def log(self, source):

@@ -1,5 +1,9 @@
 import random as rnd
 from collections import defaultdict
+import blinker
+from cbor2.types import CBORTag
+
+on_revoke_event = blinker.signal("on_revoke")
 # import json
 
 MAX_OBJECTS = 10**6
@@ -38,8 +42,10 @@ class GameObjectRegistry(Singleton):
 
     def __delitem__(self, key):
         v = self.game_objects.pop(key)
-        for category in self.categories.values():
+        for category_name, category in self.categories.items():
             if v in category:
+                print(category_name)
+                on_revoke_event.send(category_name, obj=v)
                 category.remove(v)
 
     def __iter__(self):
@@ -143,6 +149,9 @@ class GameObject(metaclass=GameObjectMeta):
     def load(self, struct):
         pass
 
+    def __del__(self):
+        del self.registry[self.id_]
+
 
 class Registry:
 
@@ -189,3 +198,7 @@ class MetaRegistry(Singleton):
                 # print(new_cls)
                 return new_cls
         return Meta
+
+
+# class DelTag(CBORTag):
+#     pass

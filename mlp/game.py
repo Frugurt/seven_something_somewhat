@@ -1,18 +1,19 @@
 import os
-from itertools import cycle
+from random import randint
+import logging
+from bisect import insort
+import blinker
 from .serialization import RefTag
 from .replication_manager import (
     GameObjectRegistry,
     GameObject,
 )
-from random import randint
 from .protocol import *
 from .bind_widget import bind_widget
 from .grid import Grid
 from .unit import Unit
 from .tools import dict_merge
 from .actions.new_action import SPEED
-import logging
 logger = logging.getLogger(__name__)
 handler = logging.FileHandler(
     './game_logs/apply_actions{}.log'.format("_server" if os.environ.get("IS_SERVER") else ""),
@@ -20,6 +21,9 @@ handler = logging.FileHandler(
 )
 logger.addHandler(handler)
 logger.setLevel(logging.DEBUG)
+
+on_summon_event = blinker.signal("on_summon")
+on_revoke_event = blinker.signal("on_revoke")
 
 
 @bind_widget("TurnOrderIndicator")
@@ -31,13 +35,37 @@ class TurnOrderManager(GameObject):
     def __init__(self, id_=None):
         super().__init__(id_)
         self._current_turn_order = []
+        on_summon_event.connect(self.append_unit, sender='Unit')
+        on_revoke_event.connect(self.remove_unit, sender='Unit')
 
     def __iter__(self):
-        return iter((x[-1] for x in self._current_turn_order))
+        return iter((x[-1] for x in reversed(self._current_turn_order[::])))
 
     @property
     def units(self):
         return self.registry.categories[Unit.__name__]
+
+    # @on_summon_event.connect_via('Unit')
+    def append_unit(self, _, obj):
+        print("ON SUMMON")
+        print(self)
+        unit = obj
+        ordered_unit = (
+            max((randint(0, 10) for _ in range(unit.stats.initiative))),
+            unit.stats.initiative,
+            unit,
+        )
+        insort(self._current_turn_order, ordered_unit)
+
+    # @on_revoke_event.connect_via('Unit')
+    def remove_unit(self, _, obj):
+        unit = obj
+        i_2_del = None
+        for i, o_u in enumerate(self._current_turn_order):
+            if unit in o_u:
+                i_2_del = i
+                break
+        self._current_turn_order.pop(i_2_del)
 
     def rearrange(self):
         self._current_turn_order = sorted([
@@ -46,8 +74,8 @@ class TurnOrderManager(GameObject):
                 u.stats.initiative,
                 u,
             )
-            for u in self.units
-        ], reverse=True)
+            for u in self
+        ])
 
     def dump(self):
         return dict_merge(
@@ -82,9 +110,12 @@ class Game:
         self._grid = grid
         self._turn_order_manager = turn_order_manager
         self.players = players
+        # self._grid.summon()
         if players:
-            players[0].main_unit.place_in(self._grid[3, 4   ])
-            players[-1].main_unit.place_in(self._grid[-1, -1])
+            self._grid.summon(players[0].main_unit, self._grid[3, 4])
+            self._grid.summon(players[-1].main_unit, self._grid[-1, -1])
+        #     players[0].main_unit.place_in(self._grid[3, 4])
+        #     players[-1].main_unit.place_in(self._grid[-1, -1])
         self.winner = None
         for unit in self.units:
             print("STATE", unit.state)
@@ -110,7 +141,7 @@ class Game:
         # print(action.target_coord, action.context['action'].target_coord)
         if author == action.owner.stats.owner or author == "overlord":
             action.owner.append_action(action)
-        # self.clear_presumed()
+        self.clear_presumed()
         self.apply_actions()
         # self.update_position()
 
@@ -247,3 +278,4 @@ class Game:
     def clear_presumed(self):
         for unit in self.units:
             unit.clear_presumed()
+        # self._grid.undo()

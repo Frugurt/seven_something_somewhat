@@ -181,3 +181,21 @@
   widget:
     icon: './data/linden-leaf.png'
     pressed_icon: './data/linden-leaf(1).png'
+
+#- !new_action
+#  name: LetDogsOut
+#  action_type: FULL
+#  speed: SLOW
+#  cost: 3
+#  setup:
+#    - name: target_cell
+#      cursor: adjacent_cell
+#      cursor_params:
+#        - !prop source.cell
+#  effects:
+#    - effect: !eff
+#        name: Summon
+#        unit: !unit
+#          name: Dog
+#          master_name: source.owner
+#      area: !prop action.target_cell
