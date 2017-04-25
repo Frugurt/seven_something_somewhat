@@ -58,7 +58,8 @@ class Action(metaclass=ActionMeta):
         effects = []
         for effect in self.effects:
             effects.append({
-                'effect': effect['effect'].copy(),
+                # 'effect': effect['effect'].copy(),
+                'effect': effect['effect'],
                 # 'configure': effect['configure'],
                 'area': effect['area']
             })
@@ -89,7 +90,7 @@ class Action(metaclass=ActionMeta):
     def apply(self):
         self.owner.stats.action_points -= self.cost
         for effect_struct in self.effects:
-            effect = effect_struct['effect']
+            effect = effect_struct['effect'].get()
             # effect_args = {k: arg.get(self) for k, arg in effect_struct['configure'].items()}
             # effect.configure(**effect_args)
             cells = effect_struct['area'].get(self.context)

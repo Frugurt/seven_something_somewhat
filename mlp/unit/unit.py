@@ -21,7 +21,7 @@ from mlp.tools import dict_merge
 
 PLANNING, ACTION = range(2)
 
-UNITS = MetaRegistry()['Unit']
+# UNITS = MetaRegistry()['Unit']
 
 
 class Unit(GameObject):
@@ -258,7 +258,7 @@ class Unit(GameObject):
 def new_unit_constructor(loader, node):
     u_s = loader.construct_mapping(node)
 
-    # print("LOAD", u_s['name'])
+    print("LOAD", u_s['name'])
 
     @bind_widget('Unit')
     class NewUnit(Unit):

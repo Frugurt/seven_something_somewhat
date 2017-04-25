@@ -8,5 +8,5 @@ class Reference(Property):
         self.struct = struct
         self.registry = registry
 
-    def get(self, context):
+    def get(self, context=None):
         return self.registry[self.name](**self.struct)
