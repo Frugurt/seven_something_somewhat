@@ -21,6 +21,7 @@
   widget:
     sprite: './data/sprite.png'
     scale: 0.33
+
 #- !new_unit
 -
   name: Mbvaga

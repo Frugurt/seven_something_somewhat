@@ -26,7 +26,7 @@ UNITS = MetaRegistry()['Unit']
 
 class Unit(GameObject):
 
-    name = "Unit"
+    # name = "Unit"
     hooks = []
     actions = []
     resources = {}

@@ -1,11 +1,14 @@
 from yaml import SequenceNode
 from ...tools import (
-    convert,
+    # convert,
     dotdict,
 )
 from ..property.property import (
     Property,
     # Const,
+)
+from ..property.reference import (
+    Reference
 )
 from ...replication_manager import MetaRegistry
 from collections.abc import Iterable
@@ -155,6 +158,21 @@ class CustomUnitEffect(UnitEffect):
                 effect._apply(target, context)     # TODO перепроектировать это
 
 
+# def effect_constructor(loader, node):
+#     e_s = {}
+#     for key_node, value_node in node.value:
+#         # print("\n\nTAG", value_node.tag)
+#         if isinstance(value_node, SequenceNode) and value_node.tag == "tag:yaml.org,2002:seq":
+#             value = loader.construct_sequence(value_node)
+#         else:
+#             value = loader.construct_object(value_node)
+#         e_s[key_node.value] = value
+#     # e_s = loader.construct_mapping(node)
+#     name = e_s.pop("name")
+#     effect = EFFECTS[name](**e_s)
+#     return effect
+#
+
 def effect_constructor(loader, node):
     e_s = {}
     for key_node, value_node in node.value:
@@ -166,8 +184,8 @@ def effect_constructor(loader, node):
         e_s[key_node.value] = value
     # e_s = loader.construct_mapping(node)
     name = e_s.pop("name")
-    effect = EFFECTS[name](**e_s)
-    return effect
+    # effect = EFFECTS[name](**e_s)
+    return Reference(name, e_s, EFFECTS)
 
 
 def new_effect_constructor(loader, node):

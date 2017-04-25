@@ -198,7 +198,3 @@ class MetaRegistry(Singleton):
                 # print(new_cls)
                 return new_cls
         return Meta
-
-
-# class DelTag(CBORTag):
-#     pass
