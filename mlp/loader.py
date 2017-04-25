@@ -29,6 +29,8 @@ from .actions.property.area import (
 )
 from .unit.unit import (
     unit_constructor,
+    UNIT_TAG,
+    new_unit_constructor,
     NEW_UNIT_TAG,
 )
 
@@ -45,7 +47,8 @@ yaml.add_constructor(PROPERTY_TAG, property_constructor)
 yaml.add_constructor(EXPRESSION_TAG, expression_constructor)
 yaml.add_constructor(AREA_TAG, area_constructor)
 
-yaml.add_constructor(NEW_UNIT_TAG, unit_constructor)
+yaml.add_constructor(UNIT_TAG, unit_constructor)
+yaml.add_constructor(NEW_UNIT_TAG, new_unit_constructor)
 
 
 def load(paths=None):

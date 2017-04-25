@@ -21,6 +21,8 @@ from mlp.tools import dict_merge
 
 PLANNING, ACTION = range(2)
 
+UNITS = MetaRegistry()['Unit']
+
 
 class Unit(GameObject):
 
@@ -253,10 +255,10 @@ class Unit(GameObject):
                 trigger.apply(event, target, target_context)
 
 
-def unit_constructor(loader, node):
+def new_unit_constructor(loader, node):
     u_s = loader.construct_mapping(node)
 
-    print("LOAD", u_s['name'])
+    # print("LOAD", u_s['name'])
 
     @bind_widget('Unit')
     class NewUnit(Unit):
@@ -269,3 +271,11 @@ def unit_constructor(loader, node):
     return NewUnit
 
 NEW_UNIT_TAG = "!new_unit"
+
+
+def unit_constructor(loader, node):
+    u_s = loader.construct_mapping(node)
+    name = u_s.pop("name")
+    return UNITS[name](**u_s)
+
+UNIT_TAG = "!unit"
