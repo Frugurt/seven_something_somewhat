@@ -21,24 +21,13 @@
   widget:
     sprite: './data/sprite.png'
     scale: 0.33
+
 #- !new_unit
--
-  name: Mbvaga
-  resources: []
-  actions:
-    - Move
-    # ~15dmg
-    - Attack
-    # moves mbvaga in line for up to 3 cells, applies
-    # damage to first encountered unit in front of him
-    # (so up to 4 cells away from original position)
-    # and stops there. If no unit was encountered,
-    # performs attack at finish cell
-    # SLOW, cost 2, FULL, ~30 dmg
-    - Charge
-    # FAST, cost 1, STANDART, 2 mushrooms in inventory
-    # consumes magic mushrooms which provide
-    # BUFF for current and next turn
-    # halves incoming damage and restores 10 hp at the
-    # end of turn
-    - MagicMushrooms
+#  name: Dog
+#  resources:
+#    health: 15
+#    initiative: 4
+#    action_points: 5
+#  actions:
+#    - Move
+#    - Attack
