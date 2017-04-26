@@ -272,6 +272,11 @@ class Hexgrid(widget.Widget):
     def select_cell(self, cell):
         self.parent.cursor.select(cell)
 
+    def on_summon(self, unit, cell):
+        o = unit.make_widget(pos_hint={'center_x': 0.5, 'y': 0.3})
+        w = cell.make_widget()
+        w.add_widget(o)
+
 
 class FullImage(Image):
     pass

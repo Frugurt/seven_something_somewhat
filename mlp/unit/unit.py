@@ -18,10 +18,19 @@ from mlp.grid import Grid
 from mlp.actions.action import *
 from mlp.actions.new_action import *
 from mlp.tools import dict_merge
+from mlp.actions.property.reference import Reference
 
 PLANNING, ACTION = range(2)
 
-# UNITS = MetaRegistry()['Unit']
+
+class UnitsRegistry:
+
+    meta_registry = MetaRegistry()
+
+    def __getitem__(self, item):
+        return self.meta_registry['Unit'][item]
+
+UNITS = UnitsRegistry()
 
 
 class Unit(GameObject):
@@ -237,14 +246,6 @@ class Unit(GameObject):
             self.stats.triggers[event].pop(status.name)
         s.on_remove(self)
 
-    # def add_trigger(self, trigger):
-    #     for event in trigger.events:
-    #         self.stats.triggers[event][trigger.name] = trigger
-
-    # def remove_trigger(self, trigger):
-    #     for event in trigger.events:
-    #         self.stats.triggers[event].pop(trigger.name)
-
     def launch_triggers(self, tags, target, target_context):
         print("\n\n\n\nLaunch")
         print(tags)
@@ -253,6 +254,10 @@ class Unit(GameObject):
             event = frozenset(event)
             for trigger in list(self.stats.triggers[event].values()):
                 trigger.apply(event, target, target_context)
+
+    def change_owner(self, new_owner):
+        self._stats.owner = new_owner
+        self._presumed_stats.owner = new_owner
 
 
 def new_unit_constructor(loader, node):
@@ -276,6 +281,7 @@ NEW_UNIT_TAG = "!new_unit"
 def unit_constructor(loader, node):
     u_s = loader.construct_mapping(node)
     name = u_s.pop("name")
-    return UNITS[name](**u_s)
+    # return UNITS[name](**u_s)
+    return Reference(name, u_s, UNITS)
 
 UNIT_TAG = "!unit"

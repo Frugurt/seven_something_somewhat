@@ -18,16 +18,20 @@
     - Shoot
     - Reload
     - Regenerate
+    - LetDogsOut
   widget:
     sprite: './data/sprite.png'
     scale: 0.33
 
-#- !new_unit
-#  name: Dog
-#  resources:
-#    health: 15
-#    initiative: 4
-#    action_points: 5
-#  actions:
-#    - Move
-#    - Attack
+- !new_unit
+  name: Dog
+  resources:
+    health: 15
+    initiative: 4
+    action_points: 5
+  actions:
+    - Move
+    - Attack
+  widget:
+    sprite: './data/direwolf.png'
+    scale: 2.0

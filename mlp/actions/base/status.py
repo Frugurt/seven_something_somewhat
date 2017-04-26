@@ -9,6 +9,9 @@ from ..property.property import (
     # Const,
 )
 from .effect import MetaEffect
+from ..property.reference import (
+    Reference
+)
 
 STATUSES = MetaRegistry()["Status"]
 StatusMeta = MetaRegistry().make_registered_metaclass("Status")
@@ -41,15 +44,18 @@ class Status(metaclass=StatusMeta):
         context = context.copy()
         context['status'] = new_status
         new_status.context = context
+        # new_status.on_add_effects = [e.get() for e in self.on_add_effects]
+        # new_status.on_remove_effects = [e.get() for e in self.on_remove_effects]
+        # new_status.events = {k: [v.get() for v in vv] for k, vv in self.events.items()}
         return new_status
 
     def on_add(self, target):
         for effect in self.on_add_effects:
-            effect.apply(target.cell, self.context)
+            effect.get().apply(target.cell, self.context)
 
     def on_remove(self, target):
         for effect in self.on_remove_effects:
-            effect.apply(target.cell, self.context)
+            effect.get().apply(target.cell, self.context)
 
     def tick(self):
         self.duration -= 1
@@ -64,7 +70,8 @@ class Status(metaclass=StatusMeta):
 
     def apply(self, event, target, context):
         effects = self.events.get(event, [])
-        for effect in effects:
+        for effect_ref in effects:
+            effect = effect_ref.get()
             if isinstance(effect, MetaEffect):
                 effect.apply(target, self.context, effect_context=context)
             else:
@@ -98,11 +105,18 @@ class Status(metaclass=StatusMeta):
     #         effect.apply(target.stats.cell, self.context)
 
 
+# def status_constructor(loader, node):
+#     s_s = loader.construct_mapping(node)
+#     name = s_s.pop("name")
+#     status = STATUSES[name](**s_s)
+#     return status
+
+
 def status_constructor(loader, node):
     s_s = loader.construct_mapping(node)
     name = s_s.pop("name")
-    status = STATUSES[name](**s_s)
-    return status
+    # status = STATUSES[name](**s_s)
+    return Reference(name, s_s, STATUSES)
 
 STATUS_TAG = "!status"
 

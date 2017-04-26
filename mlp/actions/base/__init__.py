@@ -125,7 +125,14 @@ class Reflect(MetaEffect):
 
 class Summon(CellEffect):
 
+    def __init__(self, unit, owner, **kwargs):
+        super().__init__(**kwargs)
+        self.unit = unit
+        self.owner = owner
+
     def _apply(self, cell, context):
         with self.configure(context) as c:
-            cell.grid.summon(c.unit.copy(), cell)
+            unit = c.unit
+            unit.change_owner(c.owner)
+            cell.grid.summon(unit, cell)
             super()._apply(cell, context)

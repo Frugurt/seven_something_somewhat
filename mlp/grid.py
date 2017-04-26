@@ -46,7 +46,7 @@ class Cell:
 
 class Grid(GameObject):
 
-    hooks = []
+    hooks = ['summon']
     cell = Cell
     load_priority = 1
 

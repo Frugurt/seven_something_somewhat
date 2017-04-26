@@ -48,13 +48,14 @@ class TurnOrderManager(GameObject):
     # @on_summon_event.connect_via('Unit')
     def append_unit(self, _, obj):
         print("ON SUMMON")
-        print(self)
+        print(obj)
         unit = obj
         ordered_unit = (
             max((randint(0, 10) for _ in range(unit.stats.initiative))),
             unit.stats.initiative,
             unit,
         )
+        print(ordered_unit, self._current_turn_order)
         insort(self._current_turn_order, ordered_unit)
 
     # @on_revoke_event.connect_via('Unit')
@@ -80,7 +81,7 @@ class TurnOrderManager(GameObject):
     def dump(self):
         return dict_merge(
             super().dump(),
-            {'current_turn_order': list(enumerate((RefTag(u) for u in self)))},
+            {'current_turn_order': self._current_turn_order},
         )
         # return {
         #     **super().dump(),
@@ -89,7 +90,7 @@ class TurnOrderManager(GameObject):
 
     def load(self, struct):
         super().load(struct)
-        self._current_turn_order = sorted(struct['current_turn_order'])
+        self._current_turn_order = sorted([tuple(r) for r in struct['current_turn_order']])
 
 
 @bind_widget('RemoteGame')
