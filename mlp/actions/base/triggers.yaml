@@ -1,22 +1,22 @@
-- !new_trigger
-  name: Parry
-  on_take_damage:
-    - !eff
-      name: Reflect
-  on_phase_start:
-    - !eff
-      name: RemoveStatus
-      status: !status
-        name: Parry
-
-- !new_trigger
-  name: MushroomBuffTrigger
-  on_turn_end:
-    - !eff
-      name: Heal
-      amount: 10
-  on_take_damage:
-    - !eff
-      name: ModifyParameter
-      parameter: amount
-      modifier: 0.5
+#- !new_trigger
+#  name: Parry
+#  on_take_damage:
+#    - !eff
+#      name: Reflect
+#  on_phase_start:
+#    - !eff
+#      name: RemoveStatus
+#      status: !status
+#        name: Parry
+#
+#- !new_trigger
+#  name: MushroomBuffTrigger
+#  on_turn_end:
+#    - !eff
+#      name: Heal
+#      amount: 10
+#  on_take_damage:
+#    - !eff
+#      name: ModifyParameter
+#      parameter: amount
+#      modifier: 0.5

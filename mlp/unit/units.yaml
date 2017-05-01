@@ -21,8 +21,8 @@
   widget:
     sprite: './data/sprite.png'
     scale: 0.33
-#- !new_unit
--
+
+- !new_unit
   name: Mbvaga
   resources:
     health: 80
@@ -45,6 +45,7 @@
     # BUFF for current and next turn
     # halves incoming damage and restores 10 hp at the
     # end of turn
-    - MagicMushrooms
-    widget:
-      sprite: './data/pepe.png'
+    #- MagicMushrooms
+  widget:
+    sprite: './data/pepe.png'
+    scale: 0.22

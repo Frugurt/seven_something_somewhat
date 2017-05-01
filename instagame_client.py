@@ -1,10 +1,7 @@
 import os
-<<<<<<< HEAD
 os.environ['KIVY_IMAGE'] = 'pil,sdl2'
-=======
 from os import path
 os.environ['KIVY_HOME'] = path.abspath(os.curdir)
->>>>>>> master
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.clock import Clock
@@ -43,7 +40,8 @@ class InstagameApp(App):
         sm.add_widget(screens.GameScreen(self, game.Game(), self.network_manager, "overlord", name="game"))
         sm.add_widget(screens.GameOverScreen(self, name="game_over"))
         Muzik = MetaRegistry()['Unit']['Muzik']
-        self.players = [player.Player('Ustas', Muzik('Ustas')), player.Player('Vitaline', Muzik('Vitaline'))]
+        Mbvaga = MetaRegistry()['Unit']['Mbvaga']
+        self.players = [player.Player('Ustas', Muzik('Ustas')), player.Player('Vitaline', Mbvaga('Vitaline'))]
         self.screen_manager = sm
         # self.handlers = {
         #     (pr.message_type.GAME, pr.game_message.UPDATE): self.receive_game_message,
