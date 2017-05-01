@@ -1,5 +1,10 @@
 import os
+<<<<<<< HEAD
 os.environ['KIVY_IMAGE'] = 'pil,sdl2'
+=======
+from os import path
+os.environ['KIVY_HOME'] = path.abspath(os.curdir)
+>>>>>>> master
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.clock import Clock

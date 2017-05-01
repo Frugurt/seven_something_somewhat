@@ -3,6 +3,8 @@ from kivy.uix import (
     floatlayout,
     button,
 )
+from ..grid import CompositeArena
+from ..general import camera
 # from mlp.actions.action import (
 #     RandomMove,
 #     Attack,
@@ -14,6 +16,7 @@ from mlp.serialization import (
 from mlp.protocol import *
 from ..cursor import MainCursor
 from kivy.lang import Builder
+from kivy.core.window import Window
 
 # Builder.load_file('/home/alessandro/PycharmProjects/mlp/mlp/widgets/game/game.kv')
 
@@ -59,36 +62,27 @@ class RemoteGame(floatlayout.FloatLayout):
         self._cursor = deque([MainCursor(self)])
         super().__init__(**kwargs)
         self.is_loaded = False
+        # self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
+        # self._keyboard.bind(on_key_down=self._on_keyboard_down)
         self.grid = None
+        self.camera = None
         self.turn_order_indicator = None
         # self.network_manager = NetworkManager('localhost', 1488)
         self.game = game
         self.stats = None
         self.action_bar = None
         self.current_action_bar = None
-        run_button = button.Button(
-            text="RUN",
-            pos_hint={'x': 0.73, 'y': 0.8},
-            size_hint=(0.1, 0.1)
-        )
-        run_button.bind(on_press=self.run_game)     # TODO внести эту кнопку в главный курсор
-        change_state = button.Button(
-            text="CHANGE STATE",
-            pos_hint={'x': 0.73, 'y': 0.5},
-            size_hint=(0.15, 0.1)
-        )
-        change_state.bind(on_press=lambda x: self.game.switch_state())
-        # attack_button = button.Button(
-        #     text="Attack",
-        #     pos_hint={'x': 0.3, 'y': 0.1},
-        #     size_hint=(0.1, 0.1)
-        # )
-        # attack_button.bind(on_press=self.attack)
-        self.add_widget(run_button)
-        self.add_widget(change_state)
+        # self.size = self.ids.background.size
         # self.add_widget(attack_button)
         # Clock.schedule_interval(self.watcher, 0)
         # self.network_manager.start()
+
+    # def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
+    #     return False
+
+    # def _keyboard_closed(self):
+    #     self._keyboard.unbind(on_key_down=self._on_keyboard_down)
+    #     self._keyboard = None
 
     # def move_muzik(self, _):
     #     for cell in self.game.grid:
@@ -140,13 +134,24 @@ class RemoteGame(floatlayout.FloatLayout):
     def on_receive_message(self, struct):
         # print(struct)
         if not self.is_loaded:
-            self.grid = self.game.grid.make_widget(pos_hint={'x': 0.3, 'y': 0.3})
+            self.grid = self.game.grid.make_widget(pos_hint={'center_x': 0.5, 'center_y': 0.5})
+            arena = CompositeArena(self.grid)
+            self.camera = camera.Camera(arena)
             self.turn_order_indicator = self.game.turn_order_manager.make_widget()
-            self.add_widget(self.grid)
+            # self.add_widget(self.grid)
+            self.add_widget(self.camera, index=-1)
             self.add_widget(self.turn_order_indicator)
             # self.grid.update_children()
             # self.grid.bind(selected_cell=self.show_stats)
             self.is_loaded = True
+            run_button = button.Button(
+                text="RUN",
+                pos_hint={'x': 0.73, 'y': 0.8},
+                size_hint=(0.1, 0.1)
+            )
+            run_button.bind(on_press=self.run_game)  # TODO внести эту кнопку в главный курсор
+            self.camera.normed_camera_pos = (0.25, 0.25)
+            self.add_widget(run_button, index=1)
         self.cursor.update()
 
     # def loopback_message(self, message_struct):

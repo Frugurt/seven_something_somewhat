@@ -1,3 +1,4 @@
+import os
 from itertools import cycle
 from .serialization import RefTag
 from .replication_manager import (
@@ -10,9 +11,15 @@ from .bind_widget import bind_widget
 from .grid import Grid
 from .unit import Unit
 from .tools import dict_merge
-from .actions.action import (
-    SLOW, NORMAL, FAST
+from .actions.new_action import SPEED
+import logging
+logger = logging.getLogger(__name__)
+handler = logging.FileHandler(
+    './game_logs/apply_actions{}.log'.format("_server" if os.environ.get("IS_SERVER") else ""),
+    'w',
 )
+logger.addHandler(handler)
+logger.setLevel(logging.DEBUG)
 
 
 @bind_widget("TurnOrderIndicator")
@@ -103,6 +110,7 @@ class Game:
         # print(action.target_coord, action.context['action'].target_coord)
         if author == action.owner.stats.owner or author == "overlord":
             action.owner.append_action(action)
+        # self.clear_presumed()
         self.apply_actions()
         # self.update_position()
 
@@ -140,6 +148,15 @@ class Game:
         return self._turn_order_manager
 
     def run(self):
+        """
+        1) Начинается ход
+        2) Начинается фаза
+        3) Чуваки действуют
+        4) Заканчивается фаза
+        5) Повторяется 2-4
+        6) Заканчивается ход
+        :return:
+        """
         result = False
         self.switch_state()
         if all((player.is_ready for player in self.players)):
@@ -151,15 +168,15 @@ class Game:
             if len(alive_players) == 1:
                 self.declare_winner(alive_players.pop())
                 return
-            for unit in self.units:
-                unit.launch_triggers("on_phase_start", unit, unit.context)
             if not anyone_not_pass:
                 print("all pass")
                 self.action_log[-1].append("--------------")
+                for unit in self.units:
+                    unit.launch_triggers(["turn", "end"], unit, unit.context)
                 self.turn_order_manager.rearrange()
                 for unit in self.units:
                     unit.refill_action_points()
-                    unit.launch_triggers("on_turn_start", unit, unit.context)
+                    unit.launch_triggers(["turn","start"], unit, unit.context)
             for player in self.players:
                 player.is_ready = False
             result = True
@@ -167,32 +184,50 @@ class Game:
         self.switch_state()
         return result
 
-    def apply_actions(self, logging=False):
+    def apply_actions(self, log=False):
         anyone_not_pass = False
-        # print(self.units)
-        if logging:
+        logger.debug("START APPLING ACTIONS")
+        for unit in self.units:
+            unit.launch_triggers(["phase", "start"], unit, unit.context)
+        if log:
             self.action_log.append([])
         for unit in self.turn_order_manager:
+            logger.debug("APPLY FAST FOR {} in state {}".format(unit, unit.state))
             # print(unit)
-            unit_is_not_pass = unit.apply_actions(speed=FAST)
-            if logging:
+            unit_is_not_pass = unit.apply_actions(speed=SPEED.FAST)
+            for unit_ in self.units:
+                logger.debug("{} real stats {}".format(unit_, unit_._stats))
+                logger.debug("{} presumed stats {}".format(unit_, unit_._stats.presumed))
+            if log:
                 self.action_log[-1].extend(unit.action_log)
             unit.action_log.clear()
             anyone_not_pass = anyone_not_pass or unit_is_not_pass
         for unit in self.turn_order_manager:
+            logger.debug("APPLY NORMAL FOR {} in state {}".format(unit, unit.state))
             # print(unit)
             unit_is_not_pass = unit.apply_actions()
-            if logging:
+            for unit_ in self.units:
+                logger.debug("{} real stats {}".format(unit_, unit_._stats))
+                logger.debug("{} presumed stats {}".format(unit_, unit_._stats.presumed))
+            if log:
                 self.action_log[-1].extend(unit.action_log)
             unit.action_log.clear()
             anyone_not_pass = anyone_not_pass or unit_is_not_pass
         for unit in self.turn_order_manager:
             # print(unit)
-            unit_is_not_pass = unit.apply_actions(speed=SLOW)
-            if logging:
+            logger.debug("APPLY SLOW FOR {} in state {}".format(unit, unit.state))
+            unit_is_not_pass = unit.apply_actions(speed=SPEED.SLOW)
+            for unit_ in self.units:
+                logger.debug("{} real stats {}".format(unit_, unit_._stats))
+                logger.debug("{} presumed stats {}".format(unit_, unit_._stats.presumed))
+            if log:
                 self.action_log[-1].extend(unit.action_log)
             unit.action_log.clear()
             anyone_not_pass = anyone_not_pass or unit_is_not_pass
+        for unit in self.units:
+            unit.launch_triggers(["phase", "end"], unit, unit.context)
+        # for unit in self.units:
+        #     logger.debug("{} real stats {}".format(unit, unit.stats.resources))
         return anyone_not_pass
 
     def declare_winner(self, player):
@@ -200,7 +235,9 @@ class Game:
 
     def switch_state(self):
         for unit in self.units:
+            logger.debug("{} OLD STATS {}".format(unit, unit.stats))
             unit.switch_state()
+            logger.debug("{} NEW STATS {}".format(unit, unit.stats))
             # unit.clear_presumed()
 
     def update_position(self):

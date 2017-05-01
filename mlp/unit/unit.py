@@ -1,6 +1,7 @@
-from random import choice
-from functools import reduce
-import traceback
+from itertools import (
+    chain,
+    combinations,
+)
 from mlp.replication_manager import (
     GameObject,
     # RefTag,
@@ -178,18 +179,22 @@ class Unit(GameObject):
     def remove_action(self, action_index):
         self.current_action_bar.remove_action(action_index)
 
-    def apply_actions(self, speed=NORMAL):
+    def apply_actions(self, speed=SPEED.NORMAL):
         return self.current_action_bar.apply_actions(speed)
 
     def refill_action_points(self):
         self.stats.action_points = 3       # TODO сделать по людски
         self.stats.move_points = 3
+        for status in list(self.stats.statuses.values()):
+            status.tick()
 
     def clear_presumed(self):
         self._stats.update_presumed()
 
     def __repr__(self):
-        return "{} {}".format(self.stats.owner, self.__class__.__name__)
+        who = "{} {} at".format(self.stats.owner, self.__class__.__name__)
+        where = "{}".format(self.stats.cell)
+        return " ".join((who, where))
 
     # def __cmp__(self, other):
     #     return 1 if id(self) > id(other) else (-1 if id(self) < id(other) else 0)
@@ -214,6 +219,8 @@ class Unit(GameObject):
 
     def add_status(self, status):
         self.stats.statuses[status.name] = status
+        for event in status.events:
+            self.stats.triggers[event][status.name] = status
         status.on_add(self)
         # print("STATUS", self.state, self.stats.statuses)
 
@@ -223,20 +230,26 @@ class Unit(GameObject):
         # print("PLANNING STATUSES", self._presumed_stats.statuses)
         # print("ACTION STATUSES", self._stats.statuses)
         s = self.stats.statuses.pop(status.name)
+        for event in status.events:
+            self.stats.triggers[event].pop(status.name)
         s.on_remove(self)
 
-    def add_trigger(self, trigger):
-        for event in trigger.events:
-            self.stats.triggers[event][trigger.name] = trigger
+    # def add_trigger(self, trigger):
+    #     for event in trigger.events:
+    #         self.stats.triggers[event][trigger.name] = trigger
 
-    def remove_trigger(self, trigger):
-        for event in trigger.events:
-            self.stats.triggers[event].pop(trigger.name)
+    # def remove_trigger(self, trigger):
+    #     for event in trigger.events:
+    #         self.stats.triggers[event].pop(trigger.name)
 
-    def launch_triggers(self, event, target, target_context):
-        # print("Launch")
-        for trigger in list(self.stats.triggers[event].values()):
-            trigger.apply(event, target, target_context)
+    def launch_triggers(self, tags, target, target_context):
+        print("\n\n\n\nLaunch")
+        print(tags)
+        l = len(tags)
+        for event in chain(*(combinations(tags, j) for j in range(1, l+1))):
+            event = frozenset(event)
+            for trigger in list(self.stats.triggers[event].values()):
+                trigger.apply(event, target, target_context)
 
 
 def unit_constructor(loader, node):

@@ -20,7 +20,7 @@ type_ = Enum(
     "STANDARD",
 )
 # FAST, NORMAL, SLOW = range(3)
-speed = Enum(
+SPEED = Enum(
     "FAST",
     "NORMAL",
     "SLOW",
@@ -137,6 +137,9 @@ class Action(metaclass=ActionMeta):
         kwargs = {ss['name']: getattr(self, ss['name']) for ss in self.setup_fields}
         return self.__class__(self.owner, **kwargs)
 
+    def __repr__(self):
+        return "{} of {}".format(self.name, self.owner)
+
     # def load(self, struct):
     #     for name, val in struct:
     #         pass
@@ -151,7 +154,7 @@ def actions_constructor(loader, node):
     class NewAction(Action):
         name = a_s['name']
         action_type = getattr(type_, a_s['action_type'])
-        action_speed = getattr(speed, a_s['speed'])
+        action_speed = getattr(SPEED, a_s['speed'])
         cost = a_s['cost']
         setup_fields = a_s['setup']
         effects = a_s['effects']

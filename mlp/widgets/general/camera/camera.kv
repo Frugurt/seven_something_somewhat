@@ -1,0 +1,14 @@
+<-FullImage@Image>:
+    id: img
+    scale: 1.0
+    allow_stretch: True
+    size: self.texture.size if self.texture else (0, 0)
+    size_hint: (None, None)
+    on_scale: self.width = self.texture.width * self.scale; self.height = self.texture.height * self.scale
+    canvas:
+        Color:
+            rgb: (1, 1, 1)
+        Rectangle:
+            pos: self.pos
+            texture: self.texture
+            size: self.size

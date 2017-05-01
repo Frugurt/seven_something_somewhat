@@ -17,9 +17,12 @@
     - Parry
     - Shoot
     - Reload
+    - Regenerate
   widget:
-    sprite: './data/duelist.png'
-- !new_unit
+    sprite: './data/sprite.png'
+    scale: 0.33
+#- !new_unit
+-
   name: Mbvaga
   resources:
     health: 80

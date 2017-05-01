@@ -26,6 +26,7 @@
   effects:
     - effect: !eff
         name: Damage
+        extra_tags: ["melee"]
         amount: 15
       area: !area
         name: Melee
@@ -184,3 +185,21 @@
   widget:
     icon: './data/mushroom.png'
     pressed_icon: './data/mushroom_pressed.png'
+
+- !new_action
+  name: Regenerate
+  action_type: FULL
+  speed: SLOW
+  cost: 3
+  setup: []
+  effects:
+    - effect: !eff
+        name: AddStatus
+        status: !status
+          name: Regeneration
+          duration: -1
+          power: !prop source.ammo
+      area: !prop source.cell
+  widget:
+    icon: './data/linden-leaf.png'
+    pressed_icon: './data/linden-leaf(1).png'

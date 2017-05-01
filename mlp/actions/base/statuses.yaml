@@ -10,6 +10,27 @@
       name: ChangeStat
       stat_name: unit_state
       value: "sword"
+
+- !new_status
+  name: Parry
+  on_phase_end:
+    - !eff
+      name: RemoveStatus
+      status: !status
+        name: Parry
+  on_harmful_melee:
+    - !eff
+      name: Reflect
+
+- !new_status
+  name: Regeneration
+  params:
+    - power
+  on_turn_start:
+    - !eff
+      name: ChangeStat
+      stat_name: health
+      value: !expr [!prop target.health, "+", !prop status.power]
       
 - !new_status
   name: MushroomBuff

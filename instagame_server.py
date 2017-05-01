@@ -1,4 +1,6 @@
 import sys
+import os
+os.environ["IS_SERVER"] = "1"
 sys.path.insert(0, '/home/alessandro/PycharmProjects/mlp')
 from tornado import (
     ioloop,
@@ -12,6 +14,7 @@ from mlp.serialization import (
     mlp_dumps as encode,
     mlp_loads as decode,
     CreateOrUpdateTag,
+    mlp_encoder,
 )
 from mlp.replication_manager import (
     GameObjectRegistry
@@ -26,6 +29,14 @@ from mlp.actions import action
 from mlp.player import Player
 from tests.gridwidget import GrassGrid
 from mlp.loader import load
+import logging
+logger = logging.getLogger(__name__)
+handler = logging.FileHandler(
+    './game_logs/instagame_server.log',
+    'w',
+)
+logger.addHandler(handler)
+logger.setLevel(logging.DEBUG)
 load()
 """
 Клиенты отсылают начальные данные (персонажей например)
@@ -72,6 +83,7 @@ class TestServer(tcpserver.TCPServer):
         else:
             registry = GameObjectRegistry()
             registry.purge()
+            mlp_encoder.purge()
             inital_data = decode(inital_message)
             print(inital_data['players'])
             inital_data['players'] = [registry.load_obj(pl_struct) for pl_struct in inital_data['players']]
@@ -97,7 +109,9 @@ class TestServer(tcpserver.TCPServer):
                         # if player.name == player_name:
                         player.is_ready = True
                     self.game.run()
+                    logger.debug("RUN")
                 else:
+                    logger.debug("RECEIVE")
                     self.game.receive_message(message_struct)
                 if self.game.winner is not None:
                     print("WINNER")

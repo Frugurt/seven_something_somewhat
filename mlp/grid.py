@@ -4,6 +4,7 @@ from itertools import (
     permutations,
     repeat,
 )
+from operator import add, mul
 from functools import (
     reduce,
 )
