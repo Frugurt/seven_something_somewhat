@@ -19,15 +19,13 @@
       stat_name: health
       value: !expr [!prop target.health, "+", !prop status.power]
       
-#- !new_status
-#  name: MushroomBuff
-#  duration: 2
-#  on_add:
-#    - !eff
-#      name: CreateTrigger
-#      trigger_name: MushroomBuffTrigger
-#  on_remove:
-#    - !eff
-#      name: RemoveTrigger
-#      trigger_name: MushroomBuffTrigger
+- !new_status
+  name: DamageReduction
+  params:
+    - multiplier
+  on_harmful:
+    - !eff
+      name: AlterDamage
+      multiplier: !prop status.multiplier
+
     

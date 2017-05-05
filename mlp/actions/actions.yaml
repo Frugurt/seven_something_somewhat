@@ -32,7 +32,6 @@
         name: Melee
         radius: 1
         center: !prop source.cell
-#  check: !expr [!prop source.unit_state, "==", "sword"]
   widget:
     icon: './data/punch(1).png'
     pressed_icon: './data/punch.png'
@@ -181,13 +180,13 @@
   cost: 1
   setup: []
   effects: 
-    # - effect: !eff
-        # name: AddStatus
-        # status: !status
-          # name: DamageAlteration
-          # duration: 2
-          # multiplier: 0.5
-      # area: !prop source.cell
+    - effect: !eff
+        name: AddStatus
+        status: !status
+          name: DamageReduction
+          duration: 2
+          multiplier: 0.5
+      area: !prop source.cell
     - effect: !eff
         name: AddStatus
         status: !status

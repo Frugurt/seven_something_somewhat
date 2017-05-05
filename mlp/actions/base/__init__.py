@@ -134,3 +134,19 @@ class Reflect(MetaEffect):
         print(effect_context, "effect_context")
         effect.apply(effect_context['source'].cell, context)
         effect.cancel()
+        
+class AlterDamage(MetaEffect):
+
+    info_message = "lul"
+    
+    def __init__(self, multiplier, **kwargs):
+        super().__init__(**kwargs)
+        self.multiplier = multiplier
+        
+    def _apply(self, effect, context, effect_context):
+        print(context, "context")
+        print(effect_context, "effect_context")
+        if effect.name == 'Damage':
+            with self.configure(context) as c, effect.configure(effect_context) as ec:
+                effect.amount = int(ec.amount * c.multiplier)
+        
