@@ -2,6 +2,7 @@
   name: Muzik
   resources:
     health: 100
+    damage: 15
     initiative: 3
     action_points: 3
     unit_state: "sword"
@@ -26,6 +27,7 @@
   name: Mbvaga
   resources:
     health: 80
+    damage: 15
     initiative: 3
     action_points: 3
     mushrooms: 2
@@ -33,7 +35,7 @@
     - Move
     # ~15dmg
     - Attack
-    # moves mbvaga in line for up to 3 cells, applies
+    # moves Mbvaga in line for up to 3 cells, applies
     # damage to first encountered unit in front of him
     # (so up to 4 cells away from original position)
     # and stops there. If no unit was encountered,
@@ -45,7 +47,7 @@
     # BUFF for current and next turn
     # halves incoming damage and restores 10 hp at the
     # end of turn
-    #- MagicMushrooms
+    - MagicMushrooms
   widget:
     sprite: './data/pepe.png'
     scale: 0.22
