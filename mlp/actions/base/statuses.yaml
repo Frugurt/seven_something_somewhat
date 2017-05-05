@@ -23,7 +23,7 @@
   name: DamageReduction
   params:
     - multiplier
-  on_harmful:
+  on_damage:
     - !eff
       name: AlterDamage
       multiplier: !prop status.multiplier

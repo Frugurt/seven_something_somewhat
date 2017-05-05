@@ -32,10 +32,25 @@ class Line(Area):
         grid = context['source'].cell.grid
         return grid.get_line(self.source.get(context), self.target.get(context)[-1], self.length)
 
+class Ray(Area):
+
+    def __init__(self, source, target, length):
+        self.source = source
+        self.target = target
+        self.length = length
+
+    def get(self, context):
+        grid = context['source'].cell.grid
+        line = grid.get_line(self.source.get(context), self.target.get(context)[-1], self.length)[1:]
+        for i, cell in enumerate(line):
+            if cell.object:
+                return line[:i + 1]
+        return line
 
 AREAS = {
     "Melee": Melee,
     "Line": Line,
+    "Ray": Ray,
 }
 
 

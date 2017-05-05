@@ -104,19 +104,20 @@
   cost: 1
   setup:
     - name: target
-      cursor: line
+      cursor: ray
       cursor_params:
         - !prop source.cell
+        - 10
   effects:
     - effect: !eff
         name: Damage
         amount: 35
         target_coord: !prop action.target
       area: !area
-        name: Line
+        name: Ray
         source: !prop source.cell
         target: !prop action.target
-        length: null
+        length: 10
     - effect: !eff
         name: ChangeStat
         stat_name: loaded

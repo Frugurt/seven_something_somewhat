@@ -177,10 +177,43 @@ class LineSelectCursor(RequestCursor):
         super().send(_)
         self.requester.select_result = [c.cell for c in self.selected_cells]
         # TODO Смотри multiselectcursor
+        
+class RaySelectCursor(RequestCursor):
+
+    def __init__(self, game_widget, requester, source_cell, length=None):
+        super().__init__(game_widget, requester)
+        self.source_cell = source_cell
+        self.selected_cells = []
+        self.length = length
+        print("LENGTH")
+        print(self.length)
+
+    def select(self, cell):
+        self.deactivate()
+        ray_cells = cell.cell.grid.get_line(self.source_cell, cell.cell, self.length)[1:]
+        self.selected_cells = [c.make_widget() for c in ray_cells]
+        self.activate()
+
+    def activate(self):
+        super().activate()
+        for cell in self.selected_cells:
+            cell.is_highlighted = True
+
+    def deactivate(self):
+        super().deactivate()
+        for cell in self.selected_cells:
+            cell.is_highlighted = False
+
+    def send(self, _):
+        super().send(_)
+        self.requester.select_result = [c.cell for c in self.selected_cells]
+        # TODO Смотри multiselectcursor
+
 
 
 CURSOR_TABLE = {
     'any_cell': MultiSelectCursor,
     'adjacent_cell': AdjacentSelectCursor,
     'line': LineSelectCursor,
+    'ray': RaySelectCursor
 }

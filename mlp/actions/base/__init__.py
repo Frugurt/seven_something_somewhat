@@ -40,7 +40,7 @@ class Damage(UnitEffect):
 
     name = "Damage"
     info_message = "{} take {} damage"
-    _tags = ['harmful']
+    _tags = ['harmful', 'damage']
 
     def __init__(self, amount, **kwargs):
         super().__init__(**kwargs)
@@ -146,7 +146,6 @@ class AlterDamage(MetaEffect):
     def _apply(self, effect, context, effect_context):
         print(context, "context")
         print(effect_context, "effect_context")
-        if effect.name == 'Damage':
-            with self.configure(context) as c, effect.configure(effect_context) as ec:
-                effect.amount = int(ec.amount * c.multiplier)
+        with self.configure(context) as c, effect.configure(effect_context) as ec:
+            effect.amount = int(ec.amount * c.multiplier)
         
