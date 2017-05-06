@@ -131,6 +131,42 @@
     icon: './data/gunshot.png'
     pressed_icon: './data/gunshot(1).png'
 
+    
+- !new_action
+  name: Shoot
+  action_type: STANDARD
+  speed: SLOW
+  cost: 1
+  setup:
+    - name: target
+      cursor: ray
+      cursor_params:
+        - !prop source.cell
+        - 10
+  effects:
+    - effect: !eff
+        name: Damage
+        amount: 35
+        target_coord: !prop action.target
+      area: !area
+        name: Ray
+        source: !prop source.cell
+        target: !prop action.target
+        length: 10
+    - effect: !eff
+        name: ChangeStat
+        stat_name: loaded
+        value: false
+      area: !prop source.cell
+  check: !expr
+    - [!prop source.unit_state, "==", "rifle"]
+    - and
+    - [!prop source.loaded]
+  widget:
+    icon: './data/gunshot.png'
+    pressed_icon: './data/gunshot(1).png'
+    
+    
 - !new_action
   name: Reload
   action_type: FULL
@@ -204,6 +240,35 @@
   widget:
     icon: './data/mushroom.png'
     pressed_icon: './data/mushroom_pressed.png'
+    
+- !new_action
+  name: Charge
+  action_type: FULL
+  speed: SLOW
+  cost: 2
+  setup:
+    - name: target
+      cursor: ray
+      cursor_params:
+        - !prop source.cell
+        - 2
+  effects:
+    - effect: !eff
+        name: Damage
+        amount: 20
+        target_coord: !prop action.target
+      area: !area
+        name: Ray
+        source: !prop source.cell
+        target: !prop action.target
+        length: 3
+    - effect: !eff
+        name: Move
+        path: !prop action.target
+      area: !prop source.cell
+  widget:
+    icon: './data/sprint.png'
+    pressed_icon: './data/sprint_pressed.png'
 
 - !new_action
   name: Regenerate

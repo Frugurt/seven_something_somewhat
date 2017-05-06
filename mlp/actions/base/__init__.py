@@ -31,7 +31,7 @@ class Move(UnitEffect):
             for path_part in path:
                 next_cell = grid.find_path(target.cell, path_part)[1]
                 if next_cell.object is None:
-                    target.move(c.path)
+                    target.move(next_cell)
             self.info_message = self.info_message.format(target, c.path)
             super()._apply(target, context)
 

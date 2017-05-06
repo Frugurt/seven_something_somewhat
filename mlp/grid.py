@@ -198,6 +198,8 @@ class HexGrid(Grid):
     def get_line(self, source_cell, target_cell, length=None):
         # TODO правильно продлевать длину линий
         distance = self.distance(source_cell, target_cell)
+        if distance == 0:
+            return [source_cell]
         step = 1 / distance
         length = length or distance
         result = []
