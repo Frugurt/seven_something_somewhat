@@ -8,18 +8,15 @@ from mlp.replication_manager import (
     # ActionsRegistry,
     MetaRegistry,
 )
-# from mlp.bind_widget import bind_widget
-# from mlp.stats import (
-#     Stats,
-#     MajorStats,
-# )
 from mlp.stats.new_stats import MajorStats
 from mlp.grid import Grid
 from mlp.actions.action import *
 from mlp.actions.new_action import *
 from mlp.tools import dict_merge
 from mlp.actions.property.reference import Reference
+import blinker
 
+summon_event = blinker.signal("summon")
 PLANNING, ACTION = range(2)
 
 
@@ -42,6 +39,7 @@ class Unit(GameObject):
 
     def __init__(self, master_name=None, id_=None):
         super().__init__(id_)
+        self.is_alive = False
         self._last_cell = None
         self.state = PLANNING
         self.presumed_path = []
@@ -55,6 +53,7 @@ class Unit(GameObject):
         )
         self.clear_presumed()
         self.context = {'source': self}
+        # summon_event.connect(self.on_summon)
 
     @property
     def _presumed_stats(self):
@@ -161,6 +160,8 @@ class Unit(GameObject):
         # self._presumed_stats.load(struct['presumed_stats'])
         self.current_action_bar.load(struct['current_actions'])
         self.update_position()
+        # if not self.is_alive:
+        #     summon_event.send(unit=self, cell=self.cell)
         # if self._stats.cell:
         #     self.pos = self._stats.cell.pos
         # self.master_name = struct['master_name']
@@ -258,6 +259,10 @@ class Unit(GameObject):
     def change_owner(self, new_owner):
         self._stats.owner = new_owner
         self._presumed_stats.owner = new_owner
+
+    def on_summon(self, unit=None, cell=None):
+        if unit is self:
+            self.is_alive = True
 
 
 def new_unit_constructor(loader, node):

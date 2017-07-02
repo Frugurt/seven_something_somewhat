@@ -12,7 +12,7 @@ import blinker
 from mlp.replication_manager import GameObject
 from .tools import dict_merge
 
-on_summon_event = blinker.signal("on_summon")
+summon_event = blinker.signal("summon")
 
 
 def sum_iterables(iter1, iter2):
@@ -46,7 +46,7 @@ class Cell:
 
 class Grid(GameObject):
 
-    hooks = ['summon']
+    hooks = []
     cell = Cell
     load_priority = 1
 
@@ -58,16 +58,16 @@ class Grid(GameObject):
         self._changed_terrains = []
         if size is not None:
             self.create_cells()
+        summon_event.connect(self.summon)
 
     def change_terrain(self):
         pass
 
-    def summon(self, unit, cell):
+    def summon(self, _, unit, cell):
         # unit = unit(owner)
         self._new_objects.append(unit)
         unit.place_in(cell)
         print(unit)
-        on_summon_event.send('Unit', obj=unit)
 
     def undo(self):
         pass
@@ -124,6 +124,7 @@ class RectGrid(Grid):
         self._grid = None
         if size is not None:
             self.create_cells()
+        summon_event.connect(self.summon)
 
     def create_cells(self):
         w, h = self.size

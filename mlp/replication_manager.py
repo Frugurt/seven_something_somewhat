@@ -3,7 +3,7 @@ from collections import defaultdict
 import blinker
 from cbor2.types import CBORTag
 
-on_revoke_event = blinker.signal("on_revoke")
+revoke_event = blinker.signal("revoke")
 # import json
 
 MAX_OBJECTS = 10**6
@@ -45,7 +45,7 @@ class GameObjectRegistry(Singleton):
         for category_name, category in self.categories.items():
             if v in category:
                 print(category_name)
-                on_revoke_event.send(category_name, obj=v)
+                revoke_event.send(category_name, obj=v)
                 category.remove(v)
 
     def __iter__(self):

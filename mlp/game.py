@@ -22,8 +22,8 @@ handler = logging.FileHandler(
 logger.addHandler(handler)
 logger.setLevel(logging.DEBUG)
 
-on_summon_event = blinker.signal("on_summon")
-on_revoke_event = blinker.signal("on_revoke")
+summon = blinker.signal("summon")
+revoke = blinker.signal("revoke")
 
 
 @bind_widget("TurnOrderIndicator")
@@ -35,8 +35,8 @@ class TurnOrderManager(GameObject):
     def __init__(self, id_=None):
         super().__init__(id_)
         self._current_turn_order = []
-        on_summon_event.connect(self.append_unit, sender='Unit')
-        on_revoke_event.connect(self.remove_unit, sender='Unit')
+        # summon.connect(self.append_unit, sender='Unit')
+        # revoke.connect(self.remove_unit, sender='Unit')
 
     def __iter__(self):
         return iter((x[-1] for x in reversed(self._current_turn_order[::])))
@@ -113,8 +113,8 @@ class Game:
         self.players = players
         # self._grid.summon()
         if players:
-            self._grid.summon(players[0].main_unit, self._grid[3, 4])
-            self._grid.summon(players[-1].main_unit, self._grid[-1, -1])
+            summon.send(None, unit=players[0].main_unit, cell=self._grid[3, 4])
+            summon.send(None, unit=players[-1].main_unit, cell=self._grid[-1, -1])
         #     players[0].main_unit.place_in(self._grid[3, 4])
         #     players[-1].main_unit.place_in(self._grid[-1, -1])
         self.winner = None

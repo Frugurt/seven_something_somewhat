@@ -1,39 +1,25 @@
 # -*- coding: utf-8 -*-
-import kivy
-from kivy.uix import (
-    layout
-)
-import kivy.uix.boxlayout as blayout
 import numpy as np
 from numpy import matlib as mtl
 from kivy.lang import Builder
 import kivy.uix.widget as widget
 from kivy.uix import (
     relativelayout,
-    floatlayout,
     label,
 )
 from kivy.properties import (
     ListProperty,
-    ObjectProperty,
     NumericProperty,
     BooleanProperty,
 )
-import os
-from kivy.factory import Factory
-from kivy.uix.slider import Slider
-from kivy.graphics import Mesh, Color, Translate
 from math import cos, sin, pi, sqrt, degrees, radians
 from kivy.uix.image import Image
-# from ..general.camera.camera import FullImage
 from ..unit.unit import Unit
-import random as rnd
-from kivy.uix.filechooser import *
-from kivy.uix.popup import Popup
+import blinker
 __author__ = 'ecialo'
 H_COEF = sqrt(3)/2
 R2 = radians(60)
-
+summon_event = blinker.signal("summon")
 # Factory.register('LoadDialog', cls=LoadDialog)
 
 Builder.load_file('./mlp/widgets/grid/gridwidget.kv')
@@ -186,6 +172,7 @@ class Hexgrid(widget.Widget):
         self.bind(scale=self.rescale)
         # child_size = (0, 0)
         self.update_size()
+        # summon_event.connect(self.on_summon)
 
     def make_cells(self):
         for cell in reversed(list(self.grid)):
@@ -272,7 +259,7 @@ class Hexgrid(widget.Widget):
     def select_cell(self, cell):
         self.parent.cursor.select(cell)
 
-    def on_summon(self, unit, cell):
+    def on_summon(self, unit=None, cell=None):
         o = unit.make_widget(pos_hint={'center_x': 0.5, 'y': 0.3})
         w = cell.make_widget()
         w.add_widget(o)
