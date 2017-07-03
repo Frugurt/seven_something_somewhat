@@ -22,7 +22,8 @@ def sum_iterables(iter1, iter2):
 
 class Cell:
 
-    hooks = ['take', 'place']
+    # hooks = ['take', 'place']
+    hooks = []
 
     def __init__(self, pos, grid=None, terrain=None):
         # super().__init__(id_=id_)

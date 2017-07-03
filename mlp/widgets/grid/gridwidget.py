@@ -61,11 +61,11 @@ class HexCellWidget(relativelayout.FloatLayout):
         # self.update_vertices()
         # self.bind(rotator=self.update_vertices)
 
-    def on_take(self, obj):
-        self.remove_widget(obj.make_widget())
-
-    def on_place(self, obj):
-        self.add_widget(obj.make_widget())
+    # def on_take(self, obj):
+    #     self.remove_widget(obj.make_widget())
+    #
+    # def on_place(self, obj):
+    #     self.add_widget(obj.make_widget())
 
     # def on_pos(self, _, __):
     #     if self.parent:

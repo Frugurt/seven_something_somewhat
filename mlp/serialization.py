@@ -13,6 +13,7 @@ from .actions.base.status import (
     Status,
     STATUSES,
 )
+from .widgets.sprite_manager.commands.command import Command
 
 from .protocol import *
 
@@ -157,6 +158,28 @@ def encode_status(encoder, status, fp):
     encoder.encode_custom_tag(StatusTag(status), fp)
 
 
+class CommandTag(CBORTag):
+
+    def __init__(self, obj):
+        super().__init__(46, obj.dump())
+
+
+def encode_command(encoder, command, fp):
+    encoder.encode_custom_tag(CommandTag(command), fp)
+
+
+class CommandDecoder:
+
+    registry = MetaRegistry()["Command"]
+
+    def __call__(self, decoder, command_struct, fp, shareable_index=None):
+        print("\n\nACTION STRUCT")
+        # print(action_struct, self.registry.actions)
+        # action = action_struct['action']
+        command_name = command_struct.pop('name')
+        return self.registry[command_name](**command_struct)
+
+
 class PurgeableCBOREncoder(cbor2.CBOREncoder):
 
     def purge(self):
@@ -169,6 +192,7 @@ mlp_decoder = cbor2.CBORDecoder(semantic_decoders={
     43: CreateOrUpdateDecoder(),
     44: CellDecoder(),
     45: status_decoder,
+    46: CommandDecoder(),
 })
 mlp_encoder = PurgeableCBOREncoder(
     value_sharing=True,
@@ -177,6 +201,7 @@ mlp_encoder = PurgeableCBOREncoder(
         Action: encode_action,
         GameObject: encode_game_object,
         Status: encode_status,
+        Command: encode_command,
     }
 )
 
