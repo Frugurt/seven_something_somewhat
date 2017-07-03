@@ -3,7 +3,6 @@ from random import randint
 import logging
 from bisect import insort
 import blinker
-from .serialization import RefTag
 from .replication_manager import (
     GameObjectRegistry,
     GameObject,
@@ -24,6 +23,7 @@ logger.setLevel(logging.DEBUG)
 
 summon = blinker.signal("summon")
 revoke = blinker.signal("revoke")
+trace = blinker.signal("trace")
 
 
 @bind_widget("TurnOrderIndicator")
@@ -101,6 +101,7 @@ class Game:
     def __init__(self, players=None, grid=None, turn_order_manager=None):
         self.registry = GameObjectRegistry()
         self.action_log = []
+        self.commands = []
         self.handlers = {
             (message_type.GAME, game_message.CALL): self.registry.remote_call,
             (message_type.GAME, game_message.UPDATE): self.registry.load,
@@ -280,3 +281,7 @@ class Game:
         for unit in self.units:
             unit.clear_presumed()
         # self._grid.undo()
+
+    @trace.connect
+    def add_to_commands(self, _, command):
+        self.commands.append(command)

@@ -9,6 +9,10 @@ from .status import (
     Status,
     STATUSES,
 )
+import blinker
+from ...widgets.sprite_manager.commands.command import Place
+
+trace = blinker.signal("trace")
 
 
 class Move(UnitEffect):
@@ -31,6 +35,14 @@ class Move(UnitEffect):
                 path = [path]
             for path_part in path:
                 next_cell = grid.find_path(target.cell, path_part)[1]
+
+                # send command
+                trace.send(command=Place(
+                    unit=target,
+                    place=next_cell,
+                    old_place=target.cell
+                ))
+
                 if next_cell.object is None:
                     target.move(c.path)
             self.info_message = self.info_message.format(target, c.path)
