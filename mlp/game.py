@@ -13,6 +13,7 @@ from .grid import Grid
 from .unit import Unit
 from .tools import dict_merge
 from .actions.new_action import SPEED
+from mlp.widgets.sprite_manager.commands.command import Place
 logger = logging.getLogger(__name__)
 handler = logging.FileHandler(
     './game_logs/apply_actions{}.log'.format("_server" if os.environ.get("IS_SERVER") else ""),
@@ -285,3 +286,11 @@ class Game:
     @trace.connect
     def add_to_commands(self, _, command):
         self.commands.append(command)
+
+    @summon.connect
+    def on_summon(self, _, unit, cell):
+        trace.send(command=Place(
+            unit=unit,
+            place=cell,
+            old_place=None
+        ))
