@@ -42,8 +42,8 @@ class TurnOrderManager(GameObject):
     def __init__(self, id_=None):
         super().__init__(id_)
         self._current_turn_order = []
-        summon.connect(self.append_unit, sender='Unit')
-        revoke.connect(self.remove_unit, sender='Unit')
+        summon.connect(self.append_unit)
+        revoke.connect(self.remove_unit)
 
     def __iter__(self):
         return iter((x[-1] for x in reversed(self._current_turn_order[::])))
@@ -62,11 +62,11 @@ class TurnOrderManager(GameObject):
         )
 
     # @on_summon_event.connect_via('Unit')
-    def append_unit(self, _, obj):
+    def append_unit(self, _, unit, cell=None):
         print("ON SUMMON")
-        print(obj)
+        print(unit)
         self._current_turn_order.append(
-            (LAST, obj.stats.initiative, obj)
+            (LAST, unit.stats.initiative, unit)
         )
 
     # @on_revoke_event.connect_via('Unit')
@@ -94,6 +94,8 @@ class TurnOrderManager(GameObject):
         # }
 
     def load(self, struct):
+        print("LOAD TURN ORDER")
+        print(struct)
         super().load(struct)
         self._current_turn_order = sorted([tuple(r) for r in struct['current_turn_order']])
 
