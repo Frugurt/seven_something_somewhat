@@ -26,7 +26,7 @@ class Place(Command):
 
     def execute(self):
         unit = self.unit
-        uw = unit.make_widget()
+        uw = unit.make_widget(pos_hint={'center_x': 0.5, 'center_y': 0.5})
         if self.old_place:
             self.old_place.make_widget().remove_widget(uw)
         self.place.make_widget().add_widget(uw)

@@ -16,9 +16,10 @@ from mlp.serialization import (
 )
 from mlp.protocol import *
 from ..cursor import MainCursor
+import blinker
 from kivy.lang import Builder
 from kivy.core.window import Window
-
+commands = blinker.signal("commands")
 # Builder.load_file('/home/alessandro/PycharmProjects/mlp/mlp/widgets/game/game.kv')
 
 
@@ -77,6 +78,7 @@ class RemoteGame(floatlayout.FloatLayout):
         # self.add_widget(attack_button)
         # Clock.schedule_interval(self.watcher, 0)
         # self.network_manager.start()
+        commands.connect(self.process_commands)
 
     # def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
     #     return False
@@ -169,6 +171,11 @@ class RemoteGame(floatlayout.FloatLayout):
             message_struct = self.network_manager.decode(message)
             # print(message_struct)
             self.receive_message(message_struct)
+
+    def process_commands(self, _, commands):
+        print(commands)
+        for command in commands:
+            command.execute()
 
     # def show_stats(self, _, selected_cell):
     #     if self.stats:

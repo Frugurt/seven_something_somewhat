@@ -30,6 +30,7 @@ logger.setLevel(logging.DEBUG)
 summon = blinker.signal("summon")
 revoke = blinker.signal("revoke")
 trace = blinker.signal("trace")
+commands = blinker.signal("commands")
 
 
 @bind_widget("TurnOrderIndicator")
@@ -111,6 +112,7 @@ class Game:
             (message_type.GAME, game_message.UPDATE): self.registry.load,
             (message_type.GAME, game_message.ACTION_APPEND): self.append_action,
             (message_type.GAME, game_message.ACTION_REMOVE): self.remove_action,
+            (message_type.GAME, game_message.COMMAND): self.envoke_commands,
             # (message_type.GAME, game_message.READY): self.run,
         }
         self._grid = grid
@@ -292,8 +294,8 @@ class Game:
 
     # @trace.connect
     def add_to_commands(self, _, command):
-        pass
-        # self.commands.append(command)
+        # pass
+        self.commands.append(command)
 
     # @summon.connect
     def on_summon(self, _, unit, cell):
@@ -303,3 +305,6 @@ class Game:
             place=cell,
             old_place=None
         ))
+
+    def envoke_commands(self, new_commands):
+        commands.send(commands=new_commands)

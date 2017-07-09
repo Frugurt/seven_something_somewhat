@@ -63,9 +63,13 @@ class TestServer(tcpserver.TCPServer):
         ioloop.IOLoop.current().spawn_callback(self.work_with, stream)
 
     async def send_update(self, stream):
-        print(self.game.registry.game_objects)
-        print(self.game.registry.dump())
+        # print(self.game.registry.game_objects)
+        # print(self.game.registry.dump())
         # payload = self.game.registry.dump()
+        # payload = {
+            # 'commands': self.game.commands[::],
+            # 'registry': [CreateOrUpdateTag(o) for o in self.game.registry.dump()],
+        # }
         payload = [CreateOrUpdateTag(o) for o in self.game.registry.dump()]
         message = {
             'message_type': (message_type.GAME, game_message.UPDATE),
@@ -73,6 +77,13 @@ class TestServer(tcpserver.TCPServer):
         }
         # await stream.write(json.dumps(message).encode())
         await stream.write(encode(message) + SEPARATOR)
+        payload = self.game.commands[::]
+        message = {
+            'message_type': (message_type.GAME, game_message.COMMAND),
+            'payload': payload
+        }
+        await stream.write(encode(message) + SEPARATOR)
+        self.game.commands.clear()
 
     async def work_with(self, stream):
         try:
