@@ -1,4 +1,8 @@
 from collections.abc import Iterable
+
+import blinker
+
+from mlp.commands.command import Place
 from .effect import (
     UnitEffect,
     MetaEffect,
@@ -9,8 +13,6 @@ from .status import (
     Status,
     STATUSES,
 )
-import blinker
-from ...widgets.sprite_manager.commands.command import Place
 
 trace = blinker.signal("trace")
 

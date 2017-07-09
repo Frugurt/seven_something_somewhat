@@ -185,13 +185,13 @@ class Hexgrid(widget.Widget):
             )
             self._grid[x][y] = w
             self.add_widget(w)
-            if terrain:
+            # if terrain:
                 # t = terrain.make_widget(pos_hint={'center_x': 0.5, 'center_y': 0.5})
                 # w.add_widget(t)
                 # t.update_vertices()
-                if cell.object:
-                    o = cell.object.make_widget(pos_hint={'center_x': 0.5, 'y': 0.3})
-                    w.add_widget(o)
+                # if cell.object:
+                    # o = cell.object.make_widget(pos_hint={'center_x': 0.5, 'y': 0.3})
+                    # w.add_widget(o)
                 # for _, content in enumerate(cell.additional_content):
                 #     c = content.make_widget(pos_hint={'center_x': 0.5, 'center_y': 0.5})
                 #     w.add_widget(c)

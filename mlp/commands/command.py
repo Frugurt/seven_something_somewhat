@@ -1,4 +1,4 @@
-from ....replication_manager import MetaRegistry
+from mlp.replication_manager import MetaRegistry
 
 EFFECTS = MetaRegistry()['Command']
 CommandMeta = MetaRegistry().make_registered_metaclass("Command")

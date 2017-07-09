@@ -1,19 +1,24 @@
-import os
-from random import randint
 import logging
+import os
 from bisect import insort
+from random import randint
+
 import blinker
+
+from mlp.commands.command import Place
+from .actions.new_action import SPEED
+from .bind_widget import bind_widget
+from .grid import Grid
+from .protocol import *
 from .replication_manager import (
     GameObjectRegistry,
     GameObject,
 )
-from .protocol import *
-from .bind_widget import bind_widget
-from .grid import Grid
-from .unit import Unit
 from .tools import dict_merge
-from .actions.new_action import SPEED
-from mlp.widgets.sprite_manager.commands.command import Place
+from .unit import Unit
+
+LAST = -1
+
 logger = logging.getLogger(__name__)
 handler = logging.FileHandler(
     './game_logs/apply_actions{}.log'.format("_server" if os.environ.get("IS_SERVER") else ""),
@@ -36,8 +41,8 @@ class TurnOrderManager(GameObject):
     def __init__(self, id_=None):
         super().__init__(id_)
         self._current_turn_order = []
-        # summon.connect(self.append_unit, sender='Unit')
-        # revoke.connect(self.remove_unit, sender='Unit')
+        summon.connect(self.append_unit, sender='Unit')
+        revoke.connect(self.remove_unit, sender='Unit')
 
     def __iter__(self):
         return iter((x[-1] for x in reversed(self._current_turn_order[::])))
@@ -46,18 +51,22 @@ class TurnOrderManager(GameObject):
     def units(self):
         return self.registry.categories[Unit.__name__]
 
+    @staticmethod
+    def get_current_unit_initiative(unit):
+        ini = unit.stats.initiative
+        return (
+            max((randint(0, 10) for _ in range(ini))),
+            ini,
+            unit,
+        )
+
     # @on_summon_event.connect_via('Unit')
     def append_unit(self, _, obj):
         print("ON SUMMON")
         print(obj)
-        unit = obj
-        ordered_unit = (
-            max((randint(0, 10) for _ in range(unit.stats.initiative))),
-            unit.stats.initiative,
-            unit,
+        self._current_turn_order.append(
+            (LAST, obj.stats.initiative, obj)
         )
-        print(ordered_unit, self._current_turn_order)
-        insort(self._current_turn_order, ordered_unit)
 
     # @on_revoke_event.connect_via('Unit')
     def remove_unit(self, _, obj):
@@ -70,14 +79,8 @@ class TurnOrderManager(GameObject):
         self._current_turn_order.pop(i_2_del)
 
     def rearrange(self):
-        self._current_turn_order = sorted([
-            (
-                max((randint(0, 10) for _ in range(u.stats.initiative))),
-                u.stats.initiative,
-                u,
-            )
-            for u in self
-        ])
+        cur_turn_order = [self.get_current_unit_initiative(x[-1]) for x in self._current_turn_order]
+        self._current_turn_order = sorted(cur_turn_order, reverse=True)
 
     def dump(self):
         return dict_merge(
@@ -113,6 +116,10 @@ class Game:
         self._grid = grid
         self._turn_order_manager = turn_order_manager
         self.players = players
+
+        trace.connect(self.add_to_commands)
+        summon.connect(self.on_summon)
+
         # self._grid.summon()
         if players:
             summon.send(None, unit=players[0].main_unit, cell=self._grid[3, 4])
@@ -283,12 +290,14 @@ class Game:
             unit.clear_presumed()
         # self._grid.undo()
 
-    @trace.connect
+    # @trace.connect
     def add_to_commands(self, _, command):
-        self.commands.append(command)
+        pass
+        # self.commands.append(command)
 
-    @summon.connect
+    # @summon.connect
     def on_summon(self, _, unit, cell):
+        print("SUMMONED", unit)
         trace.send(command=Place(
             unit=unit,
             place=cell,

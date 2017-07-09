@@ -1,21 +1,22 @@
 import io
+
 import cbor2
 from cbor2.types import CBORTag
+
+from mlp.commands.command import Command
+from .actions.base.status import (
+    Status,
+    STATUSES,
+)
+from .actions.new_action import Action
+from .grid import Cell
+from .protocol import *
 from .replication_manager import (
     GameObjectRegistry,
     # ActionsRegistry,
     GameObject,
     MetaRegistry,
 )
-from .grid import Cell
-from .actions.new_action import Action
-from .actions.base.status import (
-    Status,
-    STATUSES,
-)
-from .widgets.sprite_manager.commands.command import Command
-
-from .protocol import *
 
 
 class RefTag(CBORTag):
