@@ -15,7 +15,11 @@ from .replication_manager import (
     GameObject,
 )
 from .tools import dict_merge
-from .unit import Unit
+from .unit import (
+    Unit,
+    PLANNING,
+    ACTION
+)
 
 LAST = -1
 
@@ -107,6 +111,7 @@ class Game:
 
     def __init__(self, players=None, grid=None, turn_order_manager=None):
         self.registry = GameObjectRegistry()
+        self.state = PLANNING
         self.action_log = []
         self.commands = []
         self.handlers = {
@@ -126,8 +131,10 @@ class Game:
 
         # self._grid.summon()
         if players:
+            self.switch_state()
             summon.send(None, unit=players[0].main_unit, cell=self._grid[3, 4])
             summon.send(None, unit=players[-1].main_unit, cell=self._grid[-1, -1])
+            self.switch_state()
         #     players[0].main_unit.place_in(self._grid[3, 4])
         #     players[-1].main_unit.place_in(self._grid[-1, -1])
         self.winner = None
@@ -279,6 +286,7 @@ class Game:
         self.winner = player
 
     def switch_state(self):
+        self.state = int(not self.state)
         for unit in self.units:
             logger.debug("{} OLD STATS {}".format(unit, unit.stats))
             unit.switch_state()
@@ -297,7 +305,8 @@ class Game:
     # @trace.connect
     def add_to_commands(self, _, command):
         # pass
-        self.commands.append(command)
+        if self.state is ACTION:
+            self.commands.append(command)
 
     # @summon.connect
     def on_summon(self, _, unit, cell):
@@ -309,4 +318,5 @@ class Game:
         ))
 
     def envoke_commands(self, new_commands):
+        print("ENVOKE COMMANDS")
         commands.send(commands=new_commands)

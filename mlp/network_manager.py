@@ -28,7 +28,7 @@ class NetworkManager(Thread):
         super().__init__(name="NetworkManager")
         self.loop = ioloop.IOLoop.current()
         self.client = tcpclient.TCPClient()
-        self.inqueue = queue.Queue()
+        self.inqueue = tq.Queue()
         self.outqueue = queue.Queue()
         self.encode = encoder
         self.decode = decoder
@@ -51,19 +51,12 @@ class NetworkManager(Thread):
     def consumer(self, stream):
     # async def consumer(self, stream):
         while True:
-            # print("yolo")
             # text = await self.inqueue.get()
-            try:
-                text = self.inqueue.get_nowait()
-                print("bytes sended", text)
-                # print(self.inqueue)
-            except:
-                print(id(self.inqueue))
-            else:
+            text = yield self.inqueue.get()
+            # print("bytes sended", text)
             # await stream.write(text)
-                yield stream.write(text + SEPARATOR)
-                self.inqueue.task_done()
-            yield gen.sleep(10)
+            yield stream.write(text + SEPARATOR)
+
 
     @gen.coroutine
     def receiver(self, stream):
@@ -83,12 +76,10 @@ class NetworkManager(Thread):
             else:
                 self.outqueue.put_nowait(text)
 
-    @gen.coroutine
     def send(self, struct):
-        print('send', struct)
+        # print('send', struct)
         message = self.encode(struct)
         self.inqueue.put_nowait(message)
-        print(id(self.inqueue))
 
     def dump(self):
         data = deque()

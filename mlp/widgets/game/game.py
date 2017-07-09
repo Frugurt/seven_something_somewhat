@@ -69,7 +69,7 @@ class RemoteGame(floatlayout.FloatLayout):
         self.grid = None
         self.camera = None
         self.turn_order_indicator = None
-        self.network_manager = NetworkManager('localhost', 1488)
+        # self.network_manager = NetworkManager('localhost', 1488)
         self.game = game
         self.stats = None
         self.action_bar = None

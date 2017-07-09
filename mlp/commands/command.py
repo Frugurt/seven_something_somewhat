@@ -27,6 +27,7 @@ class Place(Command):
     def execute(self):
         unit = self.unit
         uw = unit.make_widget(pos_hint={'center_x': 0.5, 'y': 0.3})
+        print("\nUNIT {} \n PLACE{} \nOLD PLACE{}\n".format(self.unit, self.place, self.old_place))
         if self.old_place:
             self.old_place.make_widget().remove_widget(uw)
         self.place.make_widget().add_widget(uw)
