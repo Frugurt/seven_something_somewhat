@@ -6,7 +6,7 @@ from mlp.replication_manager import (
     GameObject,
     # RefTag,
     # ActionsRegistry,
-    MetaRegistry,
+    # MetaRegistry,
 )
 from mlp.stats.new_stats import MajorStats
 from mlp.grid import Grid

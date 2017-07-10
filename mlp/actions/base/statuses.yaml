@@ -3,11 +3,13 @@
   on_add:
     - !eff
       name: ChangeStat
+      extra_tags: ["plan"]
       stat_name: unit_state
       value: "rifle"
   on_remove:
     - !eff
       name: ChangeStat
+      extra_tags: ["plan"]
       stat_name: unit_state
       value: "sword"
 

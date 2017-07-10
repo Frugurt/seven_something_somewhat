@@ -14,6 +14,7 @@ from ...replication_manager import MetaRegistry
 from collections.abc import Iterable
 from contextlib import contextmanager
 
+PLANNING = 0
 EFFECTS = MetaRegistry()['Effect']
 EffectMeta = MetaRegistry().make_registered_metaclass("Effect")
 
@@ -26,7 +27,8 @@ class AbstractEffect(metaclass=EffectMeta):
 
     def __init__(self, **kwargs):
         self.is_canceled = False
-        self.extra_tags = kwargs.pop('extra_tags', [])
+        print(self.name, kwargs)
+        self.extra_tags = kwargs.get('extra_tags', [])
         print("\n\nEXXTRA TAGSSS", self.name, self.tags)
         # self
 
@@ -81,6 +83,10 @@ class UnitEffect(AbstractEffect):
             cells = [cells]
         for cell in cells:
             if cell.object is not None:
+                unit = cell.object
+                if unit.state is PLANNING and "plan" not in self.tags:
+                    # print("FAIL!!!!!!!!!!!!!!!!!!!!!!")
+                    return
                 effect_context = context.copy()
                 effect_context['target'] = cell.object
                 effect = self.copy()
@@ -184,6 +190,7 @@ def effect_constructor(loader, node):
         e_s[key_node.value] = value
     # e_s = loader.construct_mapping(node)
     name = e_s.pop("name")
+    print(e_s)
     # effect = EFFECTS[name](**e_s)
     return Reference(name, e_s, EFFECTS)
 

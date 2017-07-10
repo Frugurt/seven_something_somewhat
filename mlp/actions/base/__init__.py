@@ -20,6 +20,7 @@ trace = blinker.signal("trace")
 class Move(UnitEffect):
 
     info_message = "{} move to {}"
+    name = "Move"
 
     def __init__(self, **kwargs):
         self.path = kwargs['path']
@@ -71,6 +72,7 @@ class Damage(UnitEffect):
 class AddStatus(UnitEffect):
 
     info_message = "add {} to {}"
+    name = "AddStatus"
 
     def __init__(self, status, **kwargs):
         super().__init__(**kwargs)
@@ -88,6 +90,7 @@ class AddStatus(UnitEffect):
 class RemoveStatus(UnitEffect):
 
     info_message = "remove {} from {}"
+    name = "RemoveStatus"
 
     def __init__(self, status, **kwargs):
         super().__init__(**kwargs)
@@ -105,6 +108,7 @@ class RemoveStatus(UnitEffect):
 class ChangeStat(UnitEffect):
 
     info_message = "change stat {} of {} to {}"
+    name = "ChangeStat"
 
     def __init__(self, stat_name, value=None, **kwargs):
         self.stat_name = stat_name

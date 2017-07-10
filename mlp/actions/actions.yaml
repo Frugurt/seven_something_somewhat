@@ -11,6 +11,7 @@
   effects:
     - effect: !eff
         name: Move
+        extra_tags: ["plan"]
         path: !prop action.path
       area: !prop source.cell
   widget:
@@ -46,6 +47,7 @@
   effects:
     - effect: !eff
         name: AddStatus
+        extra_tags: ["plan"]
         status: !status
           name: WithRifle
       area: !prop source.cell
@@ -63,6 +65,7 @@
   effects:
     - effect: !eff
         name: RemoveStatus
+        extra_tags: ["plan"]
         status: !status
           name: WithRifle
       area: !prop source.cell
@@ -80,6 +83,7 @@
   effects:
     - effect: !eff
         name: AddStatus
+        extra_tags: ["plan"]
         status: !status
           name: Parry
       area: !prop source.cell
@@ -107,9 +111,10 @@
         name: Line
         source: !prop source.cell
         target: !prop action.target
-        length: null
+        length: 5
     - effect: !eff
         name: ChangeStat
+        extra_tags: ["plan"]
         stat_name: loaded
         value: false
       area: !prop source.cell
@@ -130,11 +135,13 @@
   effects:
     - effect: !eff
         name: ChangeStat
+        extra_tags: ["plan"]
         stat_name: ammo
         value: !expr [!prop target.ammo, "-", 1]
       area: !prop source.cell
     - effect: !eff
         name: ChangeStat
+        extra_tags: ["plan"]
         stat_name: loaded
         value: true
       area: !prop source.cell
@@ -173,6 +180,7 @@
   effects:
     - effect: !eff
         name: AddStatus
+        extra_tags: ["plan"]
         status: !status
           name: Regeneration
           duration: -1
