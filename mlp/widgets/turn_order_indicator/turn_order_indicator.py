@@ -24,9 +24,9 @@ class TurnOrderIndicator(stl.StackLayout):
         self.turn_order_manager = turn_order_manager
         super().__init__(**kwargs)
         for u in self.turn_order_manager:
-            self.add_widget(TurnOrderRecord(text=u.stats.owner))
+            self.add_widget(TurnOrderRecord(text="{} {}".format(u.stats.owner, u.name)))
 
     def on_load(self, _):
         self.clear_widgets()
         for u in self.turn_order_manager:
-            self.add_widget(TurnOrderRecord(text=u.stats.owner))
+            self.add_widget(TurnOrderRecord(text="{} {}".format(u.stats.owner, u.name)))

@@ -70,8 +70,9 @@ class TurnOrderManager(GameObject):
         print("ON SUMMON")
         print(unit)
         self._current_turn_order.append(
-            (LAST, unit.stats.initiative, unit)
+            (LAST, unit.stats.initiative, unit,)
         )
+        self._current_turn_order = self._current_turn_order[::]
         print(self._current_turn_order)
 
     # @on_revoke_event.connect_via('Unit')
@@ -90,11 +91,13 @@ class TurnOrderManager(GameObject):
 
     def dump(self):
         print("CURRENT TURN ORDER")
-        print(self._current_turn_order)
-        return dict_merge(
+        # print(self._current_turn_order)
+        msg = dict_merge(
             super().dump(),
             {'current_turn_order': self._current_turn_order},
         )
+        print(msg)
+        return msg
         # return {
         #     **super().dump(),
         #     'current_turn_order': list(enumerate((RefTag(u) for u in self)))
@@ -231,7 +234,7 @@ class Game:
                 self.turn_order_manager.rearrange()
                 for unit in self.units:
                     unit.refill_action_points()
-                    unit.launch_triggers(["turn","start"], unit, unit.context)
+                    unit.launch_triggers(["turn", "start"], unit, unit.context)
             for player in self.players:
                 player.is_ready = False
             result = True
