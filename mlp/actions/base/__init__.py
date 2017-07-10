@@ -15,6 +15,7 @@ from .status import (
 )
 
 trace = blinker.signal("trace")
+summon = blinker.signal("summon")
 
 
 class Move(UnitEffect):
@@ -151,6 +152,8 @@ class Summon(CellEffect):
     def _apply(self, cell, context):
         with self.configure(context) as c:
             unit = c.unit
+            print("UNIT")
+            print(unit)
             unit.change_owner(c.owner)
-            cell.grid.summon(unit, cell)
+            summon.send(unit=unit, cell=cell)
             super()._apply(cell, context)
