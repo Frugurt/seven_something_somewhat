@@ -72,6 +72,7 @@ class TurnOrderManager(GameObject):
         self._current_turn_order.append(
             (LAST, unit.stats.initiative, unit)
         )
+        print(self._current_turn_order)
 
     # @on_revoke_event.connect_via('Unit')
     def remove_unit(self, _, obj):
@@ -88,6 +89,8 @@ class TurnOrderManager(GameObject):
         self._current_turn_order = sorted(cur_turn_order, reverse=True)
 
     def dump(self):
+        print("CURRENT TURN ORDER")
+        print(self._current_turn_order)
         return dict_merge(
             super().dump(),
             {'current_turn_order': self._current_turn_order},

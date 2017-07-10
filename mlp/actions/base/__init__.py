@@ -144,6 +144,8 @@ class Reflect(MetaEffect):
 
 class Summon(CellEffect):
 
+    name = "Summon"
+
     def __init__(self, unit, owner, **kwargs):
         super().__init__(**kwargs)
         self.unit = unit
@@ -152,8 +154,7 @@ class Summon(CellEffect):
     def _apply(self, cell, context):
         with self.configure(context) as c:
             unit = c.unit
-            print("UNIT")
-            print(unit)
+            unit.switch_state()
             unit.change_owner(c.owner)
             summon.send(unit=unit, cell=cell)
             super()._apply(cell, context)

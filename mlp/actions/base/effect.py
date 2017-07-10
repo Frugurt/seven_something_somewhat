@@ -1,3 +1,5 @@
+import logging
+import os
 from yaml import SequenceNode
 from ...tools import (
     # convert,
@@ -13,6 +15,14 @@ from ..property.reference import (
 from ...replication_manager import MetaRegistry
 from collections.abc import Iterable
 from contextlib import contextmanager
+
+logger = logging.getLogger(__name__)
+handler = logging.FileHandler(
+    './game_logs/apply_effects{}.log'.format("_server" if os.environ.get("IS_SERVER") else ""),
+    'w',
+)
+logger.addHandler(handler)
+logger.setLevel(logging.DEBUG)
 
 PLANNING = 0
 EFFECTS = MetaRegistry()['Effect']
@@ -33,7 +43,10 @@ class AbstractEffect(metaclass=EffectMeta):
         # self
 
     def log(self, source):
-        source.action_log.append(self.info_message)
+        # source.action_log.append(self.info_message)
+        logger.debug(
+            "Effect {} with context".format(self.name)
+        )
 
     @property
     def tags(self):
@@ -79,14 +92,14 @@ class UnitEffect(AbstractEffect):
         self.log(source)
 
     def apply(self, cells, context):
+        if context['source'].state is PLANNING and "plan" not in self.tags:
+            # print("FAIL!!!!!!!!!!!!!!!!!!!!!!")
+            return
         if not isinstance(cells, Iterable):
             cells = [cells]
         for cell in cells:
             if cell.object is not None:
-                unit = cell.object
-                if unit.state is PLANNING and "plan" not in self.tags:
-                    # print("FAIL!!!!!!!!!!!!!!!!!!!!!!")
-                    return
+                # unit = cell.object
                 effect_context = context.copy()
                 effect_context['target'] = cell.object
                 effect = self.copy()
@@ -112,6 +125,9 @@ class CellEffect(AbstractEffect):
         self.log(source)
 
     def apply(self, cells, context):
+        if context['source'].state is PLANNING and "plan" not in self.tags:
+            # print("FAIL!!!!!!!!!!!!!!!!!!!!!!")
+            return
         if not isinstance(cells, Iterable):
             cells = [cells]
         for cell in cells:
