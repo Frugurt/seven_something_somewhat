@@ -84,6 +84,7 @@ class TestServer(tcpserver.TCPServer):
         }
         await stream.write(encode(message) + SEPARATOR)
         self.game.commands.clear()
+        self.game.registry.collect()
 
     async def work_with(self, stream):
         try:

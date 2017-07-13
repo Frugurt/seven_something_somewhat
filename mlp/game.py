@@ -73,17 +73,16 @@ class TurnOrderManager(GameObject):
             (LAST, unit.stats.initiative, unit,)
         )
         self._current_turn_order = self._current_turn_order[::]
-        print(self._current_turn_order)
 
     # @on_revoke_event.connect_via('Unit')
-    def remove_unit(self, _, obj):
-        unit = obj
+    def remove_unit(self, _, unit):
         i_2_del = None
         for i, o_u in enumerate(self._current_turn_order):
             if unit in o_u:
                 i_2_del = i
                 break
         self._current_turn_order.pop(i_2_del)
+        self._current_turn_order = self._current_turn_order[::]
 
     def rearrange(self):
         cur_turn_order = [self.get_current_unit_initiative(x[-1]) for x in self._current_turn_order]
@@ -138,7 +137,7 @@ class Game:
         # self._grid.summon()
         if players:
             self.switch_state()
-            summon.send(None, unit=players[0].main_unit, cell=self._grid[3, 4])
+            summon.send(None, unit=players[0].main_unit, cell=self._grid[2, 4])
             summon.send(None, unit=players[-1].main_unit, cell=self._grid[-1, -1])
             self.switch_state()
         #     players[0].main_unit.place_in(self._grid[3, 4])

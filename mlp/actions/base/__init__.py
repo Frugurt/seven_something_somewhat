@@ -2,7 +2,10 @@ from collections.abc import Iterable
 
 import blinker
 
-from mlp.commands.command import Place
+from mlp.commands.command import (
+    Place,
+    Revoke,
+)
 from .effect import (
     UnitEffect,
     MetaEffect,
@@ -66,6 +69,9 @@ class Damage(UnitEffect):
     def _apply(self, target, context):
         with self.configure(context) as c:
             target.stats.health -= c.amount
+            if target.stats.health <= 0:
+                trace.send(command=Revoke(target))
+                target.kill()
             self.info_message = self.info_message.format(target, c.amount)
             super()._apply(target, context)
 

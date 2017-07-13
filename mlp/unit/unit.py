@@ -17,6 +17,7 @@ from mlp.actions.property.reference import Reference
 import blinker
 
 summon_event = blinker.signal("summon")
+revoke = blinker.signal("revoke")
 PLANNING, ACTION = range(2)
 
 
@@ -39,7 +40,7 @@ class Unit(GameObject):
 
     def __init__(self, master_name=None, id_=None):
         super().__init__(id_)
-        self.is_alive = False
+        self.is_alive = True
         self._last_cell = None
         self.state = PLANNING
         self.presumed_path = []
@@ -149,6 +150,7 @@ class Unit(GameObject):
             {
                 # 'pos': self.pos,
                 'stats': self._stats.dump(),
+                'is_alive': self.is_alive,
                 # 'presumed_stats': self._presumed_stats.dump(),
                 'current_actions': self.current_action_bar.dump(),
             }
@@ -160,6 +162,7 @@ class Unit(GameObject):
         # self._presumed_stats.load(struct['presumed_stats'])
         self.current_action_bar.load(struct['current_actions'])
         self.update_position()
+        self.is_alive = struct['is_alive']
         # if not self.is_alive:
         #     summon_event.send(unit=self, cell=self.cell)
         # if self._stats.cell:
@@ -260,9 +263,9 @@ class Unit(GameObject):
         self._stats.owner = new_owner
         self._presumed_stats.owner = new_owner
 
-    def on_summon(self, unit=None, cell=None):
-        if unit is self:
-            self.is_alive = True
+    def kill(self):
+        self.is_alive = False
+        revoke.send(unit=self)
 
 
 def new_unit_constructor(loader, node):

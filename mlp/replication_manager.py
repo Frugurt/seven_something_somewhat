@@ -3,7 +3,7 @@ from collections import defaultdict
 import blinker
 from cbor2.types import CBORTag
 
-revoke_event = blinker.signal("revoke")
+# revoke_event = blinker.signal("revoke")
 # import json
 
 MAX_OBJECTS = 10**6
@@ -44,8 +44,7 @@ class GameObjectRegistry(Singleton):
         v = self.game_objects.pop(key)
         for category_name, category in self.categories.items():
             if v in category:
-                print(category_name)
-                revoke_event.send(category_name, obj=v)
+                # print(category_name)
                 category.remove(v)
 
     def __iter__(self):
@@ -106,6 +105,14 @@ class GameObjectRegistry(Singleton):
 
     def remote_call(self, struct):
         struct['method'](*struct['args'], **struct['kwargs'])
+
+    def collect(self):
+        to_remove = []
+        for obj in self.game_objects:
+            if hasattr(obj, 'is_alive') and not obj.is_alive:
+                to_remove.append(obj)
+        for obj in to_remove:
+            del obj
 
 
 class GameObjectMeta(type):

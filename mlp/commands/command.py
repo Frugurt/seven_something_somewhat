@@ -27,7 +27,7 @@ class Place(Command):
     def execute(self):
         unit = self.unit
         uw = unit.make_widget(pos_hint={'center_x': 0.5, 'y': 0.3})
-        print("\nUNIT {} \n PLACE{} \nOLD PLACE{}\n".format(self.unit, self.place, self.old_place))
+        # print("\nUNIT {} \n PLACE{} \nOLD PLACE{}\n".format(self.unit, self.place, self.old_place))
         if self.old_place:
             self.old_place.make_widget().remove_widget(uw)
         self.place.make_widget().add_widget(uw)
@@ -38,4 +38,22 @@ class Place(Command):
             "unit": self.unit,
             "old_place": self.old_place,
             "place": self.place,
+        }
+
+
+class Revoke(Command):
+
+    name = "revoke"
+
+    def __init__(self, unit):
+        self.unit = unit
+
+    def execute(self):
+        unit = self.unit
+        unit.cell.make_widget().remove_widget(unit.make_widget())
+
+    def dump(self):
+        return {
+            "name": self.name,
+            "unit": self.unit,
         }

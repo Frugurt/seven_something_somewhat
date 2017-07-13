@@ -13,6 +13,7 @@ from mlp.replication_manager import GameObject
 from .tools import dict_merge
 
 summon_event = blinker.signal("summon")
+revoke = blinker.signal("revoke")
 
 
 def sum_iterables(iter1, iter2):
@@ -38,7 +39,7 @@ class Cell:
         self.object = obj
         # self.terrain = None
 
-    def take(self, _):
+    def take(self, _=None):
         self.object = None
 
     def __repr__(self):
@@ -55,27 +56,22 @@ class Grid(GameObject):
         super().__init__(id_)
         self.size = size
         self._grid = None
-        self._new_objects = []
         self._changed_terrains = []
         if size is not None:
             self.create_cells()
         summon_event.connect(self.summon)
+        revoke.connect(self.revoke)
 
     def change_terrain(self):
         pass
 
     def summon(self, _, unit, cell):
         # unit = unit(owner)
-        self._new_objects.append(unit)
         unit.place_in(cell)
         print(unit)
 
-    def undo(self):
-        pass
-
-    def confirm(self):
-        self._new_objects.clear()
-        # self._changed_terrains.clear()
+    def revoke(self, _, unit=None):
+        unit.cell.take()
 
     def create_cells(self):
         pass
@@ -125,7 +121,6 @@ class RectGrid(Grid):
         self._grid = None
         if size is not None:
             self.create_cells()
-        summon_event.connect(self.summon)
 
     def create_cells(self):
         w, h = self.size
