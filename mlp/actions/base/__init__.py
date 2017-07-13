@@ -70,7 +70,7 @@ class Damage(UnitEffect):
         with self.configure(context) as c:
             target.stats.health -= c.amount
             if target.stats.health <= 0:
-                trace.send(command=Revoke(target))
+                trace.send(command=Revoke(target, target.cell))
                 target.kill()
             self.info_message = self.info_message.format(target, c.amount)
             super()._apply(target, context)

@@ -124,9 +124,9 @@ class Unit(GameObject):
         print("Update")
         print(self._presumed_stats.cell)
         print(self._stats.cell)
+        if self._last_cell:
+            self._last_cell.take(self)
         if self.cell:
-            if self._last_cell:
-                self._last_cell.take(self)
             self._last_cell = self.cell
             self.cell.place(self)
 
@@ -265,7 +265,7 @@ class Unit(GameObject):
 
     def kill(self):
         self.is_alive = False
-        revoke.send(unit=self)
+        revoke.send(unit=self, cell=self.cell)
 
 
 def new_unit_constructor(loader, node):

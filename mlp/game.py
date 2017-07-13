@@ -75,7 +75,7 @@ class TurnOrderManager(GameObject):
         self._current_turn_order = self._current_turn_order[::]
 
     # @on_revoke_event.connect_via('Unit')
-    def remove_unit(self, _, unit):
+    def remove_unit(self, _, unit, cell):
         i_2_del = None
         for i, o_u in enumerate(self._current_turn_order):
             if unit in o_u:

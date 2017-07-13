@@ -70,8 +70,9 @@ class Grid(GameObject):
         unit.place_in(cell)
         print(unit)
 
-    def revoke(self, _, unit=None):
-        unit.cell.take()
+    def revoke(self, _, unit=None, cell=None):
+        cell.take()
+        unit.cell = None
 
     def create_cells(self):
         pass

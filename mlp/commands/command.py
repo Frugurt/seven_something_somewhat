@@ -45,15 +45,16 @@ class Revoke(Command):
 
     name = "revoke"
 
-    def __init__(self, unit):
+    def __init__(self, unit, cell):
         self.unit = unit
+        self.cell = cell
 
     def execute(self):
-        unit = self.unit
-        unit.cell.make_widget().remove_widget(unit.make_widget())
+        self.cell.make_widget().remove_widget(self.unit.make_widget())
 
     def dump(self):
         return {
             "name": self.name,
             "unit": self.unit,
+            "cell": self.cell,
         }
