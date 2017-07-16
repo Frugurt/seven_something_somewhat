@@ -10,7 +10,7 @@ from kivy.properties import (
     BoundedNumericProperty
 )
 from kivy.lang import Builder
-Builder.load_file('/home/alessandro/PycharmProjects/mlp/mlp/widgets/general/camera/camera.kv')
+Builder.load_file('./mlp/widgets/general/camera/camera.kv')
 
 
 class Camera(relativelayout.RelativeLayout):
