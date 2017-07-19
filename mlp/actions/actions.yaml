@@ -7,13 +7,13 @@
     - name: path
       cursor: adjacent_cell
       cursor_params:
-        - !prop source.cell
+        - !prop source
   effects:
     - effect: !eff
         name: Move
         extra_tags: ["plan"]
         path: !prop action.path
-      area: !prop source.cell
+      area: !prop source
   widget:
     icon: './data/run.png'
     pressed_icon: './data/run2.png'
@@ -32,8 +32,8 @@
       area: !area
         name: Melee
         radius: 1
-        center: !prop source.cell
-  check: !expr [!prop source.unit_state, "==", "sword"]
+        center: !prop source
+  check: !expr [!prop owner.unit_state, "==", "sword"]
   widget:
     icon: './data/punch(1).png'
     pressed_icon: './data/punch.png'
@@ -50,8 +50,8 @@
         extra_tags: ["plan"]
         status: !status
           name: WithRifle
-      area: !prop source.cell
-  check: !expr [!prop source.unit_state, "==", "sword"]
+      area: !prop source
+  check: !expr [!prop owner.unit_state, "==", "sword"]
   widget:
     icon: './data/musket.png'
     pressed_icon: './data/musket(1).png'
@@ -68,8 +68,8 @@
         extra_tags: ["plan"]
         status: !status
           name: WithRifle
-      area: !prop source.cell
-  check: !expr [!prop source.unit_state, "==", "rifle"]
+      area: !prop source
+  check: !expr [!prop owner.unit_state, "==", "rifle"]
   widget:
     icon: './data/two-handed-sword.png'
     pressed_icon: './data/two-handed-sword2.png'
@@ -86,8 +86,8 @@
         extra_tags: ["plan"]
         status: !status
           name: Parry
-      area: !prop source.cell
-  check: !expr [!prop source.unit_state, "==", "sword"]
+      area: !prop source
+  check: !expr [!prop owner.unit_state, "==", "sword"]
   widget:
     icon: './data/sword-clash(1).png'
     pressed_icon: './data/sword-clash.png'
@@ -101,7 +101,7 @@
     - name: target
       cursor: line
       cursor_params:
-        - !prop source.cell
+        - !prop source
   effects:
     - effect: !eff
         name: Damage
@@ -109,7 +109,7 @@
         target_coord: !prop action.target
       area: !area
         name: Line
-        source: !prop source.cell
+        source: !prop source
         target: !prop action.target
         length: 5
     - effect: !eff
@@ -117,11 +117,11 @@
         extra_tags: ["plan"]
         stat_name: loaded
         value: false
-      area: !prop source.cell
+      area: !prop source
   check: !expr
-    - [!prop source.unit_state, "==", "rifle"]
+    - [!prop owner.unit_state, "==", "rifle"]
     - and
-    - [!prop source.loaded]
+    - [!prop owner.loaded]
   widget:
     icon: './data/gunshot.png'
     pressed_icon: './data/gunshot(1).png'
@@ -138,17 +138,17 @@
         extra_tags: ["plan"]
         stat_name: ammo
         value: !expr [!prop target.ammo, "-", 1]
-      area: !prop source.cell
+      area: !prop source
     - effect: !eff
         name: ChangeStat
         extra_tags: ["plan"]
         stat_name: loaded
         value: true
-      area: !prop source.cell
+      area: !prop source
   check: !expr
-    - [!prop source.ammo, ">", 0]
+    - [!prop owner.ammo, ">", 0]
     - and
-    - [!prop source.loaded, "==", false]
+    - [!prop owner.loaded, "==", false]
   widget:
     icon: './data/clockwise-rotation(1).png'
     pressed_icon: './data/clockwise-rotation.png'
@@ -166,7 +166,7 @@
       area: !area
         name: Melee
         radius: 1
-        center: !prop source.cell
+        center: !prop source
   widget:
     icon: './data/high-kick(1).png'
     pressed_icon: './data/high-kick.png'
@@ -184,8 +184,8 @@
         status: !status
           name: Regeneration
           duration: -1
-          power: !prop source.ammo
-      area: !prop source.cell
+          power: !prop owner.ammo
+      area: !prop source
   widget:
     icon: './data/linden-leaf.png'
     pressed_icon: './data/linden-leaf(1).png'
@@ -199,13 +199,13 @@
     - name: target_cell
       cursor: adjacent_cell
       cursor_params:
-        - !prop source.cell
+        - !prop source
   effects:
     - effect: !eff
         name: Summon
         unit: !unit
           name: Dog
-        owner: !prop source.owner
+        owner: !prop owner.owner
       area: !prop action.target_cell
   widget:
     icon: './data/hound(1).png'
@@ -234,7 +234,7 @@
     - name: target_cell
       cursor: line
       cursor_params:
-        - !prop source.cell
+        - !prop source
   effects:
     - effect: !eff
         name: Damage
