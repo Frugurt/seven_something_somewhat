@@ -210,3 +210,36 @@
   widget:
     icon: './data/hound(1).png'
     pressed_icon: './data/hound.png'
+
+- !new_action
+  name: Ricochet
+  setup:
+    - name: times
+  effects:
+    - effect: !eff
+        name: Damage
+    - effect: !eff
+        name: LaunchAction
+        action_name: Ricochet
+        setup:
+          times: !expr [!prop action.times, '-', 1]
+  check: !expr [!prop action.times, ">", 0]
+
+- !new_action
+  name: ChainShot
+  action_type: FULL
+  speed: SLOW
+  cost: 2
+  setup:
+    - name: target_cell
+      cursor: line
+      cursor_params:
+        - !prop source.cell
+  effects:
+    - effect: !eff
+        name: Damage
+    - effect: !eff
+        name: LaunchAction
+        action_name: Ricochet
+        setup:
+          times: 2
