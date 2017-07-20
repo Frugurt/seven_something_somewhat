@@ -85,7 +85,7 @@ def property_constructor(loader, node):
     property_ = loader.construct_scalar(node)
     if property_ in PROPERTY_TABLE:
         return PROPERTY_TABLE[property_]()
-    elif property_.startswith("source") or property_.startswith("target"):
+    elif property_.startswith("owner") or property_.startswith("target"):
         return UnitAttribute(property_)
     else:
         return Attribute(property_)

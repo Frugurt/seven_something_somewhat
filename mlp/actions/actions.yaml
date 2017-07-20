@@ -223,6 +223,13 @@
         action_name: Ricochet
         setup:
           times: !expr [!prop action.times, '-', 1]
+        area: !area
+          name: KNearestNeighbors
+          area: !area
+            name: Circle
+            center: !prop source
+            r: 2
+          filter: !expr ["Ricocheted", "not", "in", !prop object]
   check: !expr [!prop action.times, ">", 0]
 
 - !new_action

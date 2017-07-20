@@ -53,7 +53,10 @@ class Unit(GameObject):
             [registry[action_name] for action_name in self.actions],
         )
         self.clear_presumed()
-        self.context = {'source': self}
+        self.context = {
+            'source': self.cell,
+            'owner': self
+        }
         # summon_event.connect(self.on_summon)
 
     @property
