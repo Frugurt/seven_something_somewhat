@@ -107,6 +107,10 @@ class Grid(GameObject):
             {'size': self.size}
         )
 
+    @classmethod
+    def locate(cls):
+        return super().locate()[-1]
+
 
 class RectCell(Cell):
     pass

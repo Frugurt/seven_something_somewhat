@@ -229,6 +229,7 @@
             name: Circle
             center: !prop source
             r: 2
+          k: 2
           filter: !expr ["Ricocheted", "not", "in", !prop object]
   check: !expr [!prop action.times, ">", 0]
 
