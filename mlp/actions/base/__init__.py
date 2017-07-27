@@ -17,8 +17,20 @@ from .status import (
     STATUSES,
 )
 
+from ...replication_manager import MetaRegistry
+
 trace = blinker.signal("trace")
 summon = blinker.signal("summon")
+
+
+class ActionsRegistry:
+
+    meta_registry = MetaRegistry()
+
+    def __getitem__(self, item):
+        return self.meta_registry['Action'][item]
+
+ACTIONS = ActionsRegistry()
 
 
 class Move(UnitEffect):
@@ -164,3 +176,25 @@ class Summon(CellEffect):
             unit.change_owner(c.owner)
             summon.send(unit=unit, cell=cell)
             super()._apply(cell, context)
+
+
+class LaunchAction(CellEffect):
+
+    def __init__(self, action_name, setup, **kwargs):
+        super().__init__(**kwargs)
+        self.action_name = action_name
+        self.setup = setup
+
+    def _apply(self, cell, context):
+        with self.configure(context) as c:
+            new_context = {
+                'source': cell,
+                'owner': c.owner
+            }
+            action = ACTIONS[self.action_name](
+                owner=c.owner,
+                context=new_context,
+                **self.setup
+            )
+            action.context['action'] = action
+            action.apply()
