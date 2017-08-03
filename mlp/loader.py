@@ -1,7 +1,9 @@
 import yaml
 from .actions.new_action import (
-    actions_constructor,
-    NEW_ACTION_TAG
+    new_action_constructor,
+    action_constructor,
+    NEW_ACTION_TAG,
+    ACTION_TAG
 )
 from .actions.base.effect import (
     effect_constructor,
@@ -35,7 +37,8 @@ from .unit.unit import (
 )
 
 # loader = yaml.Loader()
-yaml.add_constructor(NEW_ACTION_TAG, actions_constructor)
+yaml.add_constructor(NEW_ACTION_TAG, new_action_constructor)
+yaml.add_constructor(ACTION_TAG, action_constructor)
 
 yaml.add_constructor(EFFECT_TAG, effect_constructor)
 yaml.add_constructor(NEW_EFFECT_TAG, new_effect_constructor)

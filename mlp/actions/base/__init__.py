@@ -164,3 +164,14 @@ class Summon(CellEffect):
             unit.change_owner(c.owner)
             summon.send(unit=unit, cell=cell)
             super()._apply(cell, context)
+
+
+class AddAction(UnitEffect):
+
+    name = "AddAction"
+
+
+class RemoveAction(UnitEffect):
+
+    name = "RemoveAction"
+

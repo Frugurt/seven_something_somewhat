@@ -1,7 +1,5 @@
 import yaml
 from ..replication_manager import (
-    # ActionsRegistry,
-    # ActionMeta,
     MetaRegistry
 )
 from ..protocol import Enum
@@ -11,6 +9,7 @@ from .property.property import (
     Property,
     Const,
 )
+from .property.reference import Reference
 
 
 FULL, MOVE, STANDARD = range(3)
@@ -26,6 +25,7 @@ SPEED = Enum(
     "SLOW",
 )
 
+ACTIONS = MetaRegistry()["Action"]
 ActionMeta = MetaRegistry().make_registered_metaclass("Action")
 
 
@@ -145,10 +145,17 @@ class Action(metaclass=ActionMeta):
     #     for name, val in struct:
     #         pass
 
-ACTIONS_TABLE = {}
+# ACTIONS_TABLE = {}
 
 
-def actions_constructor(loader, node):
+def action_constructor(loader, node):
+    u_s = loader.construct_mapping(node)
+    name = u_s.pop("name")
+    # return UNITS[name](**u_s)
+    return Reference(name, u_s, ACTIONS)
+
+
+def new_action_constructor(loader, node):
     a_s = loader.construct_mapping(node)
 
     @bind_widget("NewAction")
@@ -165,6 +172,7 @@ def actions_constructor(loader, node):
     return NewAction
 
 NEW_ACTION_TAG = "!new_action"
+ACTION_TAG = "!action"
 
 
 # def trigger_constructor(loader, node):
