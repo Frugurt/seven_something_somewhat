@@ -1,5 +1,6 @@
 import os
 from .new_action import SPEED
+from ..replication_manager import MetaRegistry
 from ..serialization import ActionTag
 from ..bind_widget import bind_widget
 # from ..tools import dict_merge
@@ -18,13 +19,31 @@ FULL, MOVE, STANDARD = range(3)
 @bind_widget("ActionBar")
 class ActionBar:
 
-    hooks = []
+    hooks = ["load"]
+    registry = MetaRegistry()["Action"]
 
-    def __init__(self, owner, actions):
+    def __init__(self, owner):
         self.owner = owner
-        self.actions = [
-            action(owner) for action in actions
-        ]
+        self.actions = []
+
+    def append_action(self, action):
+        self.actions.append(action(self.owner))
+
+    def remove_action(self, action_to_remove):
+        for i, action in enumerate(self.actions):
+            if action.name == action_to_remove:
+                action_index = i
+                break
+        else:
+            return
+        self.actions.pop(action_index)
+
+    def dump(self):
+        return [action.name for action in self.actions]
+
+    def load(self, struct):
+        self.actions = [self.registry[action_name](self.owner) for action_name in struct]
+        print(self.actions)
 
 
 @bind_widget("CurrentActionBar")

@@ -118,6 +118,11 @@ class ActionBar(GridLayout):
     def __init__(self, action_bar, **kwargs):
         self.action_bar = action_bar
         super().__init__(**kwargs)
+        self.update_bar()
+
+    def update_bar(self):
+        self.clear_widgets()
+        print(self.action_bar.actions)
         for action in self.action_bar.actions:
             self.add_widget(action.make_widget())
 
@@ -131,6 +136,9 @@ class ActionBar(GridLayout):
         msg_struct = remote_action_append(action)
         msg_struct['payload']["author"] = action.owner.stats.owner
         self.parent.receive_message(msg_struct)
+
+    def on_load(self, _):
+        self.update_bar()
 
 
 class CurrentActionBar(GridLayout):

@@ -2,6 +2,7 @@ from collections import defaultdict
 from .stats import (
     PLANNING
 )
+from ..actions.action import ActionBar
 from ..tools import dict_merge
 from ..bind_widget import bind_widget
 
@@ -18,6 +19,7 @@ class Stats:
         self._triggers = defaultdict(dict)
         self.statuses = {}
         self.cell = None
+        self.action_bar = ActionBar(owner)
         for key, value in self.resources.items():
             setattr(self, key, value)
         # self.presumed_stats = None if is_presumed else Stats(name, owner, True)
@@ -42,10 +44,13 @@ class Stats:
         self._triggers = defaultdict(value)
 
     def load(self, struct):
+        action_bar = struct.pop("action_bar")
+        self.action_bar.load(action_bar)
         for key, value in struct.items():
             setattr(self, key, value)
         for key, value in self.resources.items():
             setattr(self, key, value)
+        struct["action_bar"] = action_bar
         # print(self.statuses)
 
     def dump(self):
@@ -56,6 +61,7 @@ class Stats:
             'cell': self.cell,
             'statuses': self.statuses.copy(),
             'resources': self.resources.copy(),
+            'action_bar': self.action_bar.dump(),
         }
         return struct
 
