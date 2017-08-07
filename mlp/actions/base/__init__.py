@@ -192,4 +192,5 @@ class RemoveAction(UnitEffect):
     def _apply(self, target, context):
         with self.configure(context) as c:
             action = MetaRegistry()["Action"][c.action_name]
+            print(action, "ACTION REMOVE")
             target.stats.action_bar.remove_action(action)

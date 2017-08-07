@@ -19,7 +19,7 @@ FULL, MOVE, STANDARD = range(3)
 @bind_widget("ActionBar")
 class ActionBar:
 
-    hooks = ["load"]
+    hooks = ["load", "append_action", "remove_action"]
     registry = MetaRegistry()["Action"]
 
     def __init__(self, owner):
@@ -31,8 +31,9 @@ class ActionBar:
 
     def remove_action(self, action_to_remove):
         for i, action in enumerate(self.actions):
-            if action.name == action_to_remove:
+            if action.name == action_to_remove.name:
                 action_index = i
+                print("HOORAY FOR", i)
                 break
         else:
             return

@@ -140,6 +140,12 @@ class ActionBar(GridLayout):
     def on_load(self, _):
         self.update_bar()
 
+    def on_append_action(self, _):
+        self.update_bar()
+
+    def on_remove_action(self, _):
+        self.update_bar()
+
 
 class CurrentActionBar(GridLayout):
 
