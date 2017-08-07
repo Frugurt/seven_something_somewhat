@@ -6,12 +6,60 @@
       extra_tags: ["plan"]
       stat_name: unit_state
       value: "rifle"
+    - !eff
+      name: RemoveAction
+      extra_tags: ["plan"]
+      action_name: "Attack"
+    - !eff
+      name: RemoveAction
+      extra_tags: ["plan"]
+      action_name: "GetRifle"
+    - !eff
+      name: RemoveAction
+      extra_tags: ["plan"]
+      action_name: "Parry"
+    - !eff
+      name: AddAction
+      extra_tags: ["plan"]
+      action_name: "Shoot"
+    - !eff
+      name: AddAction
+      extra_tags: ["plan"]
+      action_name: "Reload"
+    - !eff
+      name: AddAction
+      extra_tags: ["plan"]
+      action_name: "GetSword"
   on_remove:
     - !eff
       name: ChangeStat
       extra_tags: ["plan"]
       stat_name: unit_state
       value: "sword"
+    - !eff
+      name: AddAction
+      extra_tags: ["plan"]
+      action_name: "Attack"
+    - !eff
+      name: AddAction
+      extra_tags: ["plan"]
+      action_name: "GetRifle"
+    - !eff
+      name: AddAction
+      extra_tags: ["plan"]
+      action_name: "Parry"
+    - !eff
+      name: RemoveAction
+      extra_tags: ["plan"]
+      action_name: "Shoot"
+    - !eff
+      name: RemoveAction
+      extra_tags: ["plan"]
+      action_name: "Reload"
+    - !eff
+      name: RemoveAction
+      extra_tags: ["plan"]
+      action_name: "GetSword"
 
 - !new_status
   name: Parry

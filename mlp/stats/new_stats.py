@@ -11,11 +11,11 @@ class Stats:
 
     hooks = ['load']
 
-    def __init__(self, name, owner, resources):#, is_presumed=False):
+    def __init__(self, owner, owner_name, resources):#, is_presumed=False):
         self.resources = resources.copy()
         self.state = PLANNING
-        self.name = name
-        self.owner = owner
+        self.name = owner.__class__.__name__
+        self.owner = owner_name
         self._triggers = defaultdict(dict)
         self.statuses = {}
         self.cell = None

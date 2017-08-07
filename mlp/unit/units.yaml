@@ -13,10 +13,10 @@
     - Attack
 #    - Kick
     - GetRifle
-    - GetSword
+#    - GetSword
     - Parry
-    - Shoot
-    - Reload
+#    - Shoot
+#    - Reload
     - Regenerate
     - LetDogsOut
   widget:

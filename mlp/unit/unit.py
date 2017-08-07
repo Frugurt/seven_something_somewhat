@@ -45,7 +45,7 @@ class Unit(GameObject):
         self.state = PLANNING
         self.presumed_path = []
         self.action_log = []
-        self._stats = MajorStats(self.__class__.__name__, master_name, self.resources)
+        self._stats = MajorStats(self, master_name, self.resources)
         self.current_action_bar = CurrentActionBar(self)
         registry = MetaRegistry()["Action"]
         # self.action_bar = ActionBar(

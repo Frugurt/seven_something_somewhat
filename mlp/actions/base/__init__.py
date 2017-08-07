@@ -16,6 +16,7 @@ from .status import (
     Status,
     STATUSES,
 )
+from ...replication_manager import MetaRegistry
 
 trace = blinker.signal("trace")
 summon = blinker.signal("summon")
@@ -170,8 +171,25 @@ class AddAction(UnitEffect):
 
     name = "AddAction"
 
+    def __init__(self, action_name, **kwargs):
+        super().__init__(**kwargs)
+        self.action_name = action_name
+
+    def _apply(self, target, context):
+        with self.configure(context) as c:
+            action = MetaRegistry()["Action"][c.action_name]
+            target.stats.action_bar.append_action(action)
+
 
 class RemoveAction(UnitEffect):
 
     name = "RemoveAction"
 
+    def __init__(self, action_name, **kwargs):
+        super().__init__(**kwargs)
+        self.action_name = action_name
+
+    def _apply(self, target, context):
+        with self.configure(context) as c:
+            action = MetaRegistry()["Action"][c.action_name]
+            target.stats.action_bar.remove_action(action)
