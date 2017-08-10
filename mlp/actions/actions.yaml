@@ -212,42 +212,79 @@
     pressed_icon: './data/hound.png'
 
 - !new_action
-  name: Ricochet
-  setup:
-    - name: times
-  effects:
-    - effect: !eff
-        name: Damage
-    - effect: !eff
-        name: LaunchAction
-        action_name: Ricochet
-        setup:
-          times: !expr [!prop action.times, '-', 1]
-        area: !area
-          name: KNearestNeighbors
-          area: !area
-            name: Circle
-            center: !prop source
-            r: 2
-          k: 2
-          filter: !expr ["Ricocheted", "not in", !prop object]
-  check: !expr [!prop action.times, ">", 0]
-
-- !new_action
-  name: ChainShot
+  name: SummonDog
   action_type: FULL
   speed: SLOW
-  cost: 2
-  setup:
-    - name: target_cell
-      cursor: line
-      cursor_params:
-        - !prop source
+  cost: 0
+  setup: []
   effects:
     - effect: !eff
-        name: Damage
+        name: Summon
+        unit: !unit
+          name: Dog
+        owner: !prop owner.owner
+      area: !prop source
+  widget:
+    icon: './data/hound(1).png'
+    pressed_icon: './data/hound.png'
+
+
+- !new_action
+  name: DogShot
+  action_type: FULL
+  speed: SLOW
+  cost: 3
+  setup:
+    - name: target_cell
+    cursor: line
+    cursor_params:
+      - !prop source
+  effects:
     - effect: !eff
         name: LaunchAction
-        action_name: Ricochet
-        setup:
-          times: 2
+        action_name: SummonDog
+        setup: []
+      area: !area
+        name: KRandomCells
+        area: !prop action.target_cell.adjacent
+        k: 1
+#- !new_action
+#  name: Ricochet
+#  setup:
+#    - name: times
+#  effects:
+#    - effect: !eff
+#        name: Damage
+#    - effect: !eff
+#        name: LaunchAction
+#        action_name: Ricochet
+#        setup:
+#          times: !expr [!prop action.times, '-', 1]
+#        area: !area
+#          name: KNearestNeighbors
+#          area: !area
+#            name: Circle
+#            center: !prop source
+#            r: 2
+#          k: 2
+#          filter: !expr ["Ricocheted", "not in", !prop object]
+#  check: !expr [!prop action.times, ">", 0]
+#
+#- !new_action
+#  name: ChainShot
+#  action_type: FULL
+#  speed: SLOW
+#  cost: 2
+#  setup:
+#    - name: target_cell
+#      cursor: line
+#      cursor_params:
+#        - !prop source
+#  effects:
+#    - effect: !eff
+#        name: Damage
+#    - effect: !eff
+#        name: LaunchAction
+#        action_name: Ricochet
+#        setup:
+#          times: 2
