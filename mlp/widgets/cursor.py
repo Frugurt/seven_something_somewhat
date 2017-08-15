@@ -179,6 +179,13 @@ class LineSelectCursor(RequestCursor):
         # TODO Смотри multiselectcursor
 
 
+class GeometrySelectCursor(RequestCursor):
+
+    def __init__(self, game_widget, requester, available_cells, shape):
+        super().__init__(game_widget, requester)
+        self.selected_cells = []
+
+
 CURSOR_TABLE = {
     'any_cell': MultiSelectCursor,
     'adjacent_cell': AdjacentSelectCursor,
