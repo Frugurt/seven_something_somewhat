@@ -185,6 +185,19 @@ class GeometrySelectCursor(RequestCursor):
         super().__init__(game_widget, requester)
         self.selected_cells = []
 
+    def activate(self):
+        super().activate()
+        for cell in self.selected_cells:
+            cell.is_highlighted = True
+
+    def deactivate(self):
+        super().deactivate()
+        for cell in self.selected_cells:
+            cell.is_highlighted = False
+
+    def send(self, _):
+        super().send(_)
+        self.requester.select_result = [c.cell for c in self.selected_cells]
 
 CURSOR_TABLE = {
     'any_cell': MultiSelectCursor,
