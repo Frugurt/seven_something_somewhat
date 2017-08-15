@@ -14,6 +14,7 @@ from mlp.actions.action import *
 from mlp.actions.new_action import *
 from mlp.tools import dict_merge
 from mlp.actions.property.reference import Reference
+from mlp.actions.base.status import Status
 import blinker
 
 summon_event = blinker.signal("summon")
@@ -56,7 +57,10 @@ class Unit(GameObject):
             # print(action_name)
             self._stats.action_bar.append_action(registry[action_name])
         self.clear_presumed()
-        self.context = {'source': self}
+        self.context = {
+            'source': self.cell,
+            'owner': self
+        }
         # summon_event.connect(self.on_summon)
 
     @property
@@ -269,6 +273,15 @@ class Unit(GameObject):
     def kill(self):
         self.is_alive = False
         revoke.send(unit=self, cell=self.cell)
+
+    def __contains__(self, item):
+        if isinstance(item, Status):
+            return item.name in self.stats.statuses
+        elif isinstance(item, str):
+            return item in self.stats.statuses
+        else:
+            raise TypeError("Wrong status type")
+
 
 
 def new_unit_constructor(loader, node):

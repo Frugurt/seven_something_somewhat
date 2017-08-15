@@ -27,6 +27,8 @@ class Expression(Property):
         '<': (operator.lt, 2),
         '>=': (operator.ge, 2),
         '<=': (operator.le, 2),
+        'in': (lambda a, b: a in b, 2),
+        'not in': (lambda a, b: a not in b),
         'and': (operator.and_, 1),
         'or': (operator.or_, 1)
     }

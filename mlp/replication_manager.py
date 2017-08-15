@@ -159,6 +159,14 @@ class GameObject(metaclass=GameObjectMeta):
     def __del__(self):
         del self.registry[self.id_]
 
+    @classmethod
+    def locate(cls):
+        if hasattr(cls, 'name'):
+            name = cls.name
+        else:
+            name = cls.__name__
+        return cls.registry.categories[name]
+
 
 class Registry:
 

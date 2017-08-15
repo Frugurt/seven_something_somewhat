@@ -2,8 +2,9 @@
 context - это словарь в котором могут быть такие параметры
 
 target -> то к чему применяется эффект
-source -> тот кто использует действие применяющее эффект
+owner -> тот кто использует действие применяющее эффект
 action -> действие накладывающее эффект
+source -> клетка из которой было совершено действие
 
 У мета эффектов
 effect_context -> контекст эффекта на который применяется метаэффект
@@ -84,7 +85,7 @@ def property_constructor(loader, node):
     property_ = loader.construct_scalar(node)
     if property_ in PROPERTY_TABLE:
         return PROPERTY_TABLE[property_]()
-    elif property_.startswith("source") or property_.startswith("target"):
+    elif property_.startswith("owner") or property_.startswith("target"):
         return UnitAttribute(property_)
     else:
         return Attribute(property_)

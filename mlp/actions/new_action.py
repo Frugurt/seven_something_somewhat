@@ -49,6 +49,7 @@ class Action(metaclass=ActionMeta):
         print("CREATE NEW")
         print(kwargs)
         self.owner = owner
+        self._context = None
         for setup_struct in self.setup_fields:
             field_name = setup_struct['name']
             setattr(self, field_name, None)
@@ -64,12 +65,28 @@ class Action(metaclass=ActionMeta):
                 'area': effect['area']
             })
         self.effects = effects
-        self.context = {
-            'action': self,
-            'source': self.owner,
-        }
+        # self.context = {
+        #     'action': self,
+        #     'owner': self.owner,
+        #     'source': self.owner.cell,
+        # }
         # print()
         # self.effects = [effect.copy() for effect in self.effects]
+
+    @property
+    def context(self):
+        if self._context:
+            return self._context
+        else:
+            return {
+                'action': self,
+                'owner': self.owner,
+                'source': self.owner.cell,
+            }
+
+    @context.setter
+    def context(self, value):
+        self._context = value
 
     def setup(self):
         for setup_struct in self.setup_fields:
