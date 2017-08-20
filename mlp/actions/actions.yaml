@@ -248,6 +248,10 @@
         name: KRandomCells
         area: !prop action.target_cell.adjacent
         k: 1
+        filter: !expr [!prop cell.object, "==", null]
+  widget:
+    icon: './data/paw(1).png'
+    pressed_icon: './data/paw.png'
 #- !new_action
 #  name: Ricochet
 #  setup:
