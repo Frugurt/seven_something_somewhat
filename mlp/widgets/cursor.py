@@ -183,17 +183,40 @@ class GeometrySelectCursor(RequestCursor):
 
     def __init__(self, game_widget, requester, available_cells, shape):
         super().__init__(game_widget, requester)
+        # self.context = requester.action.context
+        self._context = {}
+        self.available_cells = available_cells
+        print("\n\n\n", available_cells)
+        self.shape = shape
         self.selected_cells = []
+        self.highlighted_cells = None
+
+    @property
+    def context(self):
+        context = self.requester.action.context.copy()
+        context.update(self._context)
+        return context
 
     def activate(self):
         super().activate()
-        for cell in self.selected_cells:
+        self.highlighted_cells = [c.make_widget() for c in self.available_cells.get(self.context)]
+        for cell in self.highlighted_cells:
             cell.is_highlighted = True
+        for cell in self.selected_cells:
+            cell.is_selected = True
 
     def deactivate(self):
         super().deactivate()
-        for cell in self.selected_cells:
+        for cell in self.highlighted_cells:
             cell.is_highlighted = False
+        for cell in self.selected_cells:
+            cell.is_selected = False
+
+    def select(self, cell):
+        self.deactivate()
+        self._context['selected'] = cell.cell
+        self.selected_cells = [c.make_widget() for c in self.shape.get(self.context)]
+        self.activate()
 
     def send(self, _):
         super().send(_)
@@ -203,4 +226,5 @@ CURSOR_TABLE = {
     'any_cell': MultiSelectCursor,
     'adjacent_cell': AdjacentSelectCursor,
     'line': LineSelectCursor,
+    'geometry': GeometrySelectCursor,
 }

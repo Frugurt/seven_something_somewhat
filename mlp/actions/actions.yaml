@@ -5,9 +5,15 @@
   cost: 1
   setup:
     - name: path
-      cursor: adjacent_cell
+#      cursor: adjacent_cell
+      cursor: geometry
       cursor_params:
-        - !prop source
+        - !area
+          name: Adjacent
+          center: !prop source
+        - !area
+          name: Cell
+          cell: !prop selected
   effects:
     - effect: !eff
         name: Move
@@ -229,25 +235,25 @@
     pressed_icon: './data/hound.png'
 
 
-- !new_action
-  name: DogShot
-  action_type: FULL
-  speed: SLOW
-  cost: 3
-  setup:
-    - name: target_cell
-    cursor: line
-    cursor_params:
-      - !prop source
-  effects:
-    - effect: !eff
-        name: LaunchAction
-        action_name: SummonDog
-        setup: []
-      area: !area
-        name: KRandomCells
-        area: !prop action.target_cell.adjacent
-        k: 1
+#- !new_action
+#  name: DogShot
+#  action_type: FULL
+#  speed: SLOW
+#  cost: 3
+#  setup:
+#    - name: target_cell
+#    cursor: line
+#    cursor_params:
+#      - !prop source
+#  effects:
+#    - effect: !eff
+#        name: LaunchAction
+#        action_name: SummonDog
+#        setup: []
+#      area: !area
+#        name: KRandomCells
+#        area: !prop action.target_cell.adjacent
+#        k: 1
 #- !new_action
 #  name: Ricochet
 #  setup:

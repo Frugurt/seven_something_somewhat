@@ -1,9 +1,13 @@
 from .property import Property
 from ...grid import HexGrid
 from ...tools import dotdict
+from ...replication_manager import MetaRegistry
+
+AREAS = MetaRegistry()['Area']
+AreaMeta = MetaRegistry().make_registered_metaclass("Area")
 
 
-class Area(Property):
+class Area(Property, metaclass=AreaMeta):
 
     _grid = None
 
@@ -15,6 +19,25 @@ class Area(Property):
         if not self._grid:
             self._grid = HexGrid.locate()
         return self._grid
+
+
+class Cell(Area):
+
+    def __init__(self, cell):
+        self.cell = cell
+
+    def get(self, context):
+        return [self.cell.get(context)]
+
+
+class Adjacent(Area):
+
+    def __init__(self, center):
+        self.center = center
+
+    def get(self, context):
+        center = self.center.get(context)
+        return center.adjacent
 
 
 class Melee(Area):
@@ -69,12 +92,12 @@ class Circle(Area):
     def get(self, context):
         return self.grid.get_area(self.center.get(context), self.r)
 
-AREAS = {
-    "Melee": Melee,
-    "Line": Line,
-    "KNearestNeighbors": KNearestNeighbors,
-    "Circle": Circle,
-}
+# AREAS = {
+#     "Melee": Melee,
+#     "Line": Line,
+#     "KNearestNeighbors": KNearestNeighbors,
+#     "Circle": Circle,
+# }
 
 
 def area_constructor(loader, node):
