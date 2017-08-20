@@ -63,7 +63,8 @@ class Move(UnitEffect):
                 ))
 
                 if next_cell.object is None:
-                    target.move(c.path)
+                    # target.move(c.path)
+                    target.move(next_cell)
             self.info_message = self.info_message.format(target, c.path)
             super()._apply(target, context)
 
