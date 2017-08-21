@@ -64,7 +64,7 @@ class Line(Area):
 
     def get(self, context):
         grid = self.grid
-        return grid.get_line(self.source.get(context), self.target.get(context)[-1], self.length)
+        return grid.get_line(self.source.get(context), self.target.get(context), self.length)
 
 
 class KNearestNeighbors(Area):
@@ -80,7 +80,9 @@ class KNearestNeighbors(Area):
         area = self.area.get(context)
         filter_ = self.filter
         source = self.source.get(context)
-        d_pairs = [(grid.distance(cell, source), cell) for cell in area if filter_.get(dotdict({'object': cell.object}))]
+        d_pairs = [
+            (grid.distance(cell, source), cell) for cell in area if filter_.get(dotdict({'object': cell.object}))
+        ]
         return [pair[-1] for pair in sorted(d_pairs, reverse=True)[:self.k:]]
 
 
@@ -97,6 +99,7 @@ class KRandomCells(Area):
         actual_cells = [cell for cell in cells if filter_.get(dotdict({'cell': cell}))]
         shuffle(actual_cells)
         return actual_cells[:self.k:]
+
 
 class Circle(Area):
 

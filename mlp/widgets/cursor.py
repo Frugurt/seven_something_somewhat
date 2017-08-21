@@ -67,6 +67,13 @@ class RequestCursor(Cursor):
             size_hint=(None, None),
         )
         self.send_button.bind(on_press=self.send)
+        self._context = {}
+
+    @property
+    def context(self):
+        context = self.requester.action.context.copy()
+        context.update(self._context)
+        return context
 
     def activate(self):
         self.game.add_widget(self.send_button)
@@ -151,7 +158,7 @@ class LineSelectCursor(RequestCursor):
 
     def __init__(self, game_widget, requester, source_cell, length=None):
         super().__init__(game_widget, requester)
-        self.source_cell = source_cell
+        self.source_cell = source_cell.get(self.context)
         self.selected_cells = []
         self.length = length
         print("LENGTH")
@@ -184,18 +191,11 @@ class GeometrySelectCursor(RequestCursor):
     def __init__(self, game_widget, requester, available_cells, shape):
         super().__init__(game_widget, requester)
         # self.context = requester.action.context
-        self._context = {}
         self.available_cells = available_cells
         print("\n\n\n", available_cells)
         self.shape = shape
         self.selected_cells = []
         self.highlighted_cells = None
-
-    @property
-    def context(self):
-        context = self.requester.action.context.copy()
-        context.update(self._context)
-        return context
 
     def activate(self):
         super().activate()
