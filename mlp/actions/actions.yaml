@@ -112,7 +112,7 @@
     - effect: !eff
         name: Damage
         amount: 35
-        target_coord: !prop action.target
+#        target_coord: !prop action.target
       area: !area
         name: Line
         source: !prop source

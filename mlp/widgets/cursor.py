@@ -120,7 +120,7 @@ class AdjacentSelectCursor(RequestCursor):
 
     def __init__(self, game_widget, requester, source_cell):
         super().__init__(game_widget, requester)
-        self.available_cells = source_cell.adjacent
+        self.available_cells = source_cell.get(self.context).adjacent
         self.selected_cell = None
 
     def select(self, cell):
