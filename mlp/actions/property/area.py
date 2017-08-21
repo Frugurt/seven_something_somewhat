@@ -50,7 +50,7 @@ class Melee(Area):
     def get(self, context):
         grid = self.grid
         for cell in grid.get_area(self.center.get(context), self.radius):
-            if cell.object and cell.object.stats.owner != context['source'].stats.owner:
+            if cell.object and cell.object.stats.owner != context['owner'].stats.owner:
                 return [cell]
         return []
 
