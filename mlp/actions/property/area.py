@@ -63,9 +63,9 @@ class KNearestNeighbors(Area):
 
 class KRandomCells(Area):
 
-    def __init__(self, area, k, filter_):
+    def __init__(self, area, k, filter):
         self.area = area
-        self.filter = filter_
+        self.filter = filter
         self.k = k
 
     def get(self, context):
@@ -89,6 +89,7 @@ AREAS = {
     "Line": Line,
     "KNearestNeighbors": KNearestNeighbors,
     "Circle": Circle,
+    "KRandomCells": KRandomCells,
 }
 
 

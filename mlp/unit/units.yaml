@@ -19,6 +19,7 @@
     - Reload
     - Regenerate
     - LetDogsOut
+    - DogShot
   widget:
     sprite: './data/sprite.png'
     scale: 0.33
