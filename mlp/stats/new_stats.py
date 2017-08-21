@@ -5,6 +5,10 @@ from .stats import (
 from ..actions.action import ActionBar
 from ..tools import dict_merge
 from ..bind_widget import bind_widget
+from ..resource import (
+    Resource,
+    RESOURCE_TABLE,
+)
 
 
 class Stats:
@@ -22,18 +26,6 @@ class Stats:
         self.action_bar = ActionBar(owner)
         for key, value in self.resources.items():
             setattr(self, key, value)
-        # self.presumed_stats = None if is_presumed else Stats(name, owner, True)
-        # self.current_action_bar = CurrentActionBar(self.owner)
-
-    # def __getattr__(self, item):
-    #     if item in self.resources:
-        # return self.resources[item]
-    #
-    # def __setattr__(self, key, value):
-    #     if key in self.resources:
-    #         self.resources[key] = value
-    #     else:
-    #         super().__setattr__(key, value)
 
     @property
     def triggers(self):
@@ -49,7 +41,10 @@ class Stats:
         for key, value in struct.items():
             setattr(self, key, value)
         for key, value in self.resources.items():
-            setattr(self, key, value)
+            if isinstance(value, Resource):
+                setattr(self, key, value)
+            else:
+                setattr(self, key, RESOURCE_TABLE[type(value)](key, value))
         struct["action_bar"] = action_bar
         # print(self.statuses)
 

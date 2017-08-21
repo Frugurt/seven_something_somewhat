@@ -110,13 +110,6 @@ class Circle(Area):
     def get(self, context):
         return self.grid.get_area(self.center.get(context), self.r)
 
-# AREAS = {
-#     "Melee": Melee,
-#     "Line": Line,
-#     "KNearestNeighbors": KNearestNeighbors,
-#     "Circle": Circle,
-# }
-
 
 def area_constructor(loader, node):
     a_s = loader.construct_mapping(node)
