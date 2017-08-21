@@ -175,7 +175,7 @@ class LineSelectCursor(RequestCursor):
 
     def send(self, _):
         super().send(_)
-        self.requester.select_result = [c.cell for c in self.selected_cells]
+        self.requester.select_result = self.selected_cells[-1].cell
         # TODO Смотри multiselectcursor
 
 

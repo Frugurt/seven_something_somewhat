@@ -35,7 +35,8 @@ class Attribute(Property):
     def __repr__(self):
         return "get {} from {}".format(
             ".".join(self.path),
-            self.path[0],
+            # self.path[0],
+            self.donor,
         )
 
 

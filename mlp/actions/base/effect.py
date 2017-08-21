@@ -125,7 +125,7 @@ class CellEffect(AbstractEffect):
         self.log(source)
 
     def apply(self, cells, context):
-        if context['source'].state is PLANNING and "plan" not in self.tags:
+        if context['owner'].state is PLANNING and "plan" not in self.tags:
             # print("FAIL!!!!!!!!!!!!!!!!!!!!!!")
             return
         if not isinstance(cells, Iterable):

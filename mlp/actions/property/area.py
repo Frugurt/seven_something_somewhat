@@ -1,3 +1,4 @@
+from random import shuffle
 from .property import Property
 from ...grid import HexGrid
 from ...tools import dotdict
@@ -82,6 +83,20 @@ class KNearestNeighbors(Area):
         d_pairs = [(grid.distance(cell, source), cell) for cell in area if filter_.get(dotdict({'object': cell.object}))]
         return [pair[-1] for pair in sorted(d_pairs, reverse=True)[:self.k:]]
 
+
+class KRandomCells(Area):
+
+    def __init__(self, area, k, filter):
+        self.area = area
+        self.filter = filter
+        self.k = k
+
+    def get(self, context):
+        cells = self.area.get(context)
+        filter_ = self.filter
+        actual_cells = [cell for cell in cells if filter_.get(dotdict({'cell': cell}))]
+        shuffle(actual_cells)
+        return actual_cells[:self.k:]
 
 class Circle(Area):
 
