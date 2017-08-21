@@ -7,7 +7,10 @@
     unit_state: "sword"
     ammo: 3
     loaded: true
-#    mushrooms: 666
+    mushrooms: !res
+      type: numeric
+      max: 666
+      initial: 10
   actions:
     - Move
     - Attack

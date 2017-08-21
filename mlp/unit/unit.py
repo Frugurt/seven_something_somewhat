@@ -49,19 +49,13 @@ class Unit(GameObject):
         self._stats = MajorStats(self, master_name, self.resources)
         self.current_action_bar = CurrentActionBar(self)
         registry = MetaRegistry()["Action"]
-        # self.action_bar = ActionBar(
-        #     self,
-        #     [registry[action_name] for action_name in self.actions],
-        # )
         for action_name in self.actions:
-            # print(action_name)
             self._stats.action_bar.append_action(registry[action_name])
         self.clear_presumed()
         self.context = {
             'source': self.cell,
             'owner': self
         }
-        # summon_event.connect(self.on_summon)
 
     @property
     def _presumed_stats(self):

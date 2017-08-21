@@ -14,11 +14,16 @@ class NumericResource(Label):
     max_value = NumericProperty()
     name = StringProperty()
 
-    def __init__(self, name, value, max_value=None, **kwargs):
+    # def __init__(self, name, value, max_value=None, **kwargs):
+    def __init__(self, resource, **kwargs):
         super().__init__(**kwargs)
-        self.name = name
-        self.value = value
-        self.max_value = max_value or value
+        self.resource = resource
+        self.name = resource.name
+        self.value = resource.value
+        self.max_value = resource.max
+
+    def on_change(self, _):
+        self.value = self.resource.value
 
 
 class StringResource(Label):
