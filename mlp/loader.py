@@ -35,6 +35,10 @@ from .unit.unit import (
     new_unit_constructor,
     NEW_UNIT_TAG,
 )
+from .resource import (
+    resource_constructor,
+    RESOURCE_TAG,
+)
 
 # loader = yaml.Loader()
 yaml.add_constructor(NEW_ACTION_TAG, new_action_constructor)
@@ -53,6 +57,7 @@ yaml.add_constructor(AREA_TAG, area_constructor)
 yaml.add_constructor(UNIT_TAG, unit_constructor)
 yaml.add_constructor(NEW_UNIT_TAG, new_unit_constructor)
 
+yaml.add_constructor(RESOURCE_TAG, resource_constructor)
 
 def load(paths=None):
     paths = paths or [

@@ -3,13 +3,20 @@ from kivy.properties import (
     NumericProperty,
     StringProperty,
     BooleanProperty,
+    Property,
 )
 from kivy.lang import Builder
 Builder.load_file('./mlp/widgets/stats/resource.kv')
 
 
-class NumericResource(Label):
+class Resource(Label):
+    value = None
 
+    def on_change(self, _):
+        self.value = self.resource.value
+
+
+class NumericResource(Label):
     value = NumericProperty()
     max_value = NumericProperty()
     name = StringProperty()
@@ -21,9 +28,6 @@ class NumericResource(Label):
         self.name = resource.name
         self.value = resource.value
         self.max_value = resource.max
-
-    def on_change(self, _):
-        self.value = self.resource.value
 
 
 class StringResource(Label):

@@ -5,7 +5,7 @@ RESOURCES = MetaRegistry()['Resource']
 ResourceMeta = MetaRegistry().make_registered_metaclass("Resource")
 
 
-class Resource:
+class Resource(metaclass=ResourceMeta):
 
     hooks = ['change']
 
@@ -27,11 +27,11 @@ class NumericResource(Resource):
 
     name = "numeric"
 
-    def __init__(self, name, initial, min_=0, max_=None):
+    def __init__(self, name, initial, min=0, max=None):
         self.name = name
         self._current = initial
-        self.min = min_
-        self.max = max_ or initial
+        self.min = min
+        self.max = max or initial
 
     @property
     def value(self):
@@ -54,9 +54,9 @@ class OptionResource(Resource):
 
     name = "option"
 
-    def __init__(self, name, inital, options):
+    def __init__(self, name, initial, options):
         self.name = name
-        self._current = inital
+        self._current = initial
         self.options = options
 
     @property
@@ -98,9 +98,9 @@ RESOURCE_TABLE = {
 
 
 def resource_constructor(loader, node):
-    a_s = loader.construct_mapping(node)
-    name = a_s.pop("name")
-    area = RESOURCES[name](**a_s)
-    return area
+    r_s = loader.construct_mapping(node)
+    name = r_s.pop("type")
+    resource = RESOURCES[name](name, **r_s)
+    return resource
 
 RESOURCE_TAG = "!res"

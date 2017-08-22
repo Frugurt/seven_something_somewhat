@@ -41,10 +41,7 @@ class Stats:
         for key, value in struct.items():
             setattr(self, key, value)
         for key, value in self.resources.items():
-            if isinstance(value, Resource):
-                setattr(self, key, value)
-            else:
-                setattr(self, key, RESOURCE_TABLE[type(value)](key, value))
+            setattr(self, key, value)
         struct["action_bar"] = action_bar
         # print(self.statuses)
 
