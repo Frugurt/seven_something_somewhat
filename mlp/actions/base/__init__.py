@@ -157,7 +157,7 @@ class Reflect(MetaEffect):
     def _apply(self, effect, context, effect_context):
         print(context, "context")
         print(effect_context, "effect_context")
-        effect.apply(effect_context['source'].cell, context)
+        effect.apply(effect_context['owner'].cell, context)
         effect.cancel()
 
 
