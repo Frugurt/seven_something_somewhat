@@ -10,7 +10,7 @@
 #    mushrooms: 666
   actions:
     - Move
-    - Attack
+    - OldAttack
 #    - Kick
     - GetRifle
 #    - GetSword
