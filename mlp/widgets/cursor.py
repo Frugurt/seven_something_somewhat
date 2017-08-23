@@ -195,6 +195,7 @@ class GeometrySelectCursor(RequestCursor):
         print("\n\n\n", available_cells)
         self.shape = shape
         self.selected_cells = []
+        # self.selected = None
         self.highlighted_cells = None
 
     def activate(self):
@@ -220,7 +221,8 @@ class GeometrySelectCursor(RequestCursor):
 
     def send(self, _):
         super().send(_)
-        self.requester.select_result = [c.cell for c in self.selected_cells]
+        # self.requester.select_result = [c.cell for c in self.selected_cells]
+        self.requester.select_result = self._context['selected']
 
 CURSOR_TABLE = {
     'any_cell': MultiSelectCursor,
