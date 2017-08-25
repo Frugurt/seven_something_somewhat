@@ -109,6 +109,36 @@ class Circle(Area):
 
     def get(self, context):
         return self.grid.get_area(self.center.get(context), self.r)
+        
+class Ray(Area):
+
+    def __init__(self, source, target, length):
+        self.source = source
+        self.target = target
+        self.length = length
+
+    def get(self, context):
+        grid = self.grid
+        line = grid.get_line(self.source.get(context), self.target.get(context), self.length)[1:]
+        for i, cell in enumerate(line):
+            if cell.object:
+                return line[:i + 1]
+        return line
+        
+class Tail(Area):
+
+    def __init__(self, source, target, length, start=None):
+        self.source = source
+        self.target = target
+        self.length = length
+        self.start = start
+
+    def get(self, context):
+        grid = self.grid
+        distance = grid.distance(self.source.get(context), self.target.get(context))
+        start = self.start or distance
+        line = grid.get_line(self.source.get(context), self.target.get(context), self.length + start)[start + 1:]
+        return line
 
 # AREAS = {
 #     "Melee": Melee,

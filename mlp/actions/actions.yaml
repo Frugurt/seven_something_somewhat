@@ -229,6 +229,16 @@
         name: Cell
         cell: !prop action.target
     - effect: !eff
+        name: Move
+        path: !area
+          name: Tail
+          source: !prop owner.cell
+          target: !prop action.target
+          length: 1
+      area: !area
+        name: Cell
+        cell: !prop action.target 
+    - effect: !eff
         name: ChangeStat
         extra_tags: ["plan"]
         stat_name: endurance
