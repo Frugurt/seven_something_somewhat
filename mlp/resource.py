@@ -15,6 +15,9 @@ class Resource(metaclass=ResourceMeta):
     def load(self, v):
         self.value = v
 
+    def copy(self):
+        pass
+
     def change(self):
         """
         Используется для передачи сигнала об обновлении виджетов
@@ -41,6 +44,9 @@ class NumericResource(Resource):
     def value(self, v):
         self._current = max(self.min, min(v, self.max))
         self.change()
+
+    def copy(self):
+        return NumericResource(self.name, self._current, self.min, self.max)
 
     # def dump(self):
     #     return self.value
@@ -71,6 +77,9 @@ class OptionResource(Resource):
         else:
             raise AttributeError("value not in {}".format(self.options))
 
+    def copy(self):
+        return OptionResource(self.name, self._current, self.options)
+
 
 @bind_widget("BooleanResource")
 class FlagResource(Resource):
@@ -90,6 +99,9 @@ class FlagResource(Resource):
         if isinstance(v, bool):
             self._current = v
             self.change()
+
+    def copy(self):
+        return FlagResource(self.name, self._current)
 
 RESOURCE_TABLE = {
     int: NumericResource,
