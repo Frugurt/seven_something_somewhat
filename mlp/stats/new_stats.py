@@ -5,14 +5,20 @@ from .stats import (
 from ..actions.action import ActionBar
 from ..tools import dict_merge
 from ..bind_widget import bind_widget
+from ..resource import (
+    Resource,
+    RESOURCE_TABLE,
+)
 
 
 class Stats:
 
-    hooks = ['load']
+    # hooks = ['load']
+    hooks = []
 
     def __init__(self, owner, owner_name, resources):#, is_presumed=False):
-        self.resources = resources.copy()
+        # self.resources = resources.copy()
+        self.resources = {}
         self.state = PLANNING
         self.name = owner.__class__.__name__
         self.owner = owner_name
@@ -20,20 +26,18 @@ class Stats:
         self.statuses = {}
         self.cell = None
         self.action_bar = ActionBar(owner)
-        for key, value in self.resources.items():
-            setattr(self, key, value)
-        # self.presumed_stats = None if is_presumed else Stats(name, owner, True)
-        # self.current_action_bar = CurrentActionBar(self.owner)
-
-    # def __getattr__(self, item):
-    #     if item in self.resources:
-        # return self.resources[item]
-    #
-    # def __setattr__(self, key, value):
-    #     if key in self.resources:
-    #         self.resources[key] = value
-    #     else:
-    #         super().__setattr__(key, value)
+        for name, resource in resources.items():
+            if isinstance(resource, Resource):
+                resource = resource.copy()
+                setattr(self, name, resource)
+                self.resources[name] = resource.copy()
+            else:
+                resource = RESOURCE_TABLE[type(resource)](name, resource)
+                setattr(self, name, resource)
+                # self.resources[name] = RESOURCE_TABLE[type(resource)](name, resource)
+                self.resources[name] = resource
+            # resource.name_ = name
+        print("\n\nSTATS", self.resources, "\n\n")
 
     @property
     def triggers(self):
@@ -45,30 +49,44 @@ class Stats:
 
     def load(self, struct):
         action_bar = struct.pop("action_bar")
+        resources = struct.pop("resources")
         self.action_bar.load(action_bar)
         for key, value in struct.items():
             setattr(self, key, value)
-        for key, value in self.resources.items():
-            setattr(self, key, value)
+        for key, value in resources.items():
+            self.resources[key].value = value
+            # setattr(self, key, value)
         struct["action_bar"] = action_bar
         # print(self.statuses)
 
     def dump(self):
+        print("\n\n", self.resources, "\n\n")
         # status = self.statuses.copy()
         struct = {
             "name": self.name,
             "owner": self.owner,
             'cell': self.cell,
             'statuses': self.statuses.copy(),
-            'resources': self.resources.copy(),
+            'resources': {key: value.dump() for key, value in self.resources.items()},
             'action_bar': self.action_bar.dump(),
         }
         return struct
 
     def __setattr__(self, key, value):
+        try:
+            if key in self.resources:
+                self.resources[key].value = value
+                value = self.resources[key]
+        except AttributeError:
+            pass
         super().__setattr__(key, value)
-        if key in self.resources:
-            self.resources[key] = value
+
+    def __getattribute__(self, item):
+        item = super().__getattribute__(item)
+        if isinstance(item, Resource):
+            return item.value
+        else:
+            return item
 
     def __repr__(self):
         return "Stats with resources {}".format(self.resources)

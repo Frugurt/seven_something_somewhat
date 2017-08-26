@@ -4,10 +4,20 @@
     health: 100
     initiative: 3
     action_points: 3
-    unit_state: "sword"
+    unit_state: !res
+      type: option
+      name: state
+      initial: "sword"
+      options:
+        - "sword"
+        - "rifle"
     ammo: 3
     loaded: true
-#    mushrooms: 666
+    mushrooms: !res
+      name: mushrooms
+      type: numeric
+      max: 666
+      initial: 10
   actions:
     - Move
     - Attack
