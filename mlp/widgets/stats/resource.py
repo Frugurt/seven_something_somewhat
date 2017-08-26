@@ -12,7 +12,7 @@ Builder.load_file('./mlp/widgets/stats/resource.kv')
 class Resource(Label):
     value = None
 
-    def on_change(self, _):
+    def on_change(self):
         self.value = self.resource.value
 
 
