@@ -19,7 +19,7 @@ class Stats(grl.GridLayout):
         self.resources = {}
         self.add_widget(Label(text="Name: {}".format(stats.name)))
         self.add_widget(Label(text="Owner: {}".format(stats.owner)))
-        for res_name, value in stats.resources.items():
+        for res_name, value in sorted(list(stats.resources.items())):
             resource = value.make_widget()
             # self.resources[res_name] = resource
             self.add_widget(resource)

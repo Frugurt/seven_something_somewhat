@@ -31,7 +31,7 @@ class NumericResource(Resource):
     name = "numeric"
 
     def __init__(self, name, initial, min=0, max=None):
-        self.name = name
+        self.name_ = name
         self._current = initial
         self.min = min
         self.max = max or initial
@@ -46,7 +46,10 @@ class NumericResource(Resource):
         self.change()
 
     def copy(self):
-        return NumericResource(self.name, self._current, self.min, self.max)
+        return NumericResource(self.name_, self._current, self.min, self.max)
+
+    def __repr__(self):
+        return "{}: {}/{}".format(self.name_, self._current, self.max)
 
     # def dump(self):
     #     return self.value
@@ -61,7 +64,7 @@ class OptionResource(Resource):
     name = "option"
 
     def __init__(self, name, initial, options):
-        self.name = name
+        self.name_ = name
         self._current = initial
         self.options = options
 
@@ -78,7 +81,7 @@ class OptionResource(Resource):
             raise AttributeError("value not in {}".format(self.options))
 
     def copy(self):
-        return OptionResource(self.name, self._current, self.options)
+        return OptionResource(self.name_, self._current, self.options)
 
 
 @bind_widget("BooleanResource")
@@ -87,7 +90,7 @@ class FlagResource(Resource):
     name = "flag"
 
     def __init__(self, name, initial):
-        self.name = name
+        self.name_ = name
         self._current = initial
 
     @property
@@ -101,7 +104,7 @@ class FlagResource(Resource):
             self.change()
 
     def copy(self):
-        return FlagResource(self.name, self._current)
+        return FlagResource(self.name_, self._current)
 
 RESOURCE_TABLE = {
     int: NumericResource,
@@ -112,7 +115,7 @@ RESOURCE_TABLE = {
 def resource_constructor(loader, node):
     r_s = loader.construct_mapping(node)
     name = r_s.pop("type")
-    resource = RESOURCES[name](name, **r_s)
+    resource = RESOURCES[name](**r_s)
     return resource
 
 RESOURCE_TAG = "!res"

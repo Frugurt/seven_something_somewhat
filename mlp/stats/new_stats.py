@@ -13,7 +13,8 @@ from ..resource import (
 
 class Stats:
 
-    hooks = ['load']
+    # hooks = ['load']
+    hooks = []
 
     def __init__(self, owner, owner_name, resources):#, is_presumed=False):
         # self.resources = resources.copy()
@@ -28,11 +29,15 @@ class Stats:
         for name, resource in resources.items():
             if isinstance(resource, Resource):
                 resource = resource.copy()
-                # self.resources[name] = resource.copy()
+                setattr(self, name, resource)
+                self.resources[name] = resource.copy()
             else:
                 resource = RESOURCE_TABLE[type(resource)](name, resource)
+                setattr(self, name, resource)
                 # self.resources[name] = RESOURCE_TABLE[type(resource)](name, resource)
-            setattr(self, name, resource)
+                self.resources[name] = resource
+            # resource.name_ = name
+        print("\n\nSTATS", self.resources, "\n\n")
 
     @property
     def triggers(self):

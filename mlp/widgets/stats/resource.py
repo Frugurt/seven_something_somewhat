@@ -16,7 +16,7 @@ class Resource(Label):
         self.value = self.resource.value
 
 
-class NumericResource(Label):
+class NumericResource(Resource):
     value = NumericProperty()
     max_value = NumericProperty()
     name = StringProperty()
@@ -25,29 +25,31 @@ class NumericResource(Label):
     def __init__(self, resource, **kwargs):
         super().__init__(**kwargs)
         self.resource = resource
-        self.name = resource.name
+        self.name = resource.name_
         self.value = resource.value
         self.max_value = resource.max
 
 
-class StringResource(Label):
+class StringResource(Resource):
 
     value = StringProperty()
     name = StringProperty()
 
-    def __init__(self, name, value, **kwargs):
+    def __init__(self, resource, **kwargs):
         super().__init__(**kwargs)
-        self.name = name
-        self.value = value
+        self.resource = resource
+        self.name = resource.name_
+        self.value = resource.value
 
 
-class BooleanResource(Label):
+class BooleanResource(Resource):
     value = BooleanProperty()
     name = StringProperty()
 
-    def __init__(self, name, value, **kwargs):
+    def __init__(self, resource, **kwargs):
         super().__init__(**kwargs)
-        self.name = name
-        self.value = value
+        self.resource = resource
+        self.name = resource.name_
+        self.value = resource.value
 
 

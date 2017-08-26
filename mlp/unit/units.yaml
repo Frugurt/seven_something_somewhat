@@ -6,6 +6,7 @@
     action_points: 3
     unit_state: !res
       type: option
+      name: state
       initial: "sword"
       options:
         - "sword"
@@ -13,6 +14,7 @@
     ammo: 3
     loaded: true
     mushrooms: !res
+      name: mushrooms
       type: numeric
       max: 666
       initial: 10

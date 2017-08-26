@@ -2,11 +2,9 @@ from itertools import (
     chain,
     combinations,
 )
+from ..resource import Resource
 from mlp.replication_manager import (
     GameObject,
-    # RefTag,
-    # ActionsRegistry,
-    # MetaRegistry,
 )
 from mlp.stats.new_stats import MajorStats
 from mlp.grid import Grid
@@ -281,7 +279,11 @@ class Unit(GameObject):
 def new_unit_constructor(loader, node):
     u_s = loader.construct_mapping(node)
 
-    print("LOAD", u_s['name'])
+    # print("LOAD", u_s['name'])
+
+    # for name, resource in u_s['resources']:
+    #     if isinstance(resource, Resource):
+    #         resource.name = name
 
     @bind_widget('Unit')
     class NewUnit(Unit):
