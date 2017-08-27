@@ -22,9 +22,9 @@
     - Move
     - Attack
 #    - Kick
-    - GetRifle
+#    - GetRifle
 #    - GetSword
-    - Parry
+#    - Parry
 #    - Shoot
 #    - Reload
     - Regenerate

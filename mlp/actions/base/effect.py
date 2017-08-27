@@ -120,11 +120,13 @@ class MetaEffect(AbstractEffect):
     def log(self, source):
         source.action_log.append(self.info_message)
 
-    def _apply(self, effect, context, effect_context):
+    def _apply(self, effect, context):
         self.log(context)
 
     def apply(self, effect, context, effect_context):
-        self._apply(effect, context, effect_context)
+        context = context.copy()
+        context['incoming_effect'] = dotdict(effect_context)
+        self._apply(effect, context)
 
     def copy(self):
         return self.__class__(**vars(self))
@@ -154,7 +156,17 @@ class CustomUnitEffect(UnitEffect):
 
 
 class CustomMetaEffect(MetaEffect):
-    pass
+
+    name = None
+    params = []
+    effects = []
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+
+
 
 
 def effect_constructor(loader, node):

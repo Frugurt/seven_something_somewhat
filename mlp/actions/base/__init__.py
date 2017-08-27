@@ -150,15 +150,15 @@ class ChangeStat(UnitEffect):
             super()._apply(target, context)
 
 
-class Reflect(MetaEffect):
-
-    info_message = "reflect {} to {}"
-
-    def _apply(self, effect, context, effect_context):
-        print(context, "context")
-        print(effect_context, "effect_context")
-        effect.apply(effect_context['owner'].cell, context)
-        effect.cancel()
+# class Reflect(MetaEffect):
+#
+#     info_message = "reflect {} to {}"
+#
+#     def _apply(self, effect, context, effect_context):
+#         print(context, "context")
+#         print(effect_context, "effect_context")
+#         effect.apply(effect_context['owner'].cell, context)
+#         effect.cancel()
 
 
 class Summon(CellEffect):
