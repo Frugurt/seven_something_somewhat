@@ -153,6 +153,10 @@ class CustomUnitEffect(UnitEffect):
                 effect._apply(target, context)     # TODO перепроектировать это
 
 
+class CustomMetaEffect(MetaEffect):
+    pass
+
+
 def effect_constructor(loader, node):
     e_s = {}
     for key_node, value_node in node.value:
@@ -168,11 +172,23 @@ def effect_constructor(loader, node):
 def new_effect_constructor(loader, node):
     n_e = loader.construct_mapping(node)
 
-    class NewEffect(CustomUnitEffect):
-        name = n_e["name"]
-        effects = n_e['effects']
-        params = n_e['params']
+    if "type" in n_e:
+        type_ = n_e.pop("type")
+    else:
+        type_ = "unit"
 
+    if type_ == "unit":
+        class NewEffect(CustomUnitEffect):
+            name = n_e["name"]
+            effects = n_e['effects']
+            params = n_e['params']
+    elif type_ == "meta":
+        class NewEffect(CustomMetaEffect):
+            name = n_e["name"]
+            effects = n_e['effects']
+            params = n_e['params']
+    else:
+        raise ValueError("Effect type might be 'unit' or 'meta'")
     return NewEffect
 
 EFFECT_TAG = "!eff"
