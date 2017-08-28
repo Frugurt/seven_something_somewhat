@@ -228,3 +228,11 @@ class LaunchAction(CellEffect):
             )
             action.context['action'] = action
             action.apply()
+
+
+class Discard(MetaEffect):
+    pass
+
+
+class ChangeEffectStat(MetaEffect):
+    pass

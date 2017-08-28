@@ -125,7 +125,8 @@ class MetaEffect(AbstractEffect):
 
     def apply(self, effect, context, effect_context):
         context = context.copy()
-        context['incoming_effect'] = dotdict(effect_context)
+        context['incoming_effect'] = effect
+        context['incoming_effect_context'] = dotdict(effect_context)
         self._apply(effect, context)
 
     def copy(self):
@@ -166,6 +167,19 @@ class CustomMetaEffect(MetaEffect):
         for k, v in kwargs.items():
             setattr(self, k, v)
 
+    def apply(self, effect, context, effect_context):
+        context = context.copy()
+        context['incoming_effect'] = effect
+        context['incoming_effect_context'] = dotdict(effect_context)
+        context['effect'] = self
+        self._apply(effect, context)
+
+    def _apply(self, effect, context):
+        for e_s in self.effects:
+            cond = e_s.get('condition')
+            if cond is None or cond.get(context):
+                effect_ = e_s['effect']
+                effect_._apply(effect, context)
 
 
 
