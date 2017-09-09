@@ -140,13 +140,6 @@ class Tail(Area):
         line = grid.get_line(self.source.get(context), self.target.get(context), self.length + start)[start + 1:]
         return line
 
-# AREAS = {
-#     "Melee": Melee,
-#     "Line": Line,
-#     "KNearestNeighbors": KNearestNeighbors,
-#     "Circle": Circle,
-# }
-
 
 def area_constructor(loader, node):
     a_s = loader.construct_mapping(node)

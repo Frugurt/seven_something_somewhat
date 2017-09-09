@@ -1,4 +1,13 @@
-class Resource:
+from .bind_widget import bind_widget
+from .replication_manager import MetaRegistry
+
+RESOURCES = MetaRegistry()['Resource']
+ResourceMeta = MetaRegistry().make_registered_metaclass("Resource")
+
+
+class Resource(metaclass=ResourceMeta):
+
+    hooks = ['change']
 
     def dump(self):
         return self.value
@@ -6,14 +15,26 @@ class Resource:
     def load(self, v):
         self.value = v
 
+    def copy(self):
+        pass
 
+    def change(self):
+        """
+        Используется для передачи сигнала об обновлении виджетов
+        """
+        pass
+
+
+@bind_widget("NumericResource")
 class NumericResource(Resource):
 
-    def __init__(self, inital, min_=0, max_=None):
-        self._current = inital
-        self.min = min_
-        self.max = max_ or inital
-        self.base = inital      # для работы с модификаторами, которых сейчас нет
+    name = "numeric"
+
+    def __init__(self, name, initial, min=0, max=None):
+        self.name_ = name
+        self._current = initial
+        self.min = min
+        self.max = max or initial
 
     @property
     def value(self):
@@ -22,6 +43,13 @@ class NumericResource(Resource):
     @value.setter
     def value(self, v):
         self._current = max(self.min, min(v, self.max))
+        self.change()
+
+    def copy(self):
+        return NumericResource(self.name_, self._current, self.min, self.max)
+
+    def __repr__(self):
+        return "{}: {}/{}".format(self.name_, self._current, self.max)
 
     # def dump(self):
     #     return self.value
@@ -30,10 +58,14 @@ class NumericResource(Resource):
     #     self.value = v
 
 
+@bind_widget("StringResource")
 class OptionResource(Resource):
 
-    def __init__(self, inital, options):
-        self._current = inital
+    name = "option"
+
+    def __init__(self, name, initial, options):
+        self.name_ = name
+        self._current = initial
         self.options = options
 
     @property
@@ -44,13 +76,21 @@ class OptionResource(Resource):
     def value(self, v):
         if v in self.options:
             self._current = v
+            self.change()
         else:
-            raise AttributeError()
+            raise AttributeError("value not in {}".format(self.options))
+
+    def copy(self):
+        return OptionResource(self.name_, self._current, self.options)
 
 
+@bind_widget("BooleanResource")
 class FlagResource(Resource):
 
-    def __init__(self, initial):
+    name = "flag"
+
+    def __init__(self, name, initial):
+        self.name_ = name
         self._current = initial
 
     @property
@@ -61,3 +101,21 @@ class FlagResource(Resource):
     def value(self, v):
         if isinstance(v, bool):
             self._current = v
+            self.change()
+
+    def copy(self):
+        return FlagResource(self.name_, self._current)
+
+RESOURCE_TABLE = {
+    int: NumericResource,
+    bool: FlagResource,
+}
+
+
+def resource_constructor(loader, node):
+    r_s = loader.construct_mapping(node)
+    name = r_s.pop("type")
+    resource = RESOURCES[name](**r_s)
+    return resource
+
+RESOURCE_TAG = "!res"

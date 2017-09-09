@@ -2,11 +2,9 @@ from itertools import (
     chain,
     combinations,
 )
+from ..resource import Resource
 from mlp.replication_manager import (
     GameObject,
-    # RefTag,
-    # ActionsRegistry,
-    # MetaRegistry,
 )
 from mlp.stats.new_stats import MajorStats
 from mlp.grid import Grid
@@ -49,19 +47,13 @@ class Unit(GameObject):
         self._stats = MajorStats(self, master_name, self.resources)
         self.current_action_bar = CurrentActionBar(self)
         registry = MetaRegistry()["Action"]
-        # self.action_bar = ActionBar(
-        #     self,
-        #     [registry[action_name] for action_name in self.actions],
-        # )
         for action_name in self.actions:
-            # print(action_name)
             self._stats.action_bar.append_action(registry[action_name])
         self.clear_presumed()
         self.context = {
             'source': self.cell,
             'owner': self
         }
-        # summon_event.connect(self.on_summon)
 
     @property
     def _presumed_stats(self):
@@ -287,7 +279,11 @@ class Unit(GameObject):
 def new_unit_constructor(loader, node):
     u_s = loader.construct_mapping(node)
 
-    print("LOAD", u_s['name'])
+    # print("LOAD", u_s['name'])
+
+    # for name, resource in u_s['resources']:
+    #     if isinstance(resource, Resource):
+    #         resource.name = name
 
     @bind_widget('Unit')
     class NewUnit(Unit):
