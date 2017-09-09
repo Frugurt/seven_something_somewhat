@@ -62,8 +62,8 @@
   actions:
     - Move
     - Attack
-    #- Cleave
-    #- EmpoweredCleave
+    - Cleave
+    - EmpoweredCleave
     #- Lunge
     #- EmpoweredLunge
     - Kick
