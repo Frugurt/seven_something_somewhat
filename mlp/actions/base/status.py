@@ -24,12 +24,20 @@ class Status(metaclass=StatusMeta):
     on_add_effects = []
     on_remove_effects = []
     params = []
+    _tags = []
 
     def __init__(self, context=None, duration=-1, **kwargs):
         self.context = context
         self.duration = duration
+        self.extra_tags = kwargs.get('extra_tags', [])
+        if 'extra_tags' in kwargs:
+            kwargs.pop('extra_tags')
         for k, v in kwargs.items():
             setattr(self, k, v)
+
+    @property
+    def tags(self):
+        return self.extra_tags + self._tags
 
     def configure(self, context):
         # context = context.copy()
