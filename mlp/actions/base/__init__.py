@@ -112,14 +112,19 @@ class RemoveStatus(UnitEffect):
     info_message = "remove {} from {}"
     name = "RemoveStatus"
 
-    def __init__(self, status, **kwargs):
+    def __init__(self, status, by_tag=False, **kwargs):
         super().__init__(**kwargs)
-        self.status = status
+        self.status = status if isinstance(status, list) else [status]
+        self.by_tag = by_tag
 
     def _apply(self, target, context):
         # if cell.object:
         with self.configure(context) as c:
-            target.remove_status(c.status)
+            for status in c.status:
+                if self.by_tag:
+                    target.remove_status_by_tag(status)
+                else:
+                    target.remove_status(status)
             self.info_message = self.info_message.format(c.status, target)
             # print(self.info_message)
             super()._apply(target, context)
