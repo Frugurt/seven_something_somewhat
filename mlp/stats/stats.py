@@ -62,7 +62,7 @@ class Stats:
     def load(self, struct):
         for key, value in struct.items():
             setattr(self, key, value)
-        # print(self.statuses)
+        # # print(self.statuses)
 
     def dump(self):
         struct = {

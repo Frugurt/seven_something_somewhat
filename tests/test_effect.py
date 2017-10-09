@@ -1,9 +1,7 @@
+import yaml
 from ..mlp.grid import Cell
 from ..mlp.unit import UNITS
-from ..mlp.actions.base import *
 from ..mlp.loader import load
-import nose
-from nose.tools import assert_raises
 
 DUMMY = 'Dummy'
 A = 'A'
@@ -11,7 +9,10 @@ B = 'B'
 
 load()
 
+
 class TestEffect:
+
+    tests_path = "./tests/effect_tests.yaml"
 
     def setUp(self):
         self.source = Cell((0, 0))
@@ -24,11 +25,17 @@ class TestEffect:
         self.victim.switch_state()
         self.context = {
             'owner': self.author,
-            'source': self.source
+            'source': self.source,
+            'victim': self.victim.stats,
         }
 
-    def test_damage(self):
-        e = Damage(10)
-        e.apply([self.target], self.context)
-        assert self.victim.stats.health == 90
+    def test_effects(self):
+        with open(self.tests_path) as tests_file:
+            tests = yaml.load(tests_file)
+        for test in tests:
+            yield self.check, [effect.get() for effect in test['effects']], test['check']
 
+    def check(self, effects, expression):
+        for effect in effects:
+            effect.apply([self.target], self.context)
+        assert expression.get(self.context)

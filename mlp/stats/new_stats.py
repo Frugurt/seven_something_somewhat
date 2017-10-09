@@ -37,7 +37,7 @@ class Stats:
                 # self.resources[name] = RESOURCE_TABLE[type(resource)](name, resource)
                 self.resources[name] = resource
             # resource.name_ = name
-        print("\n\nSTATS", self.resources, "\n\n")
+        # print("\n\nSTATS", self.resources, "\n\n")
 
     @property
     def triggers(self):
@@ -57,10 +57,10 @@ class Stats:
             self.resources[key].value = value
             # setattr(self, key, value)
         struct["action_bar"] = action_bar
-        # print(self.statuses)
+        # # print(self.statuses)
 
     def dump(self):
-        print("\n\n", self.resources, "\n\n")
+        # print("\n\n", self.resources, "\n\n")
         # status = self.statuses.copy()
         struct = {
             "name": self.name,

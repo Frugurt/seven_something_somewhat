@@ -46,8 +46,8 @@ class Action(metaclass=ActionMeta):
     _check = None
 
     def __init__(self, owner, **kwargs):
-        print("CREATE NEW")
-        print(kwargs)
+        # print("CREATE NEW")
+        # print(kwargs)
         self.owner = owner
         self._context = None
         for setup_struct in self.setup_fields:

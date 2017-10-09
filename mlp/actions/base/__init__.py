@@ -88,6 +88,9 @@ class Damage(UnitEffect):
             self.info_message = self.info_message.format(target, c.amount)
             super()._apply(target, context)
 
+    def __repr__(self):
+        return "Damage: ({})".format(self.amount)
+
 
 class AddStatus(UnitEffect):
 

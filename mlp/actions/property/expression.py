@@ -36,7 +36,11 @@ class Expression(Property):
     UTILITY = {'(', ')'} | set(OPERATORS.keys())
 
     def __init__(self, expression):
+        self.raw_expression = expression
         self.expression = self.make_tree(self.inf_2_post(expression))
+
+    def __repr__(self):
+        return " ".join([str(token) for token in self.raw_expression])
 
     def get(self, context):
         return self.expression.get(context)

@@ -68,7 +68,7 @@ def load(paths=None):
         './mlp/unit/units.yaml',
     ]
     for path in paths:
-        print(path)
+        # print(path)
         with open(path) as a:
             # loader = yaml.Loader(a)
             yaml.load(a)

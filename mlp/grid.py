@@ -17,7 +17,7 @@ revoke = blinker.signal("revoke")
 
 
 def sum_iterables(iter1, iter2):
-    # print(iter1, iter2)
+    # # print(iter1, iter2)
     return [add(*x) for x in zip(iter1, iter2)]
 
 
@@ -68,7 +68,7 @@ class Grid(GameObject):
     def summon(self, _, unit, cell):
         # unit = unit(owner)
         unit.place_in(cell)
-        print(unit)
+        # print(unit)
 
     def revoke(self, _, unit=None, cell=None):
         cell.take()
@@ -201,8 +201,8 @@ class HexGrid(Grid):
         return a + (b - a)*t
 
     def cube_inter(self, pos_a, pos_b, t):
-        # print("CUBINTER")
-        # print(pos_a, pos_b)
+        # # print("CUBINTER")
+        # # print(pos_a, pos_b)
         return tuple((self.inter(*args) for args in zip(pos_a, pos_b, repeat(t, 3))))
 
     @staticmethod
@@ -260,7 +260,7 @@ class HexGrid(Grid):
         else:
             q, r = item
             w, h = self.size
-            # print(q, r)
+            # # print(q, r)
             if q < w and r < h:
                 return self._grid[q][r]
             else:
@@ -303,4 +303,4 @@ class HexGrid(Grid):
 
 if __name__ == '__main__':
     grid = HexGrid((10, 10))
-    print(grid.get_area((4, 4), 2))
+    # print(grid.get_area((4, 4), 2))

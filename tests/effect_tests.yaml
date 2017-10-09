@@ -1,0 +1,5 @@
+- effects:
+    - !eff
+      name: Damage
+      amount: 10
+  check: !expr [!prop victim.health, '==', 90]
