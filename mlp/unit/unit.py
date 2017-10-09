@@ -3,16 +3,17 @@ from itertools import (
     combinations,
 )
 from ..resource import Resource
-from mlp.replication_manager import (
+from ..replication_manager import (
     GameObject,
 )
-from mlp.stats.new_stats import MajorStats
-from mlp.grid import Grid
-from mlp.actions.action import *
-from mlp.actions.new_action import *
-from mlp.tools import dict_merge
-from mlp.actions.property.reference import Reference
-from mlp.actions.base.status import Status
+from ..stats.new_stats import MajorStats
+# from mlp.stats.new_stats import MajorStats
+from ..grid import Grid
+from ..actions.action import *
+from ..actions.new_action import *
+from ..tools import dict_merge
+from ..actions.property.reference import Reference
+from ..actions.base.status import Status
 import blinker
 
 summon_event = blinker.signal("summon")

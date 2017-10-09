@@ -2,7 +2,7 @@ from collections.abc import Iterable
 
 import blinker
 
-from mlp.commands.command import (
+from ...commands.command import (
     Place,
     Revoke,
 )

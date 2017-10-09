@@ -9,7 +9,7 @@ from functools import (
 )
 from operator import add
 import blinker
-from mlp.replication_manager import GameObject
+from .replication_manager import GameObject
 from .tools import dict_merge
 
 summon_event = blinker.signal("summon")

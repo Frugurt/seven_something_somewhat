@@ -59,6 +59,7 @@ yaml.add_constructor(NEW_UNIT_TAG, new_unit_constructor)
 
 yaml.add_constructor(RESOURCE_TAG, resource_constructor)
 
+
 def load(paths=None):
     paths = paths or [
         './mlp/actions/base/effects.yaml',
