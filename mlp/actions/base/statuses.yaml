@@ -85,3 +85,7 @@
 - !new_status
   name: Burning
   tags: ["dot"]
+
+- !new_status
+  name: Bleeding
+  tags: ["dot"]

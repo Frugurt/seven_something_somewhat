@@ -16,7 +16,7 @@ from .status import (
     Status,
     STATUSES,
 )
-
+from ..property.reference import ReferenceList
 from ...replication_manager import MetaRegistry
 
 trace = blinker.signal("trace")
@@ -120,7 +120,8 @@ class RemoveStatus(UnitEffect):
 
     def __init__(self, status, by_tag=False, **kwargs):
         super().__init__(**kwargs)
-        self.status = status if isinstance(status, list) else [status]
+        self.status = ReferenceList(status)
+        # self.status = status if isinstance(status, list) else [status]
         self.by_tag = by_tag
 
     def _apply(self, target, context):
@@ -131,9 +132,15 @@ class RemoveStatus(UnitEffect):
                     target.remove_status_by_tag(status)
                 else:
                     target.remove_status(status)
-            self.info_message = self.info_message.format(c.status, target)
+            # self.info_message = self.info_message.format(c.status, target)
             # print(self.info_message)
             super()._apply(target, context)
+
+    def __repr__(self):
+        return "Remove Status {}{}".format(
+            "by tag " if self.by_tag else "",
+            self.status.get()
+        )
 
 
 class ChangeStat(UnitEffect):

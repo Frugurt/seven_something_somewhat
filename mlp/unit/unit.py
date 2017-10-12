@@ -250,6 +250,14 @@ class Unit(GameObject):
             self.stats.triggers[event].pop(status.name)
         s.on_remove(self)
 
+    def remove_status_by_tag(self, tag):
+        status_to_remove = []
+        for status in self.stats.statuses.values():
+            if tag in status.tags:
+                status_to_remove.append(status)
+        for status in status_to_remove:
+            self.remove_status(status)
+
     def launch_triggers(self, tags, target, target_context):
         # print("\n\n\n\nLaunch")
         # print(tags)
