@@ -58,3 +58,28 @@
     - "and"
     - ["Bleeding", "not in", !prop victim]
 
+- effects:
+  - !eff
+    name: AddStatus
+    status: !status
+      name: Burning
+  - !eff
+    name: AddStatus
+    status: !status
+      name: Bleeding
+  - !eff
+    name: AddStatus
+    status: !status
+      name: Regeneration
+      power: 1
+  - !eff
+    name: RemoveStatus
+    by_tag: True
+    status: ["dot"]
+  check: !expr
+    - ["Burning", "not in", !prop victim]
+    - "and"
+    - ["Bleeding", "not in", !prop victim]
+    - "and"
+    - ["Regeneration", "in", !prop victim]
+
