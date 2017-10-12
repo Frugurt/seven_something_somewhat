@@ -44,7 +44,7 @@ class GameObjectRegistry(Singleton):
         v = self.game_objects.pop(key)
         for category_name, category in self.categories.items():
             if v in category:
-                # print(category_name)
+                # # print(category_name)
                 category.remove(v)
 
     def __iter__(self):
@@ -63,7 +63,7 @@ class GameObjectRegistry(Singleton):
             self.game_classes[cls.__name__] = cls
 
     def dump(self):
-        print(list(self.game_objects.items()))
+        # print(list(self.game_objects.items()))
         # return sorted([obj.dump() for id_, obj in self.game_objects.items()], key=lambda x: self.game_classes[x['cls']].load_priority, reverse=True)
         return sorted(
             [obj for id_, obj in self.game_objects.items()], key=lambda x: x.__class__.load_priority, reverse=True
@@ -71,7 +71,7 @@ class GameObjectRegistry(Singleton):
 
     def load(self, struct):
         pass
-        # print(struct)
+        # # print(struct)
         # for obj_struct in sorted(struct, key=lambda x: self.game_classes[x['cls']].load_priority, reverse=True):
         #     self.load_obj(obj_struct)
             # id_ = obj_struct['id_']
@@ -120,11 +120,11 @@ class GameObjectMeta(type):
     registry = GameObjectRegistry()
 
     def __new__(cls, name, bases, dct):
-        # print(bases)
+        # # print(bases)
         new_cls = super().__new__(cls, name, bases, dct)
         if bases:
             cls.registry.register_class(new_cls)
-        # print(new_cls)
+        # # print(new_cls)
         return new_cls
 
 
@@ -191,7 +191,7 @@ class MetaRegistry(Singleton):
 
     def __getitem__(self, item):
         classes = self.game_object_registry.game_classes
-        print(classes)
+        # print(classes)
         if item not in self.registry and item in classes:
             self.registry[item] = classes       # Актуально для юнитов
         # else:
@@ -204,12 +204,12 @@ class MetaRegistry(Singleton):
             registry = self[name]
 
             def __new__(cls, name, bases, dct):
-                # print(bases, dct)
+                # # print(bases, dct)
                 if 'name' in dct:
                     name = dct['name'] or name
                 new_cls = super().__new__(cls, name, bases, dct)
                 if bases:
                     cls.registry[name] = new_cls
-                # print(new_cls)
+                # # print(new_cls)
                 return new_cls
         return Meta

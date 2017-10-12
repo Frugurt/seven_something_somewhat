@@ -23,17 +23,17 @@ class Attribute(Property):
         path = path.split(".")
         self.donor = path[0]
         self.path = path[1::]
-        print("ATTR", self.donor, self.path)
+        # print("ATTR", self.donor, self.path)
 
     def get(self, context):
-        print(context, self.donor, self.path)
+        # print(context, self.donor, self.path)
         donor = context[self.donor]
         for p in self.path:
             donor = getattr(donor, p)
         return donor
 
     def __repr__(self):
-        return "get {} from {}".format(
+        return "{1}.{0}".format(
             ".".join(self.path),
             # self.path[0],
             self.donor,
@@ -73,8 +73,8 @@ class Oper(Property):
     def get(self, context):
         left = self.left.get(context)
         right = self.right.get(context)
-        print(left, self.left)
-        print(right, self.right)
+        # print(left, self.left)
+        # print(right, self.right)
         return self.oper(self.left.get(context), self.right.get(context))
 
 

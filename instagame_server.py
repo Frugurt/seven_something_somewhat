@@ -1,5 +1,6 @@
-import sys
 import os
+import sys
+
 os.environ["IS_SERVER"] = "1"
 sys.path.insert(0, '/home/alessandro/PycharmProjects/mlp')
 from tornado import (
@@ -25,9 +26,7 @@ from mlp.game import (
 )
 from mlp.protocol import *
 # from mlp.unit import Muzik
-from mlp.actions import action
-from mlp.player import Player
-from tests.gridwidget import GrassGrid
+from tests import GrassGrid
 from mlp.loader import load
 import logging
 logger = logging.getLogger(__name__)

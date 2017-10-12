@@ -46,3 +46,11 @@
   widget:
     sprite: './data/direwolf.png'
     scale: 2.0
+
+- !new_unit
+  name: Dummy
+  resources:
+    health: 100
+  actions:
+    - Move
+  widget:

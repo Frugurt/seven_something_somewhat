@@ -2,7 +2,7 @@ from collections.abc import Iterable
 
 import blinker
 
-from mlp.commands.command import (
+from ...commands.command import (
     Place,
     Revoke,
 )
@@ -87,6 +87,9 @@ class Damage(UnitEffect):
                 target.kill()
             self.info_message = self.info_message.format(target, c.amount)
             super()._apply(target, context)
+
+    def __repr__(self):
+        return "Damage: ({})".format(self.amount)
 
 
 class AddStatus(UnitEffect):

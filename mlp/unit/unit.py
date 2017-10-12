@@ -3,16 +3,17 @@ from itertools import (
     combinations,
 )
 from ..resource import Resource
-from mlp.replication_manager import (
+from ..replication_manager import (
     GameObject,
 )
-from mlp.stats.new_stats import MajorStats
-from mlp.grid import Grid
-from mlp.actions.action import *
-from mlp.actions.new_action import *
-from mlp.tools import dict_merge
-from mlp.actions.property.reference import Reference
-from mlp.actions.base.status import Status
+from ..stats.new_stats import MajorStats
+# from mlp.stats.new_stats import MajorStats
+from ..grid import Grid
+from ..actions.action import *
+from ..actions.new_action import *
+from ..tools import dict_merge
+from ..actions.property.reference import Reference
+from ..actions.base.status import Status
 import blinker
 
 summon_event = blinker.signal("summon")
@@ -120,9 +121,9 @@ class Unit(GameObject):
         Поместить юнит в нужную клетку
         :return:
         """
-        print("Update")
-        print(self._presumed_stats.cell)
-        print(self._stats.cell)
+        # print("Update")
+        # print(self._presumed_stats.cell)
+        # print(self._stats.cell)
         if self._last_cell:
             self._last_cell.take(self)
         if self.cell:
@@ -183,7 +184,7 @@ class Unit(GameObject):
             self.place_in(self.cell.grid[pos])
         except AttributeError:
             for obj in self.registry:
-                print(obj)
+                # print(obj)
                 if isinstance(obj, Grid):
                     self.place_in(obj[pos])
 
@@ -227,31 +228,31 @@ class Unit(GameObject):
         # self.place_in(self.cell)
         self.update_position()
         # self.cell.place(self)
-        if self.state:
-            print("NOW IN ACTION")
-        else:
-            print("NOW IN PLANNING")
+        # if self.state:
+            # print("NOW IN ACTION")
+        # else:
+            # print("NOW IN PLANNING")
 
     def add_status(self, status):
         self.stats.statuses[status.name] = status
         for event in status.events:
             self.stats.triggers[event][status.name] = status
         status.on_add(self)
-        # print("STATUS", self.state, self.stats.statuses)
+        # # print("STATUS", self.state, self.stats.statuses)
 
     def remove_status(self, status):
-        # traceback.print_stack()
+        # traceback.# print_stack()
         # i = self.stats.statuses.index(status)
-        # print("PLANNING STATUSES", self._presumed_stats.statuses)
-        # print("ACTION STATUSES", self._stats.statuses)
+        # # print("PLANNING STATUSES", self._presumed_stats.statuses)
+        # # print("ACTION STATUSES", self._stats.statuses)
         s = self.stats.statuses.pop(status.name)
         for event in status.events:
             self.stats.triggers[event].pop(status.name)
         s.on_remove(self)
 
     def launch_triggers(self, tags, target, target_context):
-        print("\n\n\n\nLaunch")
-        print(tags)
+        # print("\n\n\n\nLaunch")
+        # print(tags)
         l = len(tags)
         for event in chain(*(combinations(tags, j) for j in range(1, l+1))):
             event = frozenset(event)
@@ -279,7 +280,7 @@ class Unit(GameObject):
 def new_unit_constructor(loader, node):
     u_s = loader.construct_mapping(node)
 
-    # print("LOAD", u_s['name'])
+    # # print("LOAD", u_s['name'])
 
     # for name, resource in u_s['resources']:
     #     if isinstance(resource, Resource):

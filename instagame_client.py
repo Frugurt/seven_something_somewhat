@@ -2,11 +2,9 @@ import os
 from os import path
 os.environ['KIVY_HOME'] = path.abspath(os.curdir)
 from kivy.app import App
-from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.uix.screenmanager import (
     ScreenManager,
-    Screen,
     FadeTransition,
 )
 from mlp import network_manager
@@ -14,10 +12,6 @@ from mlp import screens
 from mlp import protocol as pr
 from mlp import game
 from mlp import player
-from tests.gridwidget import (
-    GrassGrid,
-    GrassCell
-)
 from mlp.replication_manager import MetaRegistry
 # from mlp.unit import Muzik
 from mlp.loader import load
