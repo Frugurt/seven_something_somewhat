@@ -83,3 +83,20 @@
     - "and"
     - ["Regeneration", "in", !prop victim]
 
+- effects:
+  - !eff
+    name: AddStatus
+    status: !status
+      name: Parry
+  - !eff
+    name: Damage
+    extra_tags: ["melee"]
+    amount: 10
+#  check: !expr
+#    - [!prop victim.health, '==', 100]
+#    - "and"
+#    - [!prop owner.health, '==', 100]
+  check: !prop victim.health
+  result: 100
+
+

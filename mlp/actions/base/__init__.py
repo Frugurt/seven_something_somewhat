@@ -249,7 +249,9 @@ class LaunchAction(CellEffect):
 
 
 class Discard(MetaEffect):
-    pass
+
+    def _apply(self, effect, context):
+        effect.cancel()
 
 
 class ChangeEffectStat(MetaEffect):

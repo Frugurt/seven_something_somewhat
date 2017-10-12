@@ -11,6 +11,7 @@
         stat_name: action_points
         value: !expr [!prop target.action_points, '-', !prop effect.amount]
       condition: !expr [!prop target.action_points, '>=', !prop effect.amount]
+
 - !new_eff
   name: Parry
   type: meta

@@ -33,9 +33,15 @@ class TestEffect:
         with open(self.tests_path) as tests_file:
             tests = yaml.load(tests_file)
         for test in tests:
-            yield self.check, [effect.get() for effect in test['effects']], test['check']
+            yield self.check, [effect.get() for effect in test['effects']], test['check'], test.get('result')
 
-    def check(self, effects, expression):
+    def check(self, effects, expression, result=None):
         for effect in effects:
             effect.apply([self.target], self.context)
-        assert expression.get(self.context)
+        if result:
+            assert expression.get(self.context) == result, "{} != {}".format(
+                expression.get(self.context),
+                result,
+            )
+        else:
+            assert expression.get(self.context)

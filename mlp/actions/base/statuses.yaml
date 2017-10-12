@@ -70,7 +70,8 @@
         name: Parry
   on_harmful_melee:
     - !eff
-      name: Reflect
+      name: Parry
+      power: 15
 
 - !new_status
   name: Regeneration

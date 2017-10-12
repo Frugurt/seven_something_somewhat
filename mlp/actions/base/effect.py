@@ -121,7 +121,8 @@ class CellEffect(AbstractEffect):
 class MetaEffect(AbstractEffect):
 
     def log(self, source):
-        source.action_log.append(self.info_message)
+        pass
+        # source.action_log.append(self.info_message)
 
     def _apply(self, effect, context):
         self.log(context)
@@ -182,8 +183,9 @@ class CustomMetaEffect(MetaEffect):
             cond = e_s.get('condition')
             if cond is None or cond.get(context):
                 effect_ = e_s['effect']
+                effect_ = effect_.get()
+                print(effect_)
                 effect_._apply(effect, context)
-
 
 
 def effect_constructor(loader, node):
