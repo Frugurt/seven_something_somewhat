@@ -3,3 +3,10 @@
       name: Damage
       amount: 10
   check: !expr [!prop victim.health, '==', 90]
+
+- effects:
+    - !eff
+      name: AddStatus
+      status: !status
+        name: Burning
+  check: !expr ["Burning", "in", !prop victim]

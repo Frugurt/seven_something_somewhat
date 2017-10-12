@@ -109,6 +109,9 @@ class AddStatus(UnitEffect):
             self.info_message = self.info_message.format(c.status, target)
             super()._apply(target, context)
 
+    def __repr__(self):
+        return "Add Status {}".format(self.status.name)
+
 
 class RemoveStatus(UnitEffect):
 

@@ -3,6 +3,7 @@ from .stats import (
     PLANNING
 )
 from ..actions.action import ActionBar
+from ..actions.base.status import Status
 from ..tools import dict_merge
 from ..bind_widget import bind_widget
 from ..resource import (
@@ -87,6 +88,14 @@ class Stats:
             return item.value
         else:
             return item
+
+    def __contains__(self, item):
+        if isinstance(item, Status):
+            return item.name in self.statuses
+        elif isinstance(item, str):
+            return item in self.statuses
+        else:
+            raise TypeError("Wrong status type")
 
     def __repr__(self):
         return "Stats with resources {}".format(self.resources)

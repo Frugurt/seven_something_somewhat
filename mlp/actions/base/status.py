@@ -139,6 +139,7 @@ def new_status_constructor(loader, node):
         on_remove_effects = s_s.pop("on_remove", [])
         params = s_s.pop("params", [])
         events = {frozenset(k.split("_")[1::]): v for k, v in s_s.items()}
+        _tags = s_s.pop("tags", [])
 
     return NewStatus
 
