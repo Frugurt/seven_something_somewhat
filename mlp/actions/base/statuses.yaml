@@ -71,7 +71,7 @@
   on_harmful_melee:
     - !eff
       name: Parry
-      power: 15
+      power: 20
 
 - !new_status
   name: Regeneration

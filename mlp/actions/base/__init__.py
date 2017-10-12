@@ -254,5 +254,21 @@ class Discard(MetaEffect):
         effect.cancel()
 
 
+class Redirect(MetaEffect):
+
+    def __init__(self, target, **kwargs):
+        self.target = target
+        super().__init__(**kwargs)
+
+    def _apply(self, effect, context):
+        with self.configure(context) as c:
+            new_effect = effect.copy()
+            new_context = {
+                'source': context['source'],
+                'owner': context['owner'],
+            }
+            new_effect.apply(c.target, new_context)
+
+
 class ChangeEffectStat(MetaEffect):
     pass

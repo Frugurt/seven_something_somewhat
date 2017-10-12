@@ -19,5 +19,12 @@
     - power
   effects:
     - effect: !eff
+        name: Redirect
+        target: !prop incoming_effect_context.source
+      condition: !expr
+        - !prop effect.power
+        - '>='
+        - [!prop incoming_effect.amount, '*', 2]
+    - effect: !eff
         name: Discard
       condition: !expr [!prop effect.power, '>=', !prop incoming_effect.amount]
