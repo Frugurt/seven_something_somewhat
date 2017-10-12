@@ -1,0 +1,85 @@
+- effects:
+    - !eff
+      name: Damage
+      amount: 10
+  check: !expr [!prop victim.health, '==', 90]
+
+- effects:
+    - !eff
+      name: AddStatus
+      status: !status
+        name: Burning
+  check: !expr ["Burning", "in", !prop victim]
+
+- effects:
+  - !eff
+    name: AddStatus
+    status: !status
+      name: Burning
+  - !eff
+    name: RemoveStatus
+    status: !status
+        name: Burning
+  check: !expr ["Burning", "not in", !prop victim]
+
+- effects:
+  - !eff
+    name: AddStatus
+    status: !status
+      name: Burning
+  - !eff
+    name: AddStatus
+    status: !status
+      name: Bleeding
+  - !eff
+    name: RemoveStatus
+    status: !status
+        name: Burning
+  check: !expr
+    - ["Burning", "not in", !prop victim]
+    - "and"
+    - ["Bleeding", "in", !prop victim]
+
+- effects:
+  - !eff
+    name: AddStatus
+    status: !status
+      name: Burning
+  - !eff
+    name: AddStatus
+    status: !status
+      name: Bleeding
+  - !eff
+    name: RemoveStatus
+    by_tag: True
+    status: ["dot"]
+  check: !expr
+    - ["Burning", "not in", !prop victim]
+    - "and"
+    - ["Bleeding", "not in", !prop victim]
+
+- effects:
+  - !eff
+    name: AddStatus
+    status: !status
+      name: Burning
+  - !eff
+    name: AddStatus
+    status: !status
+      name: Bleeding
+  - !eff
+    name: AddStatus
+    status: !status
+      name: Regeneration
+      power: 1
+  - !eff
+    name: RemoveStatus
+    by_tag: True
+    status: ["dot"]
+  check: !expr
+    - ["Burning", "not in", !prop victim]
+    - "and"
+    - ["Bleeding", "not in", !prop victim]
+    - "and"
+    - ["Regeneration", "in", !prop victim]
+

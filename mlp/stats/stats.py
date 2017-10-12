@@ -3,6 +3,7 @@ import traceback
 from ..resource import NumericResource
 from ..bind_widget import bind_widget
 from ..tools import dict_merge
+from ..actions.base.status import Status
 
 
 PLANNING, ACTION = range(2)
@@ -31,6 +32,14 @@ class Stats:
         self.cell = None
         # self.presumed_stats = None if is_presumed else Stats(name, owner, True)
         # self.current_action_bar = CurrentActionBar(self.owner)
+
+    def contains(self, item):
+        if isinstance(item, Status):
+            return item.name in self.statuses
+        elif isinstance(item, str):
+            return item in self.statuses
+        else:
+            raise TypeError("Wrong status type")
 
     @property
     def triggers(self):
@@ -62,7 +71,7 @@ class Stats:
     def load(self, struct):
         for key, value in struct.items():
             setattr(self, key, value)
-        # print(self.statuses)
+        # # print(self.statuses)
 
     def dump(self):
         struct = {

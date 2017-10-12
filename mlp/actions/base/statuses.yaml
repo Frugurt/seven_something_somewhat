@@ -81,3 +81,11 @@
       name: ChangeStat
       stat_name: health
       value: !expr [!prop target.health, "+", !prop status.power]
+
+- !new_status
+  name: Burning
+  tags: ["dot"]
+
+- !new_status
+  name: Bleeding
+  tags: ["dot"]

@@ -28,7 +28,7 @@ class Expression(Property):
         '>=': (operator.ge, 2),
         '<=': (operator.le, 2),
         'in': (lambda a, b: a in b, 2),
-        'not in': (lambda a, b: a not in b),
+        'not in': (lambda a, b: a not in b, 2),
         'and': (operator.and_, 1),
         'or': (operator.or_, 1)
     }
@@ -36,7 +36,11 @@ class Expression(Property):
     UTILITY = {'(', ')'} | set(OPERATORS.keys())
 
     def __init__(self, expression):
+        self.raw_expression = expression
         self.expression = self.make_tree(self.inf_2_post(expression))
+
+    def __repr__(self):
+        return " ".join([str(token) for token in self.raw_expression])
 
     def get(self, context):
         return self.expression.get(context)

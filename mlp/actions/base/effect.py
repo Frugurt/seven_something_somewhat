@@ -37,7 +37,10 @@ class AbstractEffect(metaclass=EffectMeta):
 
     def __init__(self, **kwargs):
         self.is_canceled = False
+        # print(self.name, kwargs)
         self.extra_tags = kwargs.get('extra_tags', [])
+        # print("\n\nEXXTRA TAGSSS", self.name, self.tags)
+        # self
 
     def log(self, source):
         logger.debug(
@@ -192,6 +195,8 @@ def effect_constructor(loader, node):
             value = loader.construct_object(value_node)
         e_s[key_node.value] = value
     name = e_s.pop("name")
+    # print(e_s)
+    # effect = EFFECTS[name](**e_s)
     return Reference(name, e_s, EFFECTS)
 
 
