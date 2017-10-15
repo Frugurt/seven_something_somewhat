@@ -307,7 +307,102 @@
   check: !expr [!prop owner.endurance, ">", 0]
   widget:
     icon: './data/emp_cleave.png'
-    pressed_icon: './data/emp_cleave_pressed.png'   
+    pressed_icon: './data/emp_cleave_pressed.png' 
+
+- !new_action
+  name: Lunge
+  action_type: STANDARD
+  speed: FAST
+  cost: 2
+  setup: 
+    - name: target
+      cursor: geometry_last
+      cursor_params:
+        - !area
+          name: Adjacent
+          center: !prop source
+        - !area
+          name: Ray
+          source: !prop source
+          target: !prop selected
+          length: 3
+  effects:
+    - effect: !eff
+        name: Move
+        path: !area
+          name: Ray
+          source: !prop owner.cell
+          target: !prop action.target
+          length: 1
+        extra_tags: ["plan"]
+      area: !area
+        name: Cell
+        cell: !prop owner.cell
+    - effect: !eff
+        name: Damage
+        amount: !expr [!prop owner.damage, "*", 0.6]
+        extra_tags: ["melee"]
+      area: !area
+        name: Ray
+        length: 2
+        source: !prop owner.cell
+        target: !prop action.target
+  widget:
+    icon: './data/lunge.png'
+    pressed_icon: './data/lunge_pressed.png'   
+    
+- !new_action
+  name: EmpoweredLunge
+  action_type: FULL
+  speed: NORMAL
+  cost: 2
+  setup: 
+    - name: target
+      cursor: geometry_last
+      cursor_params:
+        - !area
+          name: Circle
+          center: !prop source
+          radius: 3
+        - !area
+          name: Ray
+          source: !prop source
+          target: !prop selected
+          length: 5
+  effects:
+    - effect: !eff
+        name: Move
+        extra_tags: ["plan"]
+        path: !area
+          name: Ray
+          source: !prop owner.cell
+          target: !prop action.target
+          length: 3
+      area: !area
+        name: Cell
+        cell: !prop owner.cell
+    - effect: !eff
+        name: Damage
+        amount: !expr [!prop owner.damage, "*", 1]
+        extra_tags: ["melee"]
+      area: !area
+        name: Ray
+        source: !prop owner.cell
+        target: !prop action.target
+        length: 2
+    - effect: !eff
+        name: ChangeStat
+        extra_tags: ["plan"]
+        stat_name: endurance
+        value: !expr [!prop owner.endurance, "-", 1]
+      area: !area
+        name: Cell
+        cell: !prop owner.cell 
+  check: !expr [!prop owner.endurance, ">", 0]
+  widget:
+    icon: './data/emp_lunge.png'
+    pressed_icon: './data/emp_lunge_pressed.png' 
+    
 
 - !new_action
   name: Regenerate

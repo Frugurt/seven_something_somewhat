@@ -64,8 +64,8 @@
     - Attack
     - Cleave
     - EmpoweredCleave
-    #- Lunge
-    #- EmpoweredLunge
+    - Lunge
+    - EmpoweredLunge
     - Kick
     - EmpoweredKick
     #- Parry
