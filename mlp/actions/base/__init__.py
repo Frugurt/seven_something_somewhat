@@ -2,7 +2,7 @@ from collections.abc import Iterable
 
 import blinker
 
-from mlp.commands.command import (
+from ...commands.command import (
     Place,
     Revoke,
 )
@@ -16,7 +16,7 @@ from .status import (
     Status,
     STATUSES,
 )
-
+from ..property.reference import ReferenceList
 from ...replication_manager import MetaRegistry
 
 trace = blinker.signal("trace")
@@ -88,6 +88,9 @@ class Damage(UnitEffect):
             self.info_message = self.info_message.format(target, c.amount)
             super()._apply(target, context)
 
+    def __repr__(self):
+        return "Damage: ({})".format(self.amount)
+
 
 class AddStatus(UnitEffect):
 
@@ -106,23 +109,38 @@ class AddStatus(UnitEffect):
             self.info_message = self.info_message.format(c.status, target)
             super()._apply(target, context)
 
+    def __repr__(self):
+        return "Add Status {}".format(self.status.name)
+
 
 class RemoveStatus(UnitEffect):
 
     info_message = "remove {} from {}"
     name = "RemoveStatus"
 
-    def __init__(self, status, **kwargs):
+    def __init__(self, status, by_tag=False, **kwargs):
         super().__init__(**kwargs)
-        self.status = status
+        self.status = ReferenceList(status)
+        # self.status = status if isinstance(status, list) else [status]
+        self.by_tag = by_tag
 
     def _apply(self, target, context):
         # if cell.object:
         with self.configure(context) as c:
-            target.remove_status(c.status)
-            self.info_message = self.info_message.format(c.status, target)
+            for status in c.status:
+                if self.by_tag:
+                    target.remove_status_by_tag(status)
+                else:
+                    target.remove_status(status)
+            # self.info_message = self.info_message.format(c.status, target)
             # print(self.info_message)
             super()._apply(target, context)
+
+    def __repr__(self):
+        return "Remove Status {}{}".format(
+            "by tag " if self.by_tag else "",
+            self.status.get()
+        )
 
 
 class ChangeStat(UnitEffect):
@@ -150,15 +168,15 @@ class ChangeStat(UnitEffect):
             super()._apply(target, context)
 
 
-class Reflect(MetaEffect):
-
-    info_message = "reflect {} to {}"
-
-    def _apply(self, effect, context, effect_context):
-        print(context, "context")
-        print(effect_context, "effect_context")
-        effect.apply(effect_context['owner'].cell, context)
-        effect.cancel()
+# class Reflect(MetaEffect):
+#
+#     info_message = "reflect {} to {}"
+#
+#     def _apply(self, effect, context, effect_context):
+#         print(context, "context")
+#         print(effect_context, "effect_context")
+#         effect.apply(effect_context['owner'].cell, context)
+#         effect.cancel()
 
 
 class Summon(CellEffect):
@@ -228,3 +246,29 @@ class LaunchAction(CellEffect):
             )
             action.context['action'] = action
             action.apply()
+
+
+class Discard(MetaEffect):
+
+    def _apply(self, effect, context):
+        effect.cancel()
+
+
+class Redirect(MetaEffect):
+
+    def __init__(self, target, **kwargs):
+        self.target = target
+        super().__init__(**kwargs)
+
+    def _apply(self, effect, context):
+        with self.configure(context) as c:
+            new_effect = effect.copy()
+            new_context = {
+                'source': context['source'],
+                'owner': context['owner'],
+            }
+            new_effect.apply(c.target, new_context)
+
+
+class ChangeEffectStat(MetaEffect):
+    pass

@@ -22,9 +22,9 @@
     - Move
     - OldAttack
 #    - Kick
-    - GetRifle
+#    - GetRifle
 #    - GetSword
-    - Parry
+#    - Parry
 #    - Shoot
 #    - Reload
     - Regenerate
@@ -73,3 +73,11 @@
   widget:
     sprite: './data/sprite.png'
     scale: 0.33
+
+- !new_unit
+  name: Dummy
+  resources:
+    health: 100
+  actions:
+    - Move
+  widget:

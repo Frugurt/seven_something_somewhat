@@ -59,6 +59,7 @@ yaml.add_constructor(NEW_UNIT_TAG, new_unit_constructor)
 
 yaml.add_constructor(RESOURCE_TAG, resource_constructor)
 
+
 def load(paths=None):
     paths = paths or [
         './mlp/actions/base/effects.yaml',
@@ -67,7 +68,7 @@ def load(paths=None):
         './mlp/unit/units.yaml',
     ]
     for path in paths:
-        print(path)
+        # print(path)
         with open(path) as a:
             # loader = yaml.Loader(a)
             yaml.load(a)

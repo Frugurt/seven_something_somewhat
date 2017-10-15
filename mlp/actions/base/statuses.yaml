@@ -70,7 +70,8 @@
         name: Parry
   on_harmful_melee:
     - !eff
-      name: Reflect
+      name: Parry
+      power: 20
 
 - !new_status
   name: Regeneration
@@ -81,3 +82,11 @@
       name: ChangeStat
       stat_name: health
       value: !expr [!prop target.health, "+", !prop status.power]
+
+- !new_status
+  name: Burning
+  tags: ["dot"]
+
+- !new_status
+  name: Bleeding
+  tags: ["dot"]
