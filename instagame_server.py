@@ -25,6 +25,7 @@ from mlp.game import (
     TurnOrderManager,
 )
 from mlp.protocol import *
+from mlp.player import Player
 # from mlp.unit import Muzik
 from tests import GrassGrid
 from mlp.loader import load
